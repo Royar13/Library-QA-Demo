@@ -1,0 +1,20 @@
+{
+  "name": "library-qa-demo",
+  "description": "A library management system with purposely planted bugs for QA training courses.",
+  "main": "index.js",
+  "authors": [
+    "Roy Arad <royar13@gmail.com>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/Royar13/Library-QA-Demo",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^2.2.0"
+  }
+}
