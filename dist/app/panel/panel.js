@@ -4,6 +4,6 @@ angular.module('library', []).controller('panelCtrl', function ($scope) {
     var leftMargin = ($(window).width() - bgWidth) / 2;
     $scope.panelStyle = {};
     $scope.panelStyle.right = leftMargin + 20;
-    $scope.panelStyle.width = bgWidth * 0.7;
-    $scope.panelStyle.height = $(window).height() * 0.8;
+    //$scope.panelStyle.width = bgWidth * 0.7;
+    //$scope.panelStyle.height = $(window).height() * 0.8;
 });

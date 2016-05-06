@@ -18,7 +18,7 @@ var renameFunc = function (path) {
 };
 
 gulp.task("copy", function() {
-    return gulp.src("app/**/*", {base:"."})
+    return gulp.src("app/**", {base:"."})
             .pipe(gulp.dest("dist"));
 });
 
@@ -52,7 +52,7 @@ gulp.task('bs-reload', function () {
 gulp.task("watch", function () {
     gulp.watch("*.html", ["bs-reload"]);
     //gulp.watch("**/*.php", ["bs-reload"]);
-    gulp.watch("app/**/*", ["copy", "bs-reload"]);
+    gulp.watch("app/**", ["copy", "bs-reload"]);
     gulp.watch("assets/scss/*", ["sass"]);
     gulp.watch("assets/img/*", ["images"]);
 });

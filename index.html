@@ -7,11 +7,10 @@
         <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
         <script src="dist/app/app.js"></script>
-        <script src="dist/app/common/panel.js"></script>
+        <script src="dist/app/panel/panel.js"></script>
     </head>
     <body ng-app="library" ng-controller="panelCtrl">
-        <div id="controlPanel" ng-style="panelStyle">
-            <h1>ספריה</h1>
+        <div id="panel" ng-style="panelStyle" ng-view>
         </div>
     </body>
 </html>
