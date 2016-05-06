@@ -1,0 +1,2 @@
+var app=angular.module("library",["ngRoute"]);app.config(["$routeProvider",function(l){l.when("/",{templateUrl:"app/main/main.html",controller:"mainCtrl"}).when("/contact",{templateUrl:"pages/contact.html",controller:"contactController"})}]),angular.module("library").controller("mainCtrl",["$scope",function(l){}]),angular.module("library").controller("panelCtrl",["$scope",function(l){var t=1.67,n=$(window).height()*t,r=($(window).width()-n)/2;l.panelStyle={},l.panelStyle.right=Math.max(r+20,20)}]);
+//# sourceMappingURL=maps/script.js.map

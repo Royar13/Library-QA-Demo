@@ -1,3 +1,3 @@
-angular.module('library', []).controller('mainCtrl', function ($scope) {
+angular.module("library").controller("mainCtrl", function ($scope) {
 
 });

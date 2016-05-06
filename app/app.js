@@ -1,12 +1,12 @@
-var app = angular.module("library", []);
+var app = angular.module("library", ["ngRoute"]);
 app.config(function ($routeProvider) {
     $routeProvider
-            .when('/', {
-                templateUrl: 'main/main.html',
-                controller: 'mainCtrl'
+            .when("/", {
+                templateUrl: "app/main/main.html",
+                controller: "mainCtrl"
             })
-            .when('/contact', {
-                templateUrl: 'pages/contact.html',
-                controller: 'contactController'
+            .when("/contact", {
+                templateUrl: "pages/contact.html",
+                controller: "contactController"
             });
 });

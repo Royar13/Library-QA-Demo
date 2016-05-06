@@ -3,14 +3,15 @@
     <head>
         <title>Library QA Demo v1.0</title>
         <meta charset="UTF-8">
-        <link href="dist/assets/css/main.css" rel="stylesheet">
-        <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
-        <script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
-        <script src="dist/app/app.js"></script>
-        <script src="dist/app/panel/panel.js"></script>
+        <link href="dist/style.css" rel="stylesheet">
+        <script src="bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="bower_components/angular/angular.min.js"></script>
+        <script src="bower_components/angular-route/angular-route.min.js"></script>
+        <script src="dist/script.js"></script>
     </head>
     <body ng-app="library" ng-controller="panelCtrl">
-        <div id="panel" ng-style="panelStyle" ng-view>
+        <div id="panel" ng-style="panelStyle">
+            <div ng-view></div>
         </div>
     </body>
 </html>
