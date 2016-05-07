@@ -24,8 +24,8 @@ gulp.task("uglify", function () {
             .pipe(plumber(onError))
             .pipe(sourcemaps.init())
             .pipe(concat('script.js'))
-            .pipe(ngAnnotate())
-            .pipe(uglify())
+            //.pipe(ngAnnotate())
+            //.pipe(uglify())
             .pipe(sourcemaps.write("maps"))
             //.pipe(rename(renameFunc))
             .pipe(gulp.dest("dist"));

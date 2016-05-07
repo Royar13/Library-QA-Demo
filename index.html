@@ -10,8 +10,8 @@
         <script src="dist/script.js"></script>
     </head>
     <body ng-app="library" ng-controller="panelCtrl">
-        <div id="panel" ng-style="panelStyle">
-            <div ng-view></div>
+        <div id="panel" ng-style="panelStyle" ng-class="controllerName">
+            <ng-view></ng-view>
         </div>
     </body>
 </html>

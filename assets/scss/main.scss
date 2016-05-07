@@ -1,30 +1,68 @@
-html, body {
-    height: 100%;
-    overflow: hidden;
-}
-body, input {
-    font-family: arial;
-    font-size: 14px;
-}
-body {
-    background: #000 url('img/library-bg.jpg') no-repeat center top;
-    background-size: contain;
-}
-#panel {
-    position: absolute;
-    top: 20px;
-    height: 500px;
-    width: 700px;
-    background: rgba(255, 255, 255, 0.8);
-    border-radius: 10px;
-    box-sizing: border-box;
-    padding: 20px;
-}
-h1 {
-    margin: 0px;
-    margin-bottom: 10px;
-    font-size: 40px;
-    padding-right: 60px;
-    background: url('img/book-icon.png') no-repeat right center;
-    background-size: 55px;
+#panel.mainCtrl {
+    h1 {
+        background-image: url('img/mainBigIcon.png');
+    }
+    #categories {
+        width: 100%;
+        >div {
+            float: right;
+            width: 33%;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+            padding-left: 20px;
+
+            h2 {
+                font-size: 18px;
+                padding: 8px;
+                padding-right: 25px;
+                margin: 0px;
+                margin-bottom: 5px;
+                border-radius: 5px;
+                background: linear-gradient(to top, #08546E, #0F7596);
+                color: #fff;
+            }
+            a {
+                display: block;
+                font-size: 17px;
+                padding: 10px 0px;
+                padding-right: 35px;
+                background-repeat: no-repeat;
+                background-position: right center;
+                background-size: 35px;
+            }
+            a:hover {
+                padding-right: 45px;
+                background-position: right 10px center;
+                background-color: #ccc;
+                font-weight: bold;
+            }
+            #borrowBooks {
+                background-image: url('img/borrowBooksIcon.png');
+            }
+            #returnBooks {
+                background-image: url('img/returnBooksIcon.png');
+            }
+            #newUser {
+                background-image: url('img/newUserIcon.png');
+            }
+            #displayBooks {
+                background-image: url('img/displayBooksIcon.png');
+            }
+            #addBook {
+                background-image: url('img/addBookIcon.png');
+            }
+            #updateBook {
+                background-image: url('img/updateBookIcon.png');
+            }
+            #displayReaders {
+                background-image: url('img/displayReadersIcon.png');
+            }
+            #addReader {
+                background-image: url('img/addReaderIcon.png');
+            }
+            #updateReader {
+                background-image: url('img/updateReaderIcon.png');
+            }
+        }
+    }
 }

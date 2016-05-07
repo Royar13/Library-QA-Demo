@@ -1,0 +1,88 @@
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+body, input {
+    font-family: arial;
+    font-size: 16px;
+}
+body {
+    background: #000 url('img/library-bg.jpg') no-repeat center top;
+    background-size: auto 100%;
+}
+#panel {
+    position: absolute;
+    top: 20px;
+    height: 500px;
+    width: 700px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    box-sizing: border-box;
+    padding: 20px;
+}
+h1 {
+    margin: 0px;
+    margin-bottom: 20px;
+    font-size: 40px;
+    padding-right: 60px;
+    background-repeat: no-repeat;
+    background-position: right center;
+    line-height: 55px;
+    background-size: 55px;
+}
+a {
+    text-decoration: none;
+    color: #006;
+}
+a.btn {
+    display: block;
+    width: 160px;
+    line-height: 34px;
+    height: 34px;
+    padding: 0px;
+    background-image: url('img/btn.png');
+    background-size: 100% 100%;
+    color: #c3e3ff;   
+    box-sizing: border-box;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 17px;
+    user-select: none;
+}
+a.btn.short {
+    width: 89px;
+    background-image: url('img/btnShort.png');
+}
+a.btn:hover {
+    background-image: url('img/btnHover.png');
+    color: #fff;
+}
+a.btn.short:hover {
+    background-image: url('img/btnShortHover.png');
+    color: #fff;
+}
+a.btn:active {
+    background-image: url('img/btnActive.png');
+    color: #ddd;
+    padding-left: 2px;
+    padding-top: 2px;
+}
+a.btn.short:active {
+    background-image: url('img/btnShortActive.png');
+    color: #ddd;
+    padding-left: 2px;
+    padding-top: 2px;
+}
+.form {
+    input[type=text], input[type=password] {
+        padding: 4px;
+        border-radius: 6px;
+        border: 1px solid #999;
+        width: 220px;
+        box-shadow: inset 1px 1px 2px #ccc, 1px 1px 5px #999;
+    }
+}
+input:focus {
+    outline: none;
+}
