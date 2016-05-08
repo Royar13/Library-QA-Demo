@@ -56,16 +56,18 @@ angular.module("library").service("userService", function ($http, $location) {
         this.username = username;
         this.name = name;
     };
-    this.getUser = function (callback) {
+    this.getUser = function () {
+        if (this.username != null) {
+            return true;
+        }
         var _this = this;
-        $http({
+        return $http({
             method: "post",
             url: "./server/login.php"
         }).then(function (response) {
             if (response.data.success) {
                 _this.username = response.data.username;
                 _this.name = response.data.name;
-                callback();
             } else {
                 $location.path("/");
             }
@@ -73,11 +75,19 @@ angular.module("library").service("userService", function ($http, $location) {
     };
 });
 angular.module("library").controller("topBarCtrl", function ($scope, $http, $location, userService) {
-    var userCallback = function () {
+    var retrieveUser = function () {
         $scope.username = userService.username;
         $scope.name = userService.name;
     };
-    userService.getUser(userCallback);
+    var request = userService.getUser();
+    if (request === true) {
+        retrieveUser();
+    }
+    else {
+        request.then(function () {
+            retrieveUser();
+        });
+    }
     $scope.disconnect = function () {
         $http({
             method: "post",

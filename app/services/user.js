@@ -4,6 +4,9 @@ angular.module("library").service("userService", function ($http, $location) {
         this.name = name;
     };
     this.getUser = function () {
+        if (this.username != null) {
+            return true;
+        }
         var _this = this;
         return $http({
             method: "post",
@@ -12,7 +15,6 @@ angular.module("library").service("userService", function ($http, $location) {
             if (response.data.success) {
                 _this.username = response.data.username;
                 _this.name = response.data.name;
-                callback();
             } else {
                 $location.path("/");
             }
