@@ -1,6 +1,6 @@
 <?php
 
-class User implements IDbDependency, IValidatorDependency {
+class User implements IDbDependency {
 
     private $db;
     private $id;
@@ -9,12 +9,12 @@ class User implements IDbDependency, IValidatorDependency {
     public $name;
     public $formValidator;
 
-    public function setDatabase($db) {
-        $this->db = $db;
+    public function __construct() {
+        $this->formValidator = new FormValidator();
     }
 
-    public function setFormValidator($formValidator) {
-        $this->formValidator = $formValidator;
+    public function setDatabase($db) {
+        $this->db = $db;
     }
 
     public function authenticate() {

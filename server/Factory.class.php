@@ -23,7 +23,6 @@ class Factory {
     public static function makeUser() {
         $user = new User();
         $user->setDatabase(self::$database);
-        $user->setFormValidator(new FormValidator());
         return $user;
     }
 }

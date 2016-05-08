@@ -1,7 +1,9 @@
 angular.module("library").controller("topBarCtrl", function ($scope, $http, $location, userService) {
+    $scope.user = {};
     var retrieveUser = function () {
-        $scope.username = userService.username;
-        $scope.name = userService.name;
+        Object.keys(userService.user).forEach(function (key) {
+            $scope.user[key] = userService.user[key];
+        });
     };
     var request = userService.getUser();
     if (request === true) {
@@ -16,7 +18,7 @@ angular.module("library").controller("topBarCtrl", function ($scope, $http, $loc
         $http({
             method: "post",
             url: "./server/disconnect.php"
-        }).then(function (response) {
+        }).then(function () {
             $location.path("/");
         });
     };

@@ -53,11 +53,10 @@ angular.module("library").controller("panelCtrl", function ($scope) {
 });
 angular.module("library").service("userService", function ($http, $location) {
     this.updateUser = function (username, name) {
-        this.username = username;
-        this.name = name;
+        this.user = {username: username, name: name};
     };
     this.getUser = function () {
-        if (this.username != null) {
+        if (this.user != null) {
             return true;
         }
         var _this = this;
@@ -66,8 +65,7 @@ angular.module("library").service("userService", function ($http, $location) {
             url: "./server/login.php"
         }).then(function (response) {
             if (response.data.success) {
-                _this.username = response.data.username;
-                _this.name = response.data.name;
+                _this.updateUser(response.data.username, response.data.name);
             } else {
                 $location.path("/");
             }
@@ -75,9 +73,11 @@ angular.module("library").service("userService", function ($http, $location) {
     };
 });
 angular.module("library").controller("topBarCtrl", function ($scope, $http, $location, userService) {
+    $scope.user = {};
     var retrieveUser = function () {
-        $scope.username = userService.username;
-        $scope.name = userService.name;
+        Object.keys(userService.user).forEach(function (key) {
+            $scope.user[key] = userService.user[key];
+        });
     };
     var request = userService.getUser();
     if (request === true) {
@@ -92,7 +92,7 @@ angular.module("library").controller("topBarCtrl", function ($scope, $http, $loc
         $http({
             method: "post",
             url: "./server/disconnect.php"
-        }).then(function (response) {
+        }).then(function () {
             $location.path("/");
         });
     };

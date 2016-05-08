@@ -1,10 +1,9 @@
 angular.module("library").service("userService", function ($http, $location) {
     this.updateUser = function (username, name) {
-        this.username = username;
-        this.name = name;
+        this.user = {username: username, name: name};
     };
     this.getUser = function () {
-        if (this.username != null) {
+        if (this.user != null) {
             return true;
         }
         var _this = this;
@@ -13,8 +12,7 @@ angular.module("library").service("userService", function ($http, $location) {
             url: "./server/login.php"
         }).then(function (response) {
             if (response.data.success) {
-                _this.username = response.data.username;
-                _this.name = response.data.name;
+                _this.updateUser(response.data.username, response.data.name);
             } else {
                 $location.path("/");
             }
