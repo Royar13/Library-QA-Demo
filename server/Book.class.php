@@ -1,9 +1,8 @@
 <?php
 
-class Book {
+class Book implements IDbDependency {
 
     private $db;
-    
     public $id;
     public $name;
     public $location;
@@ -15,6 +14,7 @@ class Book {
     public function setDatabase($db) {
         $this->db = $db;
     }
+
     //$datetime = date('Y-m-d H:i:s') ;
 }
 ?>

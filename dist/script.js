@@ -16,11 +16,31 @@ app.run(function ($rootScope) {
             $rootScope.controllerName = data.$$route.controller;
     });
 });
-angular.module("library").controller("loginCtrl", function ($scope) {
-
+angular.module("library").controller("loginCtrl", function ($scope, $http, userService, $location) {
+    $scope.fields = {
+        username: "",
+        password: ""
+    };
+    $scope.errors = {};
+    $scope.loading = false;
+    $scope.login = function () {
+        $scope.loading = true;
+        $http({
+            method: "post",
+            url: "./server/login.php",
+            data: $scope.fields
+        }).then(function (response) {
+            $scope.loading = false;
+            if (response.data.success) {
+                userService.updateUser(response.data.username, response.data.name);
+                $location.path("/main");
+            } else {
+                $scope.errors = response.data.errors;
+            }
+        });
+    };
 });
 angular.module("library").controller("mainCtrl", function ($scope) {
-
 });
 angular.module("library").controller("panelCtrl", function ($scope) {
     var bgRatio = 1.67;
@@ -30,5 +50,41 @@ angular.module("library").controller("panelCtrl", function ($scope) {
     $scope.panelStyle.right = Math.max(leftMargin + 20, 20);
     //$scope.panelStyle.width = bgWidth * 0.7;
     //$scope.panelStyle.height = $(window).height() * 0.8;
+});
+angular.module("library").service("userService", function ($http, $location) {
+    this.updateUser = function (username, name) {
+        this.username = username;
+        this.name = name;
+    };
+    this.getUser = function (callback) {
+        var _this = this;
+        $http({
+            method: "post",
+            url: "./server/login.php"
+        }).then(function (response) {
+            if (response.data.success) {
+                _this.username = response.data.username;
+                _this.name = response.data.name;
+                callback();
+            } else {
+                $location.path("/");
+            }
+        });
+    };
+});
+angular.module("library").controller("topBarCtrl", function ($scope, $http, $location, userService) {
+    var userCallback = function () {
+        $scope.username = userService.username;
+        $scope.name = userService.name;
+    };
+    userService.getUser(userCallback);
+    $scope.disconnect = function () {
+        $http({
+            method: "post",
+            url: "./server/disconnect.php"
+        }).then(function (response) {
+            $location.path("/");
+        });
+    };
 });
 //# sourceMappingURL=maps/script.js.map

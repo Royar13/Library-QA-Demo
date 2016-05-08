@@ -1,0 +1,29 @@
+#panel #topBar {
+    position: absolute;
+    width: 100%;
+    top: 0px;
+    left: 20px;
+    overflow: hidden;
+    font-size: 14px;
+    #userInfo {
+        padding: 7px 10px;
+        float: left;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+        background: linear-gradient(to top, #444, #777);
+        color: #fff;
+
+        .username {
+            font-style: italic;
+            font-size: 12px;
+        }
+        #logoutBtn {
+            margin-bottom: -6px;
+            margin-right: 20px;
+            width: 18px;
+            cursor: pointer;
+            border: 1px solid #bbb;
+            border-radius: 3px;
+        }
+    }
+}

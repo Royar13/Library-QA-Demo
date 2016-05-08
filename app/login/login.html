@@ -7,7 +7,7 @@
                 שם משתמש:
             </td>
             <td>
-                <input type="text" id="username" dir="ltr">
+                <input type="text" id="username" dir="ltr" ng-model="fields.username">
             </td>
         </tr>
         <tr>
@@ -15,12 +15,19 @@
                 סיסמא:
             </td>
             <td>
-                <input type="password" id="password" dir="ltr">
+                <input type="password" id="password" dir="ltr" ng-model="fields.password">
             </td>
         </tr>
         <tr>
             <td colspan="2">
-                <a id="loginBtn" class="btn">התחבר</a>
+                <img src="assets/img/loader.gif" class="loader" ng-show="loading">
+                <div class="errors" ng-hide="loading">
+                    <div ng-repeat="error in errors.general">
+                        * {{error}}
+                    </div>
+                </div>
+                <a id="loginBtn" class="btn" ng-click="login()">התחבר</a>
+
             </td>
         </tr>
     </table>

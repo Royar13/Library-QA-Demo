@@ -33,6 +33,7 @@ h1 {
 a {
     text-decoration: none;
     color: #006;
+    cursor: pointer;
 }
 a.btn {
     display: block;
@@ -81,6 +82,13 @@ a.btn.short:active {
         border: 1px solid #999;
         width: 220px;
         box-shadow: inset 1px 1px 2px #ccc, 1px 1px 5px #999;
+    }
+    .errors {
+        color: #A00;
+        font-size: 15px;
+    }
+    .loader {
+        width: 40px;
     }
 }
 input:focus {

@@ -16,10 +16,16 @@ class Factory {
 
     public static function makeReader() {
         $reader = new Reader();
-        $book->setDatabase(self::$database);
-        return $book;
+        $reader->setDatabase(self::$database);
+        return $reader;
     }
 
+    public static function makeUser() {
+        $user = new User();
+        $user->setDatabase(self::$database);
+        $user->setFormValidator(new FormValidator());
+        return $user;
+    }
 }
 
 ?>

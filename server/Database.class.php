@@ -13,6 +13,7 @@ class Database {
         if ($this->connection == null) {
             try {
                 $this->connection = mysqli_connect($this->config["servername"], $this->config["username"], $this->config["password"], $this->config["dbname"]);
+                mysqli_query($this->connection, "SET NAMES 'utf8'");
             } catch (Exception $e) {
                 echo "Failed to connect to database: " . $e->getMessage();
             }
@@ -57,6 +58,10 @@ class Database {
             $where.="{$field}='{$value}'";
         }
         mysqli_query($this->getConnection(), "update {$table} set {$set} where {$where}");
+    }
+    
+    public function escape($str) {
+        return mysqli_real_escape_string($this->getConnection(), $str);
     }
 
 }
