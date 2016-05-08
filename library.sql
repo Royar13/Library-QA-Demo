@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 07, 2016 at 10:26 PM
+-- Generation Time: May 08, 2016 at 07:03 PM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `books_actions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `desc` char(255) COLLATE utf8_bin NOT NULL,
   `userId` int(11) NOT NULL,
-  `actionTime` int(11) NOT NULL,
+  `actionDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
@@ -126,7 +126,7 @@ CREATE TABLE IF NOT EXISTS `readers_actions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `desc` char(255) COLLATE utf8_bin NOT NULL,
   `userId` int(11) NOT NULL,
-  `actionDate` datetime NOT NULL,
+  `actionDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
@@ -142,7 +142,14 @@ CREATE TABLE IF NOT EXISTS `users` (
   `password` char(255) COLLATE utf8_bin NOT NULL,
   `name` char(255) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `password`, `name`) VALUES
+(1, 'roy', '123456', 'רועי');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
