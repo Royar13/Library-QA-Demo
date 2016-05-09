@@ -3,7 +3,8 @@
 include "globalFunctions.php";
 
 $user = Factory::makeUser();
-if ($user->login()) {
+$validator = Factory::makeFormValidator("login");
+if ($user->login($validator)) {
     $dataArr = array(
         "success" => true,
         "username" => $user->username,
@@ -12,7 +13,7 @@ if ($user->login()) {
 } else {
     $dataArr = array(
         "success" => false,
-        "errors" => $user->formValidator->outputErrors()
+        "errors" => $validator->getErrors()
     );
 }
 echo json_encode($dataArr);

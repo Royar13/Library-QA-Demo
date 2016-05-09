@@ -9,9 +9,6 @@ class Validation {
         $this->regex = $regex;
         $this->errorMsg = $errorMsg;
     }
-    public function validate($field) {
-        
-    }
 }
 
 ?>
