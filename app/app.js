@@ -8,9 +8,12 @@ app.config(function ($routeProvider) {
             .when("/main", {
                 templateUrl: "app/main/main.html",
                 controller: "mainCtrl"
+            })
+            .when("/addReader", {
+                templateUrl: "app/addReader/addReader.html",
+                controller: "addReaderCtrl"
             });
-});
-app.run(function ($rootScope) {
+}).run(function ($rootScope, $location) {
     $rootScope.$on("$routeChangeSuccess", function (event, data) {
         if (data.$$route && data.$$route.controller)
             $rootScope.controllerName = data.$$route.controller;

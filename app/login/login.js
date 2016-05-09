@@ -1,4 +1,13 @@
 angular.module("library").controller("loginCtrl", function ($scope, $http, userService, $location) {
+    var request = userService.getUser();
+    if (request === true) {
+        $location.path("/main");
+    } else {
+        request.then(function () {
+            if (userService.user != null)
+                $location.path("/main");
+        });
+    }
     $scope.fields = {
         username: "",
         password: ""

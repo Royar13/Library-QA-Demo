@@ -8,10 +8,12 @@ angular.module("library").controller("topBarCtrl", function ($scope, $http, $loc
     var request = userService.getUser();
     if (request === true) {
         retrieveUser();
-    }
-    else {
+    } else {
         request.then(function () {
-            retrieveUser();
+            if (userService.user != null)
+                retrieveUser();
+            else
+                $location.path("/");
         });
     }
     $scope.disconnect = function () {
@@ -19,6 +21,7 @@ angular.module("library").controller("topBarCtrl", function ($scope, $http, $loc
             method: "post",
             url: "./server/disconnect.php"
         }).then(function () {
+            userService.user = null;
             $location.path("/");
         });
     };

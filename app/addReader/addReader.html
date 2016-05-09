@@ -1,0 +1,74 @@
+<div ng-include="'app/topBar/topBar.html'"></div>
+<h1>קליטת קורא</h1>
+<div id="loginForm" class="form">
+    <table class="fields">
+        <tr>
+            <td class="title">
+                ת.ז.:
+            </td>
+            <td>
+                <input type="text" id="id" class="medium" dir="ltr" ng-model="fields.id">
+            </td>
+            <td class="title">
+                שם:
+            </td>
+            <td>
+                <input type="text" id="name" class="medium" ng-model="fields.name">
+            </td>
+        </tr>
+        <tr>
+            <td class="title">
+                כתובת:
+            </td>
+            <td colspan="3">
+                <table>
+                    <tr>
+                        <td>עיר:</td>
+                        <td><input type="text" id="city" class="medium" ng-model="fields.city"></td>
+                    </tr>
+                    <tr>
+                        <td>רחוב:</td>
+                        <td><input type="text" id="street" class="medium" ng-model="fields.street"></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="title">
+                מס' ספרים:
+            </td>
+            <td colspan="3">
+                <select id="booksNum" class="small">
+                    <option>2</option>
+                    <option>4</option>
+                    <option>6</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="title">
+                סוג קורא:
+            </td>
+            <td colspan="3">
+                <select id="booksNum" class="small">
+                    <option>2</option>
+                    <option>4</option>
+                    <option>6</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <img src="assets/img/loader.gif" class="loader" ng-show="loading">
+                <div class="errors" ng-hide="loading">
+                    <div ng-repeat="error in errors.general">
+                        * {{error}}
+                    </div>
+                </div>
+                <a id="loginBtn" class="btn" ng-click="login()" ng-hide="loading">התחבר</a>
+
+            </td>
+        </tr>
+    </table>
+    <a class="btn short back" ng-click="back()">חזרה</a>
+</div>

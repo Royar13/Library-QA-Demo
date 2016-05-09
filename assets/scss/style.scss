@@ -75,13 +75,25 @@ a.btn.short:active {
     padding-left: 2px;
     padding-top: 2px;
 }
+a.btn.back {
+    float: left;
+}
 .form {
-    input[type=text], input[type=password] {
+    input[type=text], input[type=password], select {
         padding: 4px;
         border-radius: 6px;
         border: 1px solid #999;
         width: 220px;
         box-shadow: inset 1px 1px 2px #ccc, 1px 1px 5px #999;
+    }
+    select {
+        width: 100px;
+    }
+    select.small {
+        width: 50px;
+    }
+    input.medium {
+        width: 140px;
     }
     .errors {
         color: #A00;
@@ -90,6 +102,34 @@ a.btn.short:active {
     .loader {
         width: 40px;
     }
+    table.fields {
+        td {
+            vertical-align: top;
+        }
+        table {
+            border-spacing: 0px;
+            tr:not(:last-child) td {
+                padding-bottom: 10px;
+            }
+            margin-right: 10px;
+        }
+        >tbody>tr {
+            >td {
+                padding-bottom: 20px;
+            }
+            >td:not(:last-child) {
+                padding-left: 2px;
+            }
+            >td:nth-child(2):not(:last-child) {
+                padding-left: 40px;
+            };
+            >td.title {
+                font-weight: bold;
+                font-size: 18px;
+            }   
+        }
+    } 
+
 }
 input:focus {
     outline: none;

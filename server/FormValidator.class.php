@@ -29,7 +29,7 @@ abstract class FormValidator implements IDbDependency {
             if (isset($param[$name])) {
                 $this->fields[$name] = Factory::makeFormField($param[$name]);
             } else {
-                $this->fields[$name] = "";
+                $this->fields[$name] = Factory::makeFormField("");
             }
         }
     }

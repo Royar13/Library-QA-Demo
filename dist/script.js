@@ -8,15 +8,27 @@ app.config(function ($routeProvider) {
             .when("/main", {
                 templateUrl: "app/main/main.html",
                 controller: "mainCtrl"
+            })
+            .when("/addReader", {
+                templateUrl: "app/addReader/addReader.html",
+                controller: "addReaderCtrl"
             });
-});
-app.run(function ($rootScope) {
+}).run(function ($rootScope, $location) {
     $rootScope.$on("$routeChangeSuccess", function (event, data) {
         if (data.$$route && data.$$route.controller)
             $rootScope.controllerName = data.$$route.controller;
     });
 });
 angular.module("library").controller("loginCtrl", function ($scope, $http, userService, $location) {
+    var request = userService.getUser();
+    if (request === true) {
+        $location.path("/main");
+    } else {
+        request.then(function () {
+            if (userService.user != null)
+                $location.path("/main");
+        });
+    }
     $scope.fields = {
         username: "",
         password: ""
@@ -42,7 +54,7 @@ angular.module("library").controller("loginCtrl", function ($scope, $http, userS
 });
 angular.module("library").controller("mainCtrl", function ($scope) {
 });
-angular.module("library").controller("panelCtrl", function ($scope) {
+angular.module("library").controller("panelCtrl", function ($scope, $window) {
     var bgRatio = 1.67;
     var bgWidth = $(window).height() * bgRatio;
     var leftMargin = ($(window).width() - bgWidth) / 2;
@@ -50,6 +62,10 @@ angular.module("library").controller("panelCtrl", function ($scope) {
     $scope.panelStyle.right = Math.max(leftMargin + 20, 20);
     //$scope.panelStyle.width = bgWidth * 0.7;
     //$scope.panelStyle.height = $(window).height() * 0.8;
+
+    $scope.back = function () {
+        $window.history.back();
+    };
 });
 angular.module("library").service("userService", function ($http, $location) {
     this.updateUser = function (username, name) {
@@ -66,8 +82,6 @@ angular.module("library").service("userService", function ($http, $location) {
         }).then(function (response) {
             if (response.data.success) {
                 _this.updateUser(response.data.username, response.data.name);
-            } else {
-                $location.path("/");
             }
         });
     };
@@ -82,10 +96,12 @@ angular.module("library").controller("topBarCtrl", function ($scope, $http, $loc
     var request = userService.getUser();
     if (request === true) {
         retrieveUser();
-    }
-    else {
+    } else {
         request.then(function () {
-            retrieveUser();
+            if (userService.user != null)
+                retrieveUser();
+            else
+                $location.path("/");
         });
     }
     $scope.disconnect = function () {
@@ -93,8 +109,13 @@ angular.module("library").controller("topBarCtrl", function ($scope, $http, $loc
             method: "post",
             url: "./server/disconnect.php"
         }).then(function () {
+            userService.user = null;
             $location.path("/");
         });
     };
 });
+angular.module("library").controller("addReaderCtrl", function ($scope) {
+
+});
+
 //# sourceMappingURL=maps/script.js.map

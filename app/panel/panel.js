@@ -1,4 +1,4 @@
-angular.module("library").controller("panelCtrl", function ($scope) {
+angular.module("library").controller("panelCtrl", function ($scope, $window) {
     var bgRatio = 1.67;
     var bgWidth = $(window).height() * bgRatio;
     var leftMargin = ($(window).width() - bgWidth) / 2;
@@ -6,4 +6,8 @@ angular.module("library").controller("panelCtrl", function ($scope) {
     $scope.panelStyle.right = Math.max(leftMargin + 20, 20);
     //$scope.panelStyle.width = bgWidth * 0.7;
     //$scope.panelStyle.height = $(window).height() * 0.8;
+
+    $scope.back = function () {
+        $window.history.back();
+    };
 });

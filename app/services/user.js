@@ -13,8 +13,6 @@ angular.module("library").service("userService", function ($http, $location) {
         }).then(function (response) {
             if (response.data.success) {
                 _this.updateUser(response.data.username, response.data.name);
-            } else {
-                $location.path("/");
             }
         });
     };
