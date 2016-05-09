@@ -2,7 +2,7 @@
 
 class Factory {
 
-    private static $database;
+    public static $database;
 
     public static function __initStatic() {
         self::$database = new Database(array("servername" => "localhost", "username" => "root", "password" => "", "dbname" => "library"));

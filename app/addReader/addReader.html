@@ -1,74 +1,81 @@
 <div ng-include="'app/topBar/topBar.html'"></div>
 <h1>קליטת קורא</h1>
 <div id="loginForm" class="form">
-    <table class="fields">
+    <table class="fields full">
         <tr>
             <td class="title">
                 ת.ז.:
             </td>
             <td>
-                <input type="text" id="id" class="medium" dir="ltr" ng-model="fields.id">
+                <input type="text" dir="ltr" ng-model="fields.id">
+                <div class="errors">{{errors.id}}</div>
             </td>
+
+        </tr>
+        <tr>
             <td class="title">
                 שם:
             </td>
             <td>
-                <input type="text" id="name" class="medium" ng-model="fields.name">
+                <input type="text" ng-model="fields.name">
+                <div class="errors">{{errors.name}}</div>
             </td>
         </tr>
         <tr>
             <td class="title">
                 כתובת:
             </td>
-            <td colspan="3">
-                <table>
-                    <tr>
-                        <td>עיר:</td>
-                        <td><input type="text" id="city" class="medium" ng-model="fields.city"></td>
-                    </tr>
-                    <tr>
-                        <td>רחוב:</td>
-                        <td><input type="text" id="street" class="medium" ng-model="fields.street"></td>
-                    </tr>
-                </table>
+            <td>
+                <div class="fieldInit">
+                    <label>עיר:</label>
+                    <input type="text" ng-model="fields.city">
+                    <div class="errors">{{errors.city}}</div>
+                </div>
+                <div class="fieldInit">
+                    <label>רחוב:</label>
+                    <input type="text" ng-model="fields.street">
+                    <div class="errors">{{errors.street}}</div>
+                </div>
             </td>
         </tr>
         <tr>
             <td class="title">
                 מס' ספרים:
             </td>
-            <td colspan="3">
-                <select id="booksNum" class="small">
-                    <option>2</option>
-                    <option>4</option>
-                    <option>6</option>
+            <td>
+                <select ng-model="fields.maxBooks">
+                    <option ng-repeat="bookNum in maxBooks" value="{{bookNum}}">{{bookNum}}</option>
                 </select>
+                <div class="errors">{{errors.maxBooks}}</div>
             </td>
         </tr>
         <tr>
             <td class="title">
                 סוג קורא:
             </td>
-            <td colspan="3">
-                <select id="booksNum" class="small">
-                    <option>2</option>
-                    <option>4</option>
-                    <option>6</option>
+            <td>
+                <select ng-model="fields.readerType">
+                    <option ng-repeat="readerType in readerTypes" value="{{readerType.id}}">{{readerType.title}}</option>
                 </select>
+                <span id="monthlyPay">
+                    <b>תשלום חודשי:</b>
+                    <input type="text" class="small" disabled="disabled" value="{{monthlyPay() | number:2}}">
+                    ₪
+                </span>
+                <div class="errors">{{errors.readerType}}</div>
             </td>
         </tr>
         <tr>
-            <td colspan="4">
+            <td colspan="2">
                 <img src="assets/img/loader.gif" class="loader" ng-show="loading">
                 <div class="errors" ng-hide="loading">
-                    <div ng-repeat="error in errors.general">
+                    <div ng-repeat="error in generalErrors">
                         * {{error}}
                     </div>
                 </div>
-                <a id="loginBtn" class="btn" ng-click="login()" ng-hide="loading">התחבר</a>
-
+                <a id="loginBtn" class="btn right" ng-click="login()" ng-hide="loading">צור קורא</a>
+                <a class="btn back" ng-click="back()" ng-hide="loading">חזרה</a>
             </td>
         </tr>
     </table>
-    <a class="btn short back" ng-click="back()">חזרה</a>
 </div>

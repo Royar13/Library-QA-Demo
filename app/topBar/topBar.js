@@ -1,10 +1,11 @@
 angular.module("library").controller("topBarCtrl", function ($scope, $http, $location, userService) {
     $scope.user = {};
-    var retrieveUser = function () {
+    function retrieveUser() {
         Object.keys(userService.user).forEach(function (key) {
             $scope.user[key] = userService.user[key];
         });
-    };
+    }
+    ;
     var request = userService.getUser();
     if (request === true) {
         retrieveUser();

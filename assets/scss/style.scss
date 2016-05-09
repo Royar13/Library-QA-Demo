@@ -30,6 +30,12 @@ h1 {
     line-height: 55px;
     background-size: 55px;
 }
+.right {
+    float: right;
+}
+.left {
+    float: left;
+}
 a {
     text-decoration: none;
     color: #006;
@@ -55,6 +61,28 @@ a.btn.short {
     width: 89px;
     background-image: url('img/btnShort.png');
 }
+a.btn.back {
+    width: 89px;
+    line-height: 30px;
+    height: 30px;
+    background-image: url('img/backIcon.png'), url('img/btnShort.png');
+    background-repeat: no-repeat;
+    background-position: right 8px center, center center;
+    background-size: 22px 22px, 100% 100%;
+    text-align: right;
+    padding-right: 35px;
+    font-size: 15px;
+    margin-right: 150px;
+    margin-top: 4px;
+    float: right;
+}
+a.btn.back:hover {
+    background-image: url('img/backIcon.png'), url('img/btnShortHover.png');
+}
+a.btn.back:active {
+    background-image: url('img/backIcon.png'), url('img/btnShortActive.png');
+    padding-right: 33px;
+}
 a.btn:hover {
     background-image: url('img/btnHover.png');
     color: #fff;
@@ -75,15 +103,12 @@ a.btn.short:active {
     padding-left: 2px;
     padding-top: 2px;
 }
-a.btn.back {
-    float: left;
-}
 .form {
     input[type=text], input[type=password], select {
         padding: 4px;
         border-radius: 6px;
         border: 1px solid #999;
-        width: 220px;
+        width: 180px;
         box-shadow: inset 1px 1px 2px #ccc, 1px 1px 5px #999;
     }
     select {
@@ -92,9 +117,13 @@ a.btn.back {
     select.small {
         width: 50px;
     }
-    input.medium {
-        width: 140px;
+    input.big {
+        width: 220px;
     }
+    input.small {
+        width: 50px;
+    }
+
     .errors {
         color: #A00;
         font-size: 15px;
@@ -102,23 +131,22 @@ a.btn.back {
     .loader {
         width: 40px;
     }
+    table.fields.full {
+        width: 100%;
+    }
     table.fields {
         td {
             vertical-align: top;
-        }
-        table {
-            border-spacing: 0px;
-            tr:not(:last-child) td {
-                padding-bottom: 10px;
-            }
-            margin-right: 10px;
         }
         >tbody>tr {
             >td {
                 padding-bottom: 20px;
             }
+            >td:first-child {
+                width: 100px;
+            }
             >td:not(:last-child) {
-                padding-left: 2px;
+                padding-left: 30px;
             }
             >td:nth-child(2):not(:last-child) {
                 padding-left: 40px;
@@ -126,11 +154,19 @@ a.btn.back {
             >td.title {
                 font-weight: bold;
                 font-size: 18px;
-            }   
+                text-align: left;
+            }
+            .fieldInit label {
+                display: block;
+                font-size: 14px;
+            }
+            .fieldInit:not(:last-child) {
+                margin-bottom: 5px;
+            }
         }
     } 
 
 }
 input:focus {
-    outline: none;
+    //outline: none;
 }
