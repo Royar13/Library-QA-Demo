@@ -28,26 +28,24 @@ class Database {
     public function insert($table, $data) {
         $fields = "";
         $values = "";
-        foreach ($data as $field => $value) {
+        foreach ($data as $key => $field) {
             if ($fields != "") {
                 $fields.=", ";
                 $values.=", ";
             }
-            $fields.=$field;
-            $value = mysqli_real_escape_string($this->getConnection(), $value);
-            $values.="'{$value}'";
+            $fields.=$key;
+            $values.="'{$field->value}'";
         }
         mysqli_query($this->getConnection(), "insert into {$table}({$fields}) values({$values})");
     }
 
     public function update($table, $data, $condition) {
         $set = "";
-        foreach ($data as $field => $value) {
+        foreach ($data as $key => $field) {
             if ($set != "") {
                 $set.=", ";
             }
-            $value = mysqli_real_escape_string($this->getConnection(), $value);
-            $set.="{$field}='{$value}'";
+            $set.="{$key}='{$field->value}'";
         }
         $where = "";
         foreach ($condition as $field => $value) {

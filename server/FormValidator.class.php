@@ -2,26 +2,20 @@
 
 abstract class FormValidator implements IDbDependency {
 
+    protected $db;
     protected $fields = array();
     protected $errors = array();
     protected $validations = array();
 
     public function __construct() {
         $this->validations["anything"] = new Validation("^[\d\D]{1,}\$", "");
-        $this->validations["date"] = new Validation("^[0-9]{4}[-/][0-9]{1,2}[-/][0-9]{1,2}\$", "השדה אינו בפורמט תאריך");
+        $this->validations["hebrew"] = new Validation("^([א-ת]{2,}\s)*[א-ת]{2,}$", "יש להזין ערך בעברית (מותר רווח בין מילים)");
+        $this->validations["street"] = new Validation("^([א-ת]{2,}\s)*[א-ת]{2,} [1-9]([0-9]){0,2}$", "הערך אינו בתבנית של 'שם רחוב מספר בית'");
+        $this->validations["israeliID"] = new Validation("^[0-9]{9}$", "על תעודת הזהות להיות בת 9 ספרות");
     }
 
     public function setDatabase($db) {
         $this->db = $db;
-    }
-
-    public function issetInputData($fieldNames, $param) {
-        foreach ($fieldNames as $name) {
-            if (!isset($param[$name])) {
-                return false;
-            }
-        }
-        return true;
     }
 
     protected function getInputData($fieldNames, $param) {
@@ -69,6 +63,14 @@ abstract class FormValidator implements IDbDependency {
                 $passed = false;
         }
         return $passed;
+    }
+
+    protected function isValid() {
+        $count = count($this->errors);
+        foreach ($this->fields as $field) {
+            $count+=count($field->errors);
+        }
+        return $count == 0;
     }
 
     abstract public function validate();

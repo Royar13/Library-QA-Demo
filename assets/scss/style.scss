@@ -2,7 +2,7 @@ html, body {
     height: 100%;
     overflow: hidden;
 }
-body, input {
+body, input, select {
     font-family: arial;
     font-size: 16px;
 }
@@ -10,7 +10,7 @@ body {
     background: #000 url('img/library-bg.jpg') no-repeat center top;
     background-size: auto 100%;
 }
-#panel {
+#panelInit {
     position: absolute;
     top: 20px;
     height: 500px;
@@ -18,7 +18,47 @@ body {
     background: rgba(255, 255, 255, 0.8);
     border-radius: 10px;
     box-sizing: border-box;
-    padding: 20px;
+    overflow: hidden;
+    padding: 15px;
+    padding-left: 10px;
+    ::-webkit-scrollbar {
+        width: 9px;
+        height: 6px;
+    }
+    ::-webkit-scrollbar-button {
+        width: 0px;
+        height: 0px;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #e1e1e1;
+        border: 1px solid #aaa;
+        border-radius: 50px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #ffffff;
+    }
+    ::-webkit-scrollbar-thumb:active {
+        background: #000000;
+    }
+    ::-webkit-scrollbar-track {
+        background: #666666;
+        border: 0px none #ffffff;
+        border-radius: 40px;
+    }
+    ::-webkit-scrollbar-track:hover {
+        background: #666666;
+    }
+    ::-webkit-scrollbar-track:active {
+        //background: #333333;
+    }
+    ::-webkit-scrollbar-corner {
+        background: transparent;
+    }
+}
+#panel {
+    margin-top: 10px;
+    height: 460px;
+    overflow-y: auto;
 }
 h1 {
     margin: 0px;
@@ -110,18 +150,22 @@ a.btn.short:active {
         border: 1px solid #999;
         width: 180px;
         box-shadow: inset 1px 1px 2px #ccc, 1px 1px 5px #999;
+        box-sizing: border-box;
     }
     select {
         width: 100px;
     }
+    select.big {
+        width: 180px;
+    }
     select.small {
-        width: 50px;
+        width: 70px;
     }
     input.big {
         width: 220px;
     }
     input.small {
-        width: 50px;
+        width: 70px;
     }
 
     .errors {
@@ -143,7 +187,7 @@ a.btn.short:active {
                 padding-bottom: 20px;
             }
             >td:first-child {
-                width: 100px;
+                //width: 150px;
             }
             >td:not(:last-child) {
                 padding-left: 30px;
@@ -155,6 +199,10 @@ a.btn.short:active {
                 font-weight: bold;
                 font-size: 18px;
                 text-align: left;
+            }
+            >td.title.required:before {
+                content: "*";
+                color: red;
             }
             .fieldInit label {
                 display: block;

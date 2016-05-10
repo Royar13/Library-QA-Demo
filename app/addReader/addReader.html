@@ -1,9 +1,8 @@
-<div ng-include="'app/topBar/topBar.html'"></div>
 <h1>קליטת קורא</h1>
 <div id="loginForm" class="form">
-    <table class="fields full">
+    <table class="fields">
         <tr>
-            <td class="title">
+            <td class="title required">
                 ת.ז.:
             </td>
             <td>
@@ -13,7 +12,7 @@
 
         </tr>
         <tr>
-            <td class="title">
+            <td class="title required">
                 שם:
             </td>
             <td>
@@ -39,31 +38,36 @@
             </td>
         </tr>
         <tr>
-            <td class="title">
+            <td class="title required">
                 מס' ספרים:
             </td>
             <td>
-                <select ng-model="fields.maxBooks">
+                <select class="small" ng-model="fields.maxBooks">
                     <option ng-repeat="bookNum in maxBooks" value="{{bookNum}}">{{bookNum}}</option>
                 </select>
                 <div class="errors">{{errors.maxBooks}}</div>
             </td>
         </tr>
         <tr>
-            <td class="title">
+            <td class="title required">
                 סוג קורא:
             </td>
             <td>
-                <select ng-model="fields.readerType">
+                <select class="big" ng-model="fields.readerType">
                     <option ng-repeat="readerType in readerTypes" value="{{readerType.id}}">{{readerType.title}}</option>
                 </select>
-                <span id="monthlyPay">
-                    <b>תשלום חודשי:</b>
-                    <input type="text" class="small" disabled="disabled" value="{{monthlyPay() | number:2}}">
-                    ₪
-                </span>
                 <div class="errors">{{errors.readerType}}</div>
             </td>
+        </tr>
+        <tr>
+            <td class="title">
+                תשלום חודשי:
+            </td>
+            <td>
+
+                <input type="text" class="small" disabled="disabled" value="{{monthlyPay() | number:2}}">
+                ₪
+            </td>        
         </tr>
         <tr>
             <td colspan="2">

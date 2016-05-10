@@ -31,6 +31,9 @@ class Factory {
             case "login":
                 $formValidator = new LoginValidator();
                 break;
+            case "reader":
+                $formValidator = new ReaderValidator();
+                break;
         }
         $formValidator->setDatabase(self::$database);
         return $formValidator;

@@ -37,14 +37,16 @@ class FormField implements IDbDependency {
     }
 
     public function validate() {
-        if ($this->isRequired) {
-            if (empty($this)) {
+        if (empty($this)) {
+            if ($this->isRequired) {
                 $field->addError("חסר ערך בשדה");
                 return false;
+            } else {
+                return true;
             }
         }
         foreach ($this->validations as $validation) {
-            if (!preg_match($validation->regex, $this->value)) {
+            if (!preg_match("/" . $validation->regex . "/", $this->value)) {
                 $this->addError($validation->errorMsg);
             }
         }

@@ -23,7 +23,7 @@ class LoginValidator extends FormValidator {
                 $this->addError("פרטי התחברות שגויים");
                 return false;
             }
-        } catch (Exception $e) {
+        } catch (Exception $ex) {
             $this->addError("שגיאת מסד נתונים");
             return false;
         }
