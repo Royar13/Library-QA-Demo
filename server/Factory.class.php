@@ -26,23 +26,18 @@ class Factory {
         return $user;
     }
 
-    public static function makeFormValidator($type) {
-        switch ($type) {
-            case "login":
-                $formValidator = new LoginValidator();
+    public static function makeInputValidator($type = "base") {
+        switch($type) {
+            case "base":
+                $inputValidator = new InputValidator();
                 break;
-            case "reader":
-                $formValidator = new ReaderValidator();
+            case "AddReader":
+                $inputValidator = new AddReaderValidator();
                 break;
         }
-        $formValidator->setDatabase(self::$database);
-        return $formValidator;
-    }
-
-    public static function makeFormField($value, $isRequired = false, $validations = array(), $sanitations = array("db")) {
-        $formField = new FormField($value, $isRequired, $validations, $sanitations);
-        $formField->setDatabase(self::$database);
-        return $formField;
+        
+        $inputValidator->setDatabase(self::$database);
+        return $inputValidator;
     }
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-class Book implements IDbDependency {
+class Book implements IDatabaseAccess {
 
     private $db;
     public $id;

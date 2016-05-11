@@ -1,6 +1,6 @@
 <?php
 
-interface IDbDependency {
+interface IDatabaseAccess {
 
     public function setDatabase($db);
 }

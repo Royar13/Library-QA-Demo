@@ -57,10 +57,6 @@ angular.module("library").controller("addReaderCtrl", function ($scope, $http) {
     });
 });
 
-angular.module("library").directive("error", function () {
-    return {
-    };
-});
 angular.module("library").controller("loginCtrl", function ($scope, $http, userService, $location) {
     var request = userService.getUser();
     if (request === true) {
@@ -92,6 +88,10 @@ angular.module("library").controller("loginCtrl", function ($scope, $http, userS
                 $scope.errors = response.data.errors;
             }
         });
+    };
+});
+angular.module("library").directive("error", function () {
+    return {
     };
 });
 angular.module("library").controller("mainCtrl", function ($scope) {

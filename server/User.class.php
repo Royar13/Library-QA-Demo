@@ -1,6 +1,6 @@
 <?php
 
-class User implements IDbDependency {
+class User implements IDatabaseAccess {
 
     private $db;
     public $id;
@@ -16,29 +16,40 @@ class User implements IDbDependency {
         return isset($_SESSION["uid"]);
     }
 
-    public function login(LoginValidator $validator) {
-        $userData = null;
+    public function fetchLoggedUser() {
         if ($this->authenticate()) {
             try {
                 $result = $this->db->query("select * from users where id='{$_SESSION["uid"]}'");
                 if (mysqli_num_rows($result) == 1) {
                     $userData = mysqli_fetch_assoc($result);
+                    $this->id = $userData["id"];
+                    $this->username = $userData["username"];
+                    $this->name = $userData["name"];
+                    return true;
                 }
-            } catch (Exception $e) {
+            } catch (Exception $ex) {
                 
             }
         }
-        if ($userData == null) {
-            if ($validator->validate()) {
-                $userData = $validator->getFields();
+        return false;
+    }
+
+    public function login(ErrorLogger $errorLogger) {
+        try {
+            $result = $this->db->query("select * from users where username='{$this->username}' and password='{$this->password}'");
+            if (mysqli_num_rows($result) == 1) {
+                $userData = mysqli_fetch_assoc($result);
+                $_SESSION["uid"] = $userData["id"];
+                
+                $this->id = $userData["id"];
+                $this->name = $userData["name"];
+                return true;
+            } else {
+                $errorLogger->addGeneralError("פרטי התחברות שגויים");
+                return false;
             }
-        }
-        if ($userData != null) {
-            $_SESSION["uid"] = $userData["id"];
-            $this->username = $userData["username"];
-            $this->name = $userData["name"];
-            return true;
-        } else {
+        } catch (Exception $ex) {
+            $errorLogger->addGeneralError("שגיאת מסד נתונים");
             return false;
         }
     }

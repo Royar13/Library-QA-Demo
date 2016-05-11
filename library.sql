@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 08, 2016 at 07:03 PM
+-- Generation Time: May 12, 2016 at 01:46 AM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -19,6 +19,26 @@ SET time_zone = "+00:00";
 --
 -- Database: `library`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `allowed_books_num`
+--
+
+CREATE TABLE IF NOT EXISTS `allowed_books_num` (
+  `maxBooks` int(11) NOT NULL,
+  PRIMARY KEY (`maxBooks`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `allowed_books_num`
+--
+
+INSERT INTO `allowed_books_num` (`maxBooks`) VALUES
+(2),
+(4),
+(6);
 
 -- --------------------------------------------------------
 
@@ -58,7 +78,7 @@ CREATE TABLE IF NOT EXISTS `books` (
 
 CREATE TABLE IF NOT EXISTS `books_actions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `desc` char(255) COLLATE utf8_bin NOT NULL,
+  `description` char(255) COLLATE utf8_bin NOT NULL,
   `userId` int(11) NOT NULL,
   `actionDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
@@ -116,6 +136,13 @@ CREATE TABLE IF NOT EXISTS `readers` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+--
+-- Dumping data for table `readers`
+--
+
+INSERT INTO `readers` (`id`, `name`, `city`, `street`, `readerType`, `maxBooks`, `status`) VALUES
+(315524694, 'רועי', 'גדשג גדשג', 'דגכד 4', 1, 2, 0);
+
 -- --------------------------------------------------------
 
 --
@@ -124,11 +151,42 @@ CREATE TABLE IF NOT EXISTS `readers` (
 
 CREATE TABLE IF NOT EXISTS `readers_actions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `desc` char(255) COLLATE utf8_bin NOT NULL,
   `userId` int(11) NOT NULL,
+  `readerId` int(11) NOT NULL,
+  `description` char(255) COLLATE utf8_bin NOT NULL,
   `actionDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=10 ;
+
+--
+-- Dumping data for table `readers_actions`
+--
+
+INSERT INTO `readers_actions` (`id`, `userId`, `readerId`, `description`, `actionDate`) VALUES
+(9, 1, 315524694, 'המשתמש {user} יצר את הקורא {reader}', '2016-05-12 02:37:46');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reader_types`
+--
+
+CREATE TABLE IF NOT EXISTS `reader_types` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` char(255) COLLATE utf8_bin NOT NULL,
+  `bookCost` decimal(10,2) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `reader_types`
+--
+
+INSERT INTO `reader_types` (`id`, `title`, `bookCost`) VALUES
+(1, 'בוגר', '11.00'),
+(2, 'ילד', '10.00'),
+(3, 'חייל', '8.00'),
+(4, 'פנסיונר', '9.00');
 
 -- --------------------------------------------------------
 
