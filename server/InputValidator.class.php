@@ -63,14 +63,14 @@ class InputValidator implements IDatabaseAccess {
 
     public function validateItem($value, $type) {
         if (empty($value)) {
-            if (array_search($type, $mandatories)) {
+            if (array_search($type, $this->mandatories)) {
                 $this->addError($type, "יש להזין ערך בשדה");
                 return false;
             } else {
                 return true;
             }
         }
-        if (isset($this->validations[$type]) && isset($this->validations[$type], $this->regexes)) {
+        if (isset($this->validations[$type]) && isset($this->regexes[$this->validations[$type]])) {
             $validation = $this->validations[$type];
             if (!preg_match("/" . $this->regexes[$validation]->regex . "/", $value)) {
                 $this->addError($type, $this->regexes[$validation]->errorMsg);

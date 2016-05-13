@@ -8,7 +8,7 @@ function addReader() {
     $param = Param::getArray();
     $validator = Factory::makeInputValidator("AddReader");
     if (!$validator->validate($param)) {
-        $validator->errorLogger->printJSON();
+        Factory::write($validator->errorLogger->getErrors());
         return;
     }
     $reader->id = $param["id"];
@@ -18,12 +18,14 @@ function addReader() {
     $reader->readerType = $param["readerType"];
     $reader->maxBooks = $param["maxBooks"];
 
-    if ((new ProxyAddReader($reader))->create($validator->errorLogger)) {
+    $proxy = new ProxyAddReader($reader);
+    $proxy->setUser(Factory::makeUser());
+    if ($proxy->create($validator->errorLogger, $proxy->getUserId())) {
         $output["success"] = true;
-        echo json_encode($output);
     } else {
-        $validator->errorLogger->printJSON();
+        $output = $validator->errorLogger->getErrors();
     }
+    Factory::write($output);
 }
 
 ?>

@@ -7,6 +7,8 @@ angular.module("library").controller("addReaderCtrl", function ($scope, $http) {
         maxBooks: 0,
         readerType: ""
     };
+    $scope.errors = {};
+    $scope.select = {maxBooks:[]};
     $scope.monthlyPay = function () {
         try {
             var pay = getReaderType($scope.fields.readerType).bookCost * $scope.fields.maxBooks;
@@ -26,12 +28,12 @@ angular.module("library").controller("addReaderCtrl", function ($scope, $http) {
         method: "post",
         url: "./server/getReaderTypes.php"
     }).then(function (response) {
-        $scope.readerTypes = response.data.readerTypes;
+        $scope.select.readerTypes = response.data.readerTypes;
     });
     $http({
         method: "post",
         url: "./server/getBooksNum.php"
     }).then(function (response) {
-        $scope.maxBooks = response.data.booksNum;
+        $scope.select.maxBooks = response.data.booksNum;
     });
 });

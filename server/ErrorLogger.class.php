@@ -12,14 +12,14 @@ class ErrorLogger {
         $this->errors["general"][] = $msg;
     }
 
-    public function printJSON() {
+    public function getErrors() {
         if (count($this->errors) == 0) {
             $output["success"] = true;
         } else {
             $output["success"] = false;
             $output["errors"] = $this->errors;
         }
-        echo json_encode($output);
+        return $output;
     }
 
     public function isValid() {

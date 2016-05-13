@@ -11,7 +11,7 @@
     </head>
     <body ng-app="library" ng-controller="panelCtrl">
         <div id="panelInit" ng-style="panelStyle">
-            <div ng-include="'app/topBar/topBar.html'"></div>
+            <div ng-if="includeTopBar()" ng-include="'app/topBar/topBar.html'"></div>
             <div id="panel" ng-class="controllerName">
                 <ng-view></ng-view>
             </div>

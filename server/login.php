@@ -11,7 +11,7 @@ function login() {
     if (!$user->authenticate() && isset($param["username"])) {
         $validator = Factory::makeInputValidator();
         if (!$validator->validate($param)) {
-            $validator->errorLogger->printJSON();
+            Factory::write($validator->errorLogger->getErrors());
             return;
         }
         $user->username = $param["username"];
@@ -19,14 +19,14 @@ function login() {
         if ($user->login($validator->errorLogger)) {
             $success = true;
         } else {
-            $validator->errorLogger->printJSON();
+            Factory::write($validator->errorLogger->getErrors());
         }
     } else {
         if ($user->fetchLoggedUser()) {
             $success = true;
         } else {
             $output["success"] = false;
-            echo json_encode($output);
+            Factory::write($output);
         }
     }
 
@@ -34,7 +34,7 @@ function login() {
         $output["success"] = true;
         $output["username"] = $user->username;
         $output["name"] = $user->name;
-        echo json_encode($output);
+        Factory::write($output);
     }
 }
 

@@ -28,6 +28,8 @@ angular.module("library").controller("addReaderCtrl", function ($scope, $http) {
         maxBooks: 0,
         readerType: ""
     };
+    $scope.errors = {};
+    $scope.select = {maxBooks:[]};
     $scope.monthlyPay = function () {
         try {
             var pay = getReaderType($scope.fields.readerType).bookCost * $scope.fields.maxBooks;
@@ -47,13 +49,13 @@ angular.module("library").controller("addReaderCtrl", function ($scope, $http) {
         method: "post",
         url: "./server/getReaderTypes.php"
     }).then(function (response) {
-        $scope.readerTypes = response.data.readerTypes;
+        $scope.select.readerTypes = response.data.readerTypes;
     });
     $http({
         method: "post",
         url: "./server/getBooksNum.php"
     }).then(function (response) {
-        $scope.maxBooks = response.data.booksNum;
+        $scope.select.maxBooks = response.data.booksNum;
     });
 });
 
@@ -90,13 +92,9 @@ angular.module("library").controller("loginCtrl", function ($scope, $http, userS
         });
     };
 });
-angular.module("library").directive("error", function () {
-    return {
-    };
-});
 angular.module("library").controller("mainCtrl", function ($scope) {
 });
-angular.module("library").controller("panelCtrl", function ($scope, $window) {
+angular.module("library").controller("panelCtrl", function ($scope, $window, $location) {
     var bgRatio = 1.67;
     var bgWidth = $(window).height() * bgRatio;
     var leftMargin = ($(window).width() - bgWidth) / 2;
@@ -108,6 +106,10 @@ angular.module("library").controller("panelCtrl", function ($scope, $window) {
     $scope.back = function () {
         $window.history.back();
     };
+
+    $scope.includeTopBar = function() {
+         return $location.path() != "/";
+    }
 });
 angular.module("library").service("userService", function ($http, $location) {
     this.updateUser = function (username, name) {
@@ -155,6 +157,71 @@ angular.module("library").controller("topBarCtrl", function ($scope, $http, $loc
             userService.user = null;
             $location.path("/");
         });
+    };
+});
+angular.module("library").directive("error", function () {
+    return {
+    };
+});
+angular.module("library").directive("errors", function () {
+    return {
+        restrict: "A",
+        scope: true,
+        templateUrl: "app/directives/field/errors.html"
+    };
+});
+angular.module("library").directive("selectField", function () {
+    return {
+        restrict: "A",
+        scope: true,
+        require: "field",
+        templateUrl: "app/directives/field/selectField.html",
+        controller: function ($scope, $element) {
+            $scope.field = $element.attr("field-name");
+
+            $scope.class = "";
+            if ($element[0].hasAttribute("add-class")) {
+                $scope.class = $element.attr("add-class");
+            }
+            $scope.selectName = $element.attr("options");
+            var valueName = null;
+            if ($element[0].hasAttribute("options-value")) {
+                valueName = $element.attr("options-value");
+            }
+            var textName = null;
+            if ($element[0].hasAttribute("options-text")) {
+                textName = $element.attr("options-text");
+            }
+            //$scope.$watch("select", function () {
+            //updateOptions();
+            //});
+            $scope.getOptionValue = function (option) {
+                if (valueName == null)
+                    return option;
+                else
+                    return option[valueName];
+            };
+            $scope.getOptionText = function (option) {
+                if (textName == null)
+                    return option;
+                else
+                    return option[textName];
+            };
+        }
+    };
+});
+angular.module("library").directive("textField", function () {
+    return {
+        restrict: "A",
+        scope: true,
+        templateUrl: "app/directives/field/textField.html",
+        controller: function ($scope, $element) {
+            $scope.field = $element.attr("field-name");
+            $scope.class = "";
+            if ($element[0].hasAttribute("add-class")) {
+                $scope.class = $element.attr("add-class");
+            }
+        }
     };
 });
 //# sourceMappingURL=maps/script.js.map

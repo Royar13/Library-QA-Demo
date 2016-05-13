@@ -5,19 +5,14 @@
             <td class="title required">
                 ת.ז.:
             </td>
-            <td>
-                <input type="text" dir="ltr" ng-model="fields.id">
-                <div class="errors">{{errors.id}}</div>
+            <td text-field field-name="id">
             </td>
-
         </tr>
         <tr>
             <td class="title required">
                 שם:
             </td>
-            <td>
-                <input type="text" ng-model="fields.name">
-                <div class="errors">{{errors.name}}</div>
+            <td text-field field-name="name">
             </td>
         </tr>
         <tr>
@@ -27,13 +22,11 @@
             <td>
                 <div class="fieldInit">
                     <label>עיר:</label>
-                    <input type="text" ng-model="fields.city">
-                    <div class="errors">{{errors.city}}</div>
+                    <div text-field field-name="city"></div>
                 </div>
                 <div class="fieldInit">
                     <label>רחוב:</label>
-                    <input type="text" ng-model="fields.street">
-                    <div class="errors">{{errors.street}}</div>
+                    <div text-field field-name="street"></div>
                 </div>
             </td>
         </tr>
@@ -41,22 +34,14 @@
             <td class="title required">
                 מס' ספרים:
             </td>
-            <td>
-                <select class="small" ng-model="fields.maxBooks">
-                    <option ng-repeat="bookNum in maxBooks" value="{{bookNum}}">{{bookNum}}</option>
-                </select>
-                <div class="errors">{{errors.maxBooks}}</div>
+            <td select-field field-name="maxBooks" options="maxBooks">
             </td>
         </tr>
         <tr>
             <td class="title required">
                 סוג קורא:
             </td>
-            <td>
-                <select class="big" ng-model="fields.readerType">
-                    <option ng-repeat="readerType in readerTypes" value="{{readerType.id}}">{{readerType.title}}</option>
-                </select>
-                <div class="errors">{{errors.readerType}}</div>
+            <td select-field field-name="readerType" add-class="big" options="readerTypes" options-value="id" options-text="title">
             </td>
         </tr>
         <tr>

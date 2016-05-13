@@ -3,9 +3,15 @@
 class Factory {
 
     public static $database;
+    public static $writer;
 
     public static function __initStatic() {
         self::$database = new Database(array("servername" => "localhost", "username" => "root", "password" => "", "dbname" => "library"));
+        self::$writer = new JSONWriter();
+    }
+
+    public static function write($arr) {
+        self::$writer->write($arr);
     }
 
     public static function makeBook() {
@@ -27,7 +33,7 @@ class Factory {
     }
 
     public static function makeInputValidator($type = "base") {
-        switch($type) {
+        switch ($type) {
             case "base":
                 $inputValidator = new InputValidator();
                 break;
@@ -35,7 +41,7 @@ class Factory {
                 $inputValidator = new AddReaderValidator();
                 break;
         }
-        
+
         $inputValidator->setDatabase(self::$database);
         return $inputValidator;
     }

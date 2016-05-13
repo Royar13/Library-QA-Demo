@@ -4,9 +4,13 @@ abstract class UserProxy {
 
     protected $user;
 
-    public function __construct() {
-        $this->user = Factory::makeUser();
+    public function setUser(User $user) {
+        $this->user = $user;
         $this->user->fetchLoggedUser();
+    }
+
+    public function getUserId() {
+        return $this->user->id;
     }
 
 }

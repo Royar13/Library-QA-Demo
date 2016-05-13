@@ -1,6 +1,6 @@
 <?php
 
-class Reader implements IDatabaseAccess {
+class Reader implements IDatabaseAccess, ICreate {
 
     private $db;
     public $id;
@@ -44,7 +44,7 @@ class Reader implements IDatabaseAccess {
         }
     }
 
-    public function validateReaderType($errorLogger) {
+    private function validateReaderType($errorLogger) {
         $value = $this->readerType;
 
         $result = $this->db->query("select id from reader_types where id='{$value}'");
@@ -53,7 +53,7 @@ class Reader implements IDatabaseAccess {
         }
     }
 
-    public function validateMaxBooks($errorLogger) {
+    private function validateMaxBooks($errorLogger) {
         $value = $this->maxBooks;
 
         $result = $this->db->query("select maxBooks from allowed_books_num where maxBooks='{$value}'");
@@ -62,7 +62,7 @@ class Reader implements IDatabaseAccess {
         }
     }
 
-    public function validateID($errorLogger) {
+    private function validateID($errorLogger) {
         $value = $this->id;
 
         $result = $this->db->query("select id from readers where id='{$value}'");
