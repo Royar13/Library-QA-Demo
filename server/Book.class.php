@@ -17,5 +17,3 @@ class Book implements IDatabaseAccess {
 
     //$datetime = date('Y-m-d H:i:s') ;
 }
-?>
-

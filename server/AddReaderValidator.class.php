@@ -11,5 +11,3 @@ class AddReaderValidator extends InputValidator {
     }
 
 }
-
-?>

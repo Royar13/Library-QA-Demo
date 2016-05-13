@@ -1,0 +1,47 @@
+<h1>הצגת קוראים</h1>
+<table st-table="displayedReaders" st-safe-src="readers" class="data-table">
+    <thead>
+        <tr>
+            <th st-sort="id">ת.ז.</th>
+            <th st-sort="name">שם</th>
+            <th st-sort="address">כתובת</th>
+            <th st-sort="readerType">סוג קורא</th>
+            <th st-sort="maxBooks">מס' ספרים</th>
+            <th st-sort="joinDate" st-sort-default="reverse">הצטרף</th>
+            <th></th>
+        </tr>
+        <tr>
+            <th>
+                <input type="text" st-search="id" placeholder="חפש ת.ז.">
+            </th>
+            <th>
+                <input type="text" st-search="name" placeholder="חפש שם">
+            </th>
+            <th>
+                <input type="text" st-search="address" placeholder="חפש כתובת">
+            </th>
+            <th>
+                <input type="text" st-search="readerType" placeholder="חפש סוג קורא">
+            </th>
+            <th>
+                <input type="text" st-search="maxBooks" placeholder="חפש מס' ספרים">
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="reader in displayedReaders| limitTo: 50">
+            <td>{{reader.id}}</td>
+            <td>{{reader.name}}</td>
+            <td>{{reader.address}}</td>
+            <td>{{reader.readerType}}</td>
+            <td>{{reader.maxBooks}}</td>
+            <td>{{reader.joinDate| dateToISO | date:'dd/MM/yy'}}</td>
+            <td>
+                <a class="editBtn" title="ערוך"></a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<a class="btn back fixed" ng-click="back()" ng-hide="loading">חזרה</a>

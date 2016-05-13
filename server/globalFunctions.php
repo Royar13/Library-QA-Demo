@@ -14,5 +14,3 @@ function myAutoLoader($className) {
         $className::__initStatic();
     }
 }
-
-?>

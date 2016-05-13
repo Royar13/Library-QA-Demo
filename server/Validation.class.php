@@ -10,5 +10,3 @@ class Validation {
         $this->errorMsg = $errorMsg;
     }
 }
-
-?>

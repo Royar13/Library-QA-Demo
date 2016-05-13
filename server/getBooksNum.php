@@ -9,4 +9,3 @@ while ($row = mysqli_fetch_assoc($result)) {
     $output["booksNum"][] = $row["maxBooks"];
 }
 echo json_encode($output);
-?>

@@ -9,4 +9,3 @@ while ($row = mysqli_fetch_assoc($result)) {
     $output["readerTypes"][] = $row;
 }
 echo json_encode($output);
-?>

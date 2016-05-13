@@ -18,6 +18,7 @@
     "jquery": "^2.2.0",
     "angular": "^1.5.5",
     "angular-route": "^1.5.5",
-    "alertify.js": "alertifyjs#^1.0.10"
+    "alertify.js": "alertifyjs#^1.0.10",
+    "angular-smart-table": "^2.1.8"
   }
 }

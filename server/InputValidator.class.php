@@ -84,5 +84,3 @@ class InputValidator implements IDatabaseAccess {
     }
 
 }
-
-?>

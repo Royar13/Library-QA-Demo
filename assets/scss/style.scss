@@ -13,8 +13,8 @@ body {
 #panelInit {
     position: absolute;
     top: 20px;
-    height: 500px;
-    width: 700px;
+    height: 530px;
+    width: 740px;
     background: rgba(255, 255, 255, 0.8);
     border-radius: 10px;
     box-sizing: border-box;
@@ -59,6 +59,7 @@ body {
     margin-top: 10px;
     height: 460px;
     overflow-y: auto;
+    padding-left: 5px;
 }
 h1 {
     margin: 0px;
@@ -116,6 +117,11 @@ a.btn.back {
     margin-top: 4px;
     float: right;
 }
+a.btn.back.fixed {
+    position: absolute;
+    left: 25px;
+    bottom: 10px;
+}
 a.btn.back:hover {
     background-image: url('img/backIcon.png'), url('img/btnShortHover.png');
 }
@@ -143,14 +149,16 @@ a.btn.short:active {
     padding-left: 2px;
     padding-top: 2px;
 }
+input[type=text], input[type=password], select {
+    padding: 4px;
+    border-radius: 6px;
+    border: 1px solid #999;
+    box-shadow: inset 1px 1px 2px #ccc, 1px 1px 5px #999;
+    box-sizing: border-box;
+}
 .form {
-    input[type=text], input[type=password], select {
-        padding: 4px;
-        border-radius: 6px;
-        border: 1px solid #999;
+    input {
         width: 180px;
-        box-shadow: inset 1px 1px 2px #ccc, 1px 1px 5px #999;
-        box-sizing: border-box;
     }
     select {
         width: 100px;
@@ -220,4 +228,51 @@ a.btn.short:active {
 }
 input:focus {
     //outline: none;
+}
+.data-table {
+    width: 100%;
+    border-spacing: 0px;
+    th {
+        text-align: right;
+        border-bottom: 2px solid #999;
+        font-size: 17px;
+    }
+    th, td {
+        padding: 10px;
+        padding-bottom: 17px;
+    }
+    td {
+        font-size: 14px;
+    }
+    thead {
+        tr:first-child th {
+            cursor: pointer;
+
+        }
+        input {
+            width: 100%;
+            font-size: 11px;
+            font-weight: bold;
+            ::-webkit-input-placeholder {
+                color: #eee;
+            }
+        }
+    }
+    tbody tr:nth-child(odd) td {
+        background-color: #f9f9f9;
+    }
+    tbody tr:nth-child(even) td {
+        background-color: #fff;
+    }
+    tbody tr:not(last-child) td {
+        border-bottom: 1px solid #aaa;
+    }
+
+    .st-sort-ascent:after{
+        content: '\25B2';
+    }
+
+    .st-sort-descent:after{
+        content: '\25BC';
+    }
 }

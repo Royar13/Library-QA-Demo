@@ -60,5 +60,3 @@ class User implements IDatabaseAccess {
     }
 
 }
-
-?>

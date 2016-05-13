@@ -1,0 +1,13 @@
+#panel.displayReadersCtrl {
+    h1 {
+        background-image: url('img/displayReadersBigIcon.png');
+    }
+    .editBtn {
+        display: block;
+        float: right;
+        background: url("img/editIcon.png");
+        background-size: cover;
+        width: 20px;
+        height: 20px;
+    }
+}

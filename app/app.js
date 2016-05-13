@@ -1,4 +1,4 @@
-var app = angular.module("library", ["ngRoute", "ngAlertify"]);
+var app = angular.module("library", ["ngRoute", "ngAlertify", "smart-table"]);
 app.config(function ($routeProvider) {
     $routeProvider
             .when("/", {
@@ -8,6 +8,10 @@ app.config(function ($routeProvider) {
             .when("/main", {
                 templateUrl: "app/main/main.html",
                 controller: "mainCtrl"
+            })
+            .when("/displayReaders", {
+                templateUrl: "app/displayReaders/displayReaders.html",
+                controller: "displayReadersCtrl"
             })
             .when("/addReader", {
                 templateUrl: "app/addReader/addReader.html",

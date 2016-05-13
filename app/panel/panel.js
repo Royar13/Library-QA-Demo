@@ -1,5 +1,5 @@
 angular.module("library").controller("panelCtrl", function ($scope, $window, $location, alertify) {
-    alertify.logPosition("top left");
+    alertify.logPosition("top right");
 
     var bgRatio = 1.67;
     var bgWidth = $(window).height() * bgRatio;
@@ -16,4 +16,5 @@ angular.module("library").controller("panelCtrl", function ($scope, $window, $lo
     $scope.includeTopBar = function () {
         return $location.path() != "/";
     }
+    $scope.loading = false;
 });

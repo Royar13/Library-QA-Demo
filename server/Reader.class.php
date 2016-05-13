@@ -1,6 +1,6 @@
 <?php
 
-class Reader implements IDatabaseAccess, ICreate {
+class Reader implements IDatabaseAccess, ICreate, IRead {
 
     private $db;
     public $id;
@@ -43,6 +43,13 @@ class Reader implements IDatabaseAccess, ICreate {
             return false;
         }
     }
+    
+    public function readAll() {
+        return $this->db->query("SELECT readers.id, readers.name, concat(readers.street,', ',readers.city) as address, reader_types.title as readerType, readers.maxBooks, readers.joinDate"
+                . " FROM readers"
+                . " JOIN reader_types"
+                . " ON readers.readerType=reader_types.id");
+    }
 
     private function validateReaderType($errorLogger) {
         $value = $this->readerType;
@@ -83,5 +90,3 @@ class Reader implements IDatabaseAccess, ICreate {
     }
 
 }
-
-?>

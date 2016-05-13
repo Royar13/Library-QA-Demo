@@ -27,5 +27,3 @@ function addReader() {
     }
     Factory::write($output);
 }
-
-?>

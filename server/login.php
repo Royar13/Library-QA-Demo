@@ -37,5 +37,3 @@ function login() {
         Factory::write($output);
     }
 }
-
-?>

@@ -4,4 +4,3 @@ class JSONWriter implements IWriter {
         echo json_encode($arr);
     }
 }
-?>

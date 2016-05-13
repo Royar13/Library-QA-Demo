@@ -13,7 +13,6 @@ angular.module("library").controller("loginCtrl", function ($scope, $http, userS
         password: ""
     };
     $scope.errors = {};
-    $scope.loading = false;
     $scope.login = function () {
         $scope.loading = true;
         $http({

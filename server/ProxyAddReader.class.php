@@ -16,5 +16,3 @@ class ProxyAddReader extends UserProxy implements ICreate {
     }
 
 }
-
-?>

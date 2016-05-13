@@ -1,4 +1,4 @@
-var app = angular.module("library", ["ngRoute", "ngAlertify"]);
+var app = angular.module("library", ["ngRoute", "ngAlertify", "smart-table"]);
 app.config(function ($routeProvider) {
     $routeProvider
             .when("/", {
@@ -8,6 +8,10 @@ app.config(function ($routeProvider) {
             .when("/main", {
                 templateUrl: "app/main/main.html",
                 controller: "mainCtrl"
+            })
+            .when("/displayReaders", {
+                templateUrl: "app/displayReaders/displayReaders.html",
+                controller: "displayReadersCtrl"
             })
             .when("/addReader", {
                 templateUrl: "app/addReader/addReader.html",
@@ -77,6 +81,20 @@ angular.module("library").controller("addReaderCtrl", function ($scope, $http, a
     };
 });
 
+angular.module("library").controller("displayReadersCtrl", function ($scope, $http) {
+    $scope.readers = [];
+    $http({
+        method: "post",
+        url: "./server/readReaders.php"
+    }).then(function (response) {
+        $scope.readers = response.data.readers;
+    });
+});
+angular.module("library").filter('dateToISO', function () {
+    return function (input) {
+        return new Date(input).toISOString();
+    };
+});
 angular.module("library").controller("loginCtrl", function ($scope, $http, userService, $location) {
     var request = userService.getUser();
     if (request === true) {
@@ -92,7 +110,6 @@ angular.module("library").controller("loginCtrl", function ($scope, $http, userS
         password: ""
     };
     $scope.errors = {};
-    $scope.loading = false;
     $scope.login = function () {
         $scope.loading = true;
         $http({
@@ -113,7 +130,7 @@ angular.module("library").controller("loginCtrl", function ($scope, $http, userS
 angular.module("library").controller("mainCtrl", function ($scope) {
 });
 angular.module("library").controller("panelCtrl", function ($scope, $window, $location, alertify) {
-    alertify.logPosition("top left");
+    alertify.logPosition("top right");
 
     var bgRatio = 1.67;
     var bgWidth = $(window).height() * bgRatio;
@@ -130,6 +147,7 @@ angular.module("library").controller("panelCtrl", function ($scope, $window, $lo
     $scope.includeTopBar = function () {
         return $location.path() != "/";
     }
+    $scope.loading = false;
 });
 angular.module("library").service("userService", function ($http, $location) {
     this.updateUser = function (username, name) {
