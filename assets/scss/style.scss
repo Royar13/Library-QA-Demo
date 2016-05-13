@@ -167,6 +167,9 @@ a.btn.short:active {
     input.small {
         width: 70px;
     }
+    input.ltr {
+        direction: ltr;
+    }
 
     .errors {
         color: #A00;

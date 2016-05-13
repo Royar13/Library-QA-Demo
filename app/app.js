@@ -1,4 +1,4 @@
-var app = angular.module("library", ["ngRoute"]);
+var app = angular.module("library", ["ngRoute", "ngAlertify"]);
 app.config(function ($routeProvider) {
     $routeProvider
             .when("/", {

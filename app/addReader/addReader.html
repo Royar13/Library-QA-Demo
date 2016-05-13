@@ -5,7 +5,7 @@
             <td class="title required">
                 ת.ז.:
             </td>
-            <td text-field field-name="id">
+            <td text-field field-name="id" add-class="ltr">
             </td>
         </tr>
         <tr>
@@ -50,19 +50,15 @@
             </td>
             <td>
 
-                <input type="text" class="small" disabled="disabled" value="{{monthlyPay() | number:2}}">
+                <input type="text" class="small" disabled="disabled" value="{{monthlyPay | number:2}}">
                 ₪
             </td>        
         </tr>
         <tr>
             <td colspan="2">
                 <img src="assets/img/loader.gif" class="loader" ng-show="loading">
-                <div class="errors" ng-hide="loading">
-                    <div ng-repeat="error in generalErrors">
-                        * {{error}}
-                    </div>
-                </div>
-                <a id="loginBtn" class="btn right" ng-click="login()" ng-hide="loading">צור קורא</a>
+                <div general-errors></div>
+                <a class="btn right" ng-click="addReader()" ng-hide="loading">צור קורא</a>
                 <a class="btn back" ng-click="back()" ng-hide="loading">חזרה</a>
             </td>
         </tr>

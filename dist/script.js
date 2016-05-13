@@ -1,4 +1,4 @@
-var app = angular.module("library", ["ngRoute"]);
+var app = angular.module("library", ["ngRoute", "ngAlertify"]);
 app.config(function ($routeProvider) {
     $routeProvider
             .when("/", {
@@ -19,7 +19,7 @@ app.config(function ($routeProvider) {
             $rootScope.controllerName = data.$$route.controller;
     });
 });
-angular.module("library").controller("addReaderCtrl", function ($scope, $http) {
+angular.module("library").controller("addReaderCtrl", function ($scope, $http, alertify) {
     $scope.fields = {
         id: "",
         name: "",
@@ -29,20 +29,21 @@ angular.module("library").controller("addReaderCtrl", function ($scope, $http) {
         readerType: ""
     };
     $scope.errors = {};
-    $scope.select = {maxBooks:[]};
-    $scope.monthlyPay = function () {
+    $scope.select = {};
+    $scope.monthlyPay = 0;
+    $scope.$watchGroup(["fields.readerType", "fields.maxBooks"], function (newValues, oldValues, scope) {
         try {
-            var pay = getReaderType($scope.fields.readerType).bookCost * $scope.fields.maxBooks;
-            return pay;
+            scope.monthlyPay = getReaderType(newValues[0]).bookCost * newValues[1];
         }
-        catch (err) {
-            return 0;
+        catch (ex) {
+
         }
-    };
+    });
+
     function getReaderType(id) {
-        for (var i in $scope.readerTypes) {
-            if ($scope.readerTypes[i].id == id)
-                return $scope.readerTypes[i];
+        for (var i in $scope.select.readerTypes) {
+            if ($scope.select.readerTypes[i].id == id)
+                return $scope.select.readerTypes[i];
         }
     }
     $http({
@@ -57,6 +58,23 @@ angular.module("library").controller("addReaderCtrl", function ($scope, $http) {
     }).then(function (response) {
         $scope.select.maxBooks = response.data.booksNum;
     });
+    $scope.addReader = function () {
+        $scope.loading = true;
+        $http({
+            method: "post",
+            url: "./server/addReader.php",
+            data: $scope.fields
+        }).then(function (response) {
+            $scope.loading = false;
+            if (!response.data.success) {
+                $scope.errors = response.data.errors;
+                alertify.error("הקלט שהוזן אינו תקין");
+            }
+            else {
+                alertify.success("הקורא נוסף בהצלחה!");
+            }
+        });
+    };
 });
 
 angular.module("library").controller("loginCtrl", function ($scope, $http, userService, $location) {
@@ -94,7 +112,9 @@ angular.module("library").controller("loginCtrl", function ($scope, $http, userS
 });
 angular.module("library").controller("mainCtrl", function ($scope) {
 });
-angular.module("library").controller("panelCtrl", function ($scope, $window, $location) {
+angular.module("library").controller("panelCtrl", function ($scope, $window, $location, alertify) {
+    alertify.logPosition("top left");
+
     var bgRatio = 1.67;
     var bgWidth = $(window).height() * bgRatio;
     var leftMargin = ($(window).width() - bgWidth) / 2;
@@ -107,8 +127,8 @@ angular.module("library").controller("panelCtrl", function ($scope, $window, $lo
         $window.history.back();
     };
 
-    $scope.includeTopBar = function() {
-         return $location.path() != "/";
+    $scope.includeTopBar = function () {
+        return $location.path() != "/";
     }
 });
 angular.module("library").service("userService", function ($http, $location) {
@@ -168,6 +188,13 @@ angular.module("library").directive("errors", function () {
         restrict: "A",
         scope: true,
         templateUrl: "app/directives/field/errors.html"
+    };
+});
+angular.module("library").directive("generalErrors", function () {
+    return {
+        restrict: "A",
+        scope: true,
+        templateUrl: "app/directives/field/generalErrors.html"
     };
 });
 angular.module("library").directive("selectField", function () {

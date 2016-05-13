@@ -5,7 +5,7 @@ class InputValidator implements IDatabaseAccess {
     private $db;
     private $regexes = array();
     private $validations;
-    private $mandatories;
+    protected $mandatories;
     private $sanitations;
     public $errorLogger;
     private $errorsCount = 0;
@@ -39,6 +39,11 @@ class InputValidator implements IDatabaseAccess {
     }
 
     public function validate(&$items) {
+        foreach ($this->mandatories as $type) {
+            if (!isset($items[$type]) || empty($items[$type])) {
+                $this->addError($type, "יש להזין ערך בשדה");
+            }
+        }
         foreach ($items as $type => $value) {
             $this->validateItem($value, $type);
             $items[$type] = $this->sanitizeItem($value, $type);
@@ -63,12 +68,8 @@ class InputValidator implements IDatabaseAccess {
 
     public function validateItem($value, $type) {
         if (empty($value)) {
-            if (array_search($type, $this->mandatories)) {
-                $this->addError($type, "יש להזין ערך בשדה");
-                return false;
-            } else {
-                return true;
-            }
+            //validate function gives error about mandatory fields without value
+            return true;
         }
         if (isset($this->validations[$type]) && isset($this->regexes[$this->validations[$type]])) {
             $validation = $this->validations[$type];
