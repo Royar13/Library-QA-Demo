@@ -21,27 +21,34 @@
                 <input type="text" st-search="address" placeholder="חפש כתובת">
             </th>
             <th>
-                <input type="text" st-search="readerType" placeholder="חפש סוג קורא">
+                <select st-search="readerType">
+                    <option value=""></option>
+                    <option ng-repeat="row in readers| unique:'readerType'" value="{{row.readerType}}">{{row.readerType}}</option>
+                </select>
             </th>
             <th>
-                <input type="text" st-search="maxBooks" placeholder="חפש מס' ספרים">
+                <select st-search="maxBooks">
+                    <option value=""></option>
+                    <option ng-repeat="row in readers| unique:'maxBooks'" value="{{row.maxBooks}}">{{row.maxBooks}}</option>
+                </select>
             </th>
             <th></th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="reader in displayedReaders| limitTo: 50">
+        <tr ng-repeat="reader in displayedReaders| limitTo: quantity">
             <td>{{reader.id}}</td>
             <td>{{reader.name}}</td>
             <td>{{reader.address}}</td>
             <td>{{reader.readerType}}</td>
             <td>{{reader.maxBooks}}</td>
             <td>{{reader.joinDate| dateToISO | date:'dd/MM/yy'}}</td>
-            <td>
+            <td class="actionsInit">
                 <a class="editBtn" title="ערוך"></a>
+                <a class="borrowBtn" title="השאלה/החזרה"></a>
             </td>
         </tr>
     </tbody>
 </table>
-<a class="btn back fixed" ng-click="back()" ng-hide="loading">חזרה</a>
+<a class="btn back fixed" ng-click="back()" ng-hide="loading"></a>

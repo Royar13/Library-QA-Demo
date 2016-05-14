@@ -5,18 +5,18 @@ addReader();
 
 function addReader() {
     $reader = Factory::makeReader();
-    $param = Param::getArray();
+    $param = new Param();
     $validator = Factory::makeInputValidator("AddReader");
-    if (!$validator->validate($param)) {
+    if (!$validator->validate(&$param->getArray())) {
         Factory::write($validator->errorLogger->getErrors());
         return;
     }
-    $reader->id = $param["id"];
-    $reader->name = $param["name"];
-    $reader->city = $param["city"];
-    $reader->street = $param["street"];
-    $reader->readerType = $param["readerType"];
-    $reader->maxBooks = $param["maxBooks"];
+    $reader->id = $param->get("id");
+    $reader->name = $param->get("name");
+    $reader->city = $param->get("city");
+    $reader->street = $param->get("street");
+    $reader->readerType = $param->get("readerType");
+    $reader->maxBooks = $param->get("maxBooks");
 
     $proxy = new ProxyAddReader($reader);
     $proxy->setUser(Factory::makeUser());

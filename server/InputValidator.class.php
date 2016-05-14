@@ -10,7 +10,7 @@ class InputValidator implements IDatabaseAccess {
     public $errorLogger;
     private $errorsCount = 0;
 
-    public function __construct($validations = array(), $mandatories = array(), $sanitations = array("db")) {
+    public function __construct($validations = array(), $mandatories = array(), $sanitations = array("html")) {
         foreach ($validations as $field => $validation) {
             $this->setValidation($field, $validation);
         }
@@ -19,10 +19,13 @@ class InputValidator implements IDatabaseAccess {
 
         $this->errorLogger = new ErrorLogger();
 
-        $this->regexes["anything"] = new Validation("^[\d\D]{1,}\$", "");
-        $this->regexes["hebrew"] = new Validation("^([א-ת]{2,}\s)*[א-ת]{2,}$", "יש להזין ערך בעברית (מותר רווח בין מילים)");
-        $this->regexes["street"] = new Validation("^([א-ת]{2,}\s)*[א-ת]{2,} [1-9]([0-9]){0,2}$", "הערך אינו בתבנית של 'שם רחוב מספר בית'");
+        //$this->regexes["anything"] = new Validation("^[\d\D]{1,}\$", "");
+        $this->regexes["hebrew"] = new Validation("^([א-ת][']?[א-ת]?[.]?){2,}(\s([א-ת][']?[א-ת]?[.]?){2,})*$", "יש להזין ערך בעברית");
+        $this->regexes["hebrewTitle"] = new Validation("^([א-ת][']?[א-ת]?[.]?[:]?){2,}(\s([א-ת][']?[א-ת]?[.]?[:]?){2,})*$", "יש להזין ערך בעברית");
+        $this->regexes["street"] = new Validation("^([א-ת][']?[א-ת]?[.]?){2,}(\s([א-ת][']?[א-ת]?[.]?){2,})* [1-9]([0-9]){0,2}$", "הערך אינו בתבנית של 'שם רחוב מספר בית'");
         $this->regexes["israeliID"] = new Validation("^[0-9]{9}$", "על תעודת הזהות להיות בת 9 ספרות");
+        $this->regexes["nonNegativeInt"] = new Validation("^(0|([1-9][0-9]{0,6}))$", "הערך צריך להיות מספר");
+        $this->regexes["positiveInt"] = new Validation("^[1-9][0-9]{0,6}$", "הערך צריך להיות מספר");
     }
 
     public function setDatabase($db) {
@@ -55,8 +58,8 @@ class InputValidator implements IDatabaseAccess {
         $initialValue = $value;
         foreach ($this->sanitations as $sanitation) {
             switch ($sanitation) {
-                case "db":
-                    $value = $this->db->escape($value);
+                case "html":
+                    $value = htmlspecialchars($value);
                     break;
             }
         }

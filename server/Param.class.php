@@ -2,24 +2,28 @@
 
 class Param {
 
-    private static $param;
+    private $param = array();
 
-    public static function get($key) {
-        $param = self::getArray();
-        if (isset($param[$key])) {
-            return $param[$key];
+    public function __construct() {
+        $arr = json_decode(file_get_contents("php://input"), true);
+        if ($arr != null)
+            $this->param = $arr;
+    }
+
+    public function get($key) {
+        if (isset($this->param[$key])) {
+            return $this->param[$key];
         } else {
             return "";
         }
     }
 
-    public static function getArray() {
-        if (self::$param != null) {
-            return self::$param;
-        } else {
-            self::$param = json_decode(file_get_contents("php://input"), true);
-            return self::$param;
-        }
+    public function &getArray() {
+        return $this->param;
+    }
+
+    public function exist($key) {
+        return isset($this->param[$key]);
     }
 
 }

@@ -10,7 +10,8 @@ angular.module("library").controller("panelCtrl", function ($scope, $window, $lo
     //$scope.panelStyle.height = $(window).height() * 0.8;
 
     $scope.back = function () {
-        $window.history.back();
+        //$window.history.back();
+        $location.path("/main");
     };
 
     $scope.includeTopBar = function () {

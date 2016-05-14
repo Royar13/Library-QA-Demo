@@ -117,6 +117,9 @@ a.btn.back {
     margin-top: 4px;
     float: right;
 }
+a.btn.back:before {
+    content: "חזרה";
+}
 a.btn.back.fixed {
     position: absolute;
     left: 25px;
@@ -224,7 +227,6 @@ input[type=text], input[type=password], select {
             }
         }
     } 
-
 }
 input:focus {
     //outline: none;
@@ -235,21 +237,19 @@ input:focus {
     th {
         text-align: right;
         border-bottom: 2px solid #999;
-        font-size: 17px;
     }
     th, td {
         padding: 10px;
-        padding-bottom: 17px;
     }
     td {
-        font-size: 14px;
+        font-size: 13px;
+        padding-bottom: 17px;
     }
     thead {
-        tr:first-child th {
+        th[st-sort] {
             cursor: pointer;
-
         }
-        input {
+        input, select {
             width: 100%;
             font-size: 11px;
             font-weight: bold;
@@ -258,21 +258,27 @@ input:focus {
             }
         }
     }
-    tbody tr:nth-child(odd) td {
-        background-color: #f9f9f9;
+    tbody {
+        tr:hover td {
+            background-color: #fffbd0 !important;
+        }
+        tr:nth-child(odd) td {
+            background-color: #f9f9f9;
+        }
+        tr:nth-child(even) td {
+            background-color: #fff;
+        }
+        tr:not(:last-child) td {
+            border-bottom: 1px solid #aaa;
+        }
     }
-    tbody tr:nth-child(even) td {
-        background-color: #fff;
-    }
-    tbody tr:not(last-child) td {
-        border-bottom: 1px solid #aaa;
-    }
-
     .st-sort-ascent:after{
         content: '\25B2';
+        font-size: 12px;
     }
 
     .st-sort-descent:after{
         content: '\25BC';
+        font-size: 12px;
     }
 }

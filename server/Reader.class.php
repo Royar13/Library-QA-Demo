@@ -78,7 +78,7 @@ class Reader implements IDatabaseAccess, ICreate, IRead {
             return;
         }
 
-        $counter = 0;
+        /*$counter = 0;
         for ($i = 0; $i < strlen($value); $i++) {
             $digit = intval($value[$i]);
             $incNum = $digit * (($i % 2) + 1);
@@ -86,7 +86,7 @@ class Reader implements IDatabaseAccess, ICreate, IRead {
         }
         if ($counter % 10 != 0) {
             $errorLogger->addError("id", "ת.ז. לא תקינה");
-        }
+        }*/
     }
 
 }

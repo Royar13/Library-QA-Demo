@@ -5,17 +5,17 @@ include "globalFunctions.php";
 login();
 
 function login() {
-    $param = Param::getArray();
+    $param = new Param();
     $user = Factory::makeUser();
     $success = false;
-    if (!$user->authenticate() && isset($param["username"])) {
+    if (!$user->authenticate() && $param->exist("username")) {
         $validator = Factory::makeInputValidator();
         if (!$validator->validate($param)) {
             Factory::write($validator->errorLogger->getErrors());
             return;
         }
-        $user->username = $param["username"];
-        $user->password = $param["password"];
+        $user->username = $param->get("username");
+        $user->password = $param->get("password");
         if ($user->login($validator->errorLogger)) {
             $success = true;
         } else {

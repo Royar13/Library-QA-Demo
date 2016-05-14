@@ -83,6 +83,7 @@ angular.module("library").controller("addReaderCtrl", function ($scope, $http, a
 
 angular.module("library").controller("displayReadersCtrl", function ($scope, $http) {
     $scope.readers = [];
+    $scope.quantity = 50;
     $http({
         method: "post",
         url: "./server/readReaders.php"
@@ -93,6 +94,18 @@ angular.module("library").controller("displayReadersCtrl", function ($scope, $ht
 angular.module("library").filter('dateToISO', function () {
     return function (input) {
         return new Date(input).toISOString();
+    };
+});
+app.filter('unique', function () {
+    return function (arr, field) {
+        var o = {}, i, l = arr.length, r = [];
+        for (i = 0; i < l; i += 1) {
+            o[arr[i][field]] = arr[i];
+        }
+        for (i in o) {
+            r.push(o[i]);
+        }
+        return r;
     };
 });
 angular.module("library").controller("loginCtrl", function ($scope, $http, userService, $location) {
@@ -127,8 +140,6 @@ angular.module("library").controller("loginCtrl", function ($scope, $http, userS
         });
     };
 });
-angular.module("library").controller("mainCtrl", function ($scope) {
-});
 angular.module("library").controller("panelCtrl", function ($scope, $window, $location, alertify) {
     alertify.logPosition("top right");
 
@@ -141,13 +152,16 @@ angular.module("library").controller("panelCtrl", function ($scope, $window, $lo
     //$scope.panelStyle.height = $(window).height() * 0.8;
 
     $scope.back = function () {
-        $window.history.back();
+        //$window.history.back();
+        $location.path("/main");
     };
 
     $scope.includeTopBar = function () {
         return $location.path() != "/";
     }
     $scope.loading = false;
+});
+angular.module("library").controller("mainCtrl", function ($scope) {
 });
 angular.module("library").service("userService", function ($http, $location) {
     this.updateUser = function (username, name) {

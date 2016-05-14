@@ -64,4 +64,8 @@ class Database {
         return mysqli_real_escape_string($this->getConnection(), $str);
     }
 
+    public function getLastId() {
+        return mysqli_insert_id($this->getConnection());
+    }
+
 }

@@ -4,65 +4,63 @@
     }
     #categories {
         width: 100%;
-        >div {
-            float: right;
+        td {
             width: 33%;
-            box-sizing: border-box;
-            margin-bottom: 15px;
+            padding-bottom: 15px;
             padding-left: 20px;
-
-            h2 {
-                font-size: 18px;
-                padding: 8px;
-                padding-right: 25px;
-                margin: 0px;
-                margin-bottom: 5px;
-                border-radius: 5px;
-                background: linear-gradient(to top, #08546E, #0F7596);
-                color: #fff;
-            }
-            a {
-                display: block;
-                font-size: 17px;
-                padding: 10px 0px;
-                padding-right: 35px;
-                background-repeat: no-repeat;
-                background-position: right center;
-                background-size: 35px;
-            }
-            a:hover {
-                padding-right: 45px;
-                background-position: right 10px center;
-                background-color: #ccc;
-                font-weight: bold;
-            }
-            #borrowBooks {
-                background-image: url('img/borrowBooksIcon.png');
-            }
-            #returnBooks {
-                background-image: url('img/returnBooksIcon.png');
-            }
-            #newUser {
-                background-image: url('img/newUserIcon.png');
-            }
-            #displayBooks {
-                background-image: url('img/displayBooksIcon.png');
-            }
-            #addBook {
-                background-image: url('img/addBookIcon.png');
-            }
-            #updateBook {
-                background-image: url('img/updateBookIcon.png');
-            }
-            #displayReaders {
-                background-image: url('img/displayReadersIcon.png');
-            }
-            #addReader {
-                background-image: url('img/addReaderIcon.png');
-            }
-            #updateReader {
-                background-image: url('img/updateReaderIcon.png');
-            }
+            vertical-align: top;
+        }
+        h2 {
+            font-size: 18px;
+            padding: 8px;
+            padding-right: 25px;
+            margin: 0px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            background: linear-gradient(to top, #08546E, #0F7596);
+            color: #fff;
+        }
+        a {
+            display: block;
+            font-size: 17px;
+            padding: 10px 0px;
+            padding-right: 35px;
+            background-repeat: no-repeat;
+            background-position: right center;
+            background-size: 35px;
+        }
+        a:hover {
+            padding-right: 45px;
+            background-position: right 10px center;
+            background-color: #ccc;
+            font-weight: bold;
+        }
+        #borrowBooks {
+            background-image: url('img/borrowBooksIcon.png');
+        }
+        #returnBooks {
+            background-image: url('img/returnBooksIcon.png');
+        }
+        #newUser {
+            background-image: url('img/newUserIcon.png');
+        }
+        #displayBooks {
+            background-image: url('img/displayBooksIcon.png');
+        }
+        #addBook {
+            background-image: url('img/addBookIcon.png');
+        }
+        #updateBook {
+            background-image: url('img/updateBookIcon.png');
+        }
+        #displayReaders {
+            background-image: url('img/displayReadersIcon.png');
+        }
+        #addReader {
+            background-image: url('img/addReaderIcon.png');
+        }
+        #updateReader {
+            background-image: url('img/updateReaderIcon.png');
         }
     }
 }

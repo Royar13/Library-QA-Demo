@@ -1,5 +1,6 @@
 angular.module("library").controller("displayReadersCtrl", function ($scope, $http) {
     $scope.readers = [];
+    $scope.quantity = 50;
     $http({
         method: "post",
         url: "./server/readReaders.php"

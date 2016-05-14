@@ -2,12 +2,39 @@
     h1 {
         background-image: url('img/displayReadersBigIcon.png');
     }
-    .editBtn {
-        display: block;
-        float: right;
-        background: url("img/editIcon.png");
-        background-size: cover;
-        width: 20px;
-        height: 20px;
+    .actionsInit {
+        width: 36px;
+        .editBtn {
+            display: block;
+            float: right;
+            background: url("img/editIcon.png");
+            background-size: cover;
+            width: 13px;
+            height: 13px;
+            margin-left: 8px;
+
+        }
+        .editBtn:hover {
+            background-image: url("img/editIconHover.png");
+        }
+        .borrowBtn {
+            display: block;
+            float: right;
+            background: url("img/blackBookIcon.png");
+            background-size: cover;
+            width: 14px;
+            height: 14px;
+        }
+        .borrowBtn:hover {
+            background-image: url("img/blackBookIconHover.png");
+        }
+    }
+    .data-table {
+        th[st-sort=readerType] {
+            width: 70px;
+        }
+        th[st-sort=maxBooks] {
+            width: 90px;
+        }
     }
 }

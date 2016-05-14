@@ -40,6 +40,9 @@ class Factory {
             case "AddReader":
                 $inputValidator = new AddReaderValidator();
                 break;
+            case "AddBook":
+                $inputValidator = new AddBookValidator();
+                break;
         }
 
         $inputValidator->setDatabase(self::$database);
