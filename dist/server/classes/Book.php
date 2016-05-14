@@ -1,6 +1,6 @@
 <?php
 
-class Book implements IDatabaseAccess, ICreate {
+class Book implements IDatabaseAccess {
 
     private $db;
     public $id;
@@ -25,15 +25,8 @@ class Book implements IDatabaseAccess, ICreate {
         }
 
         try {
-            $result = $this->db->query("select id from authors where name='{$this->author}'");
-            if (mysqli_num_rows($result) == 0) {
-                $fields["name"] = $this->author;
-                $this->db->insert("authors", $fields);
-                $this->authorId = $this->db->getLastId();
-            } else {
-                $author = mysqli_fetch_assoc($result);
-                $this->authorId = $author["id"];
-            }
+            $this->resolveAuthor();
+            $this->resolvePublisher();
 
             $fields = array();
             $fields["name"] = $this->name;
@@ -52,15 +45,46 @@ class Book implements IDatabaseAccess, ICreate {
             $this->db->insert("books_actions", $fields);
             return true;
         } catch (Exception $ex) {
-            $errorLogger->addGeneralError("שגיאת מסד נתונים");
+            $errorLogger->addGeneralError("שגיאת מסד נתונים: " . $ex->getMessage());
             return false;
         }
     }
 
-    function validateSection($errorLogger) {
-        $result = $this->db->query("select bookcaseAmount from sections where id='{$this->sectionId}'");
-        if (mysqli_num_rows($result) == 1) {
-            $section = mysqli_fetch_assoc($result);
+    private function resolveAuthor() {
+        $query = "select id from authors where name=:author";
+        $bind[":author"] = $this->author;
+        $result = $this->db->preparedQuery($query, $bind);
+        $rows = $result->fetchAll(PDO::FETCH_ASSOC);
+        if (count($rows) == 0) {
+            $fields["name"] = $this->author;
+            $this->db->insert("authors", $fields);
+            $this->authorId = $this->db->getLastId();
+        } else {
+            $this->authorId = $rows[0]["id"];
+        }
+    }
+
+    private function resolvePublisher() {
+        $query = "select id from publishers where name=:publisher";
+        $bind[":publisher"] = $this->publisher;
+        $result = $this->db->preparedQuery($query, $bind);
+        $rows = $result->fetchAll(PDO::FETCH_ASSOC);
+        if (count($rows) == 0) {
+            $fields["name"] = $this->publisher;
+            $this->db->insert("publishers", $fields);
+            $this->publisherId = $this->db->getLastId();
+        } else {
+            $this->publisherId = $rows[0]["id"];
+        }
+    }
+
+    private function validateSection($errorLogger) {
+        $query = "select bookcaseAmount from sections where id=:sectionId";
+        $bind[":sectionId"] = $this->sectionId;
+        $result = $this->db->preparedQuery($query, $bind);
+        $rows = $result->fetchAll(PDO::FETCH_ASSOC);
+        if (count($rows) == 1) {
+            $section = $rows[0];
             if ($this->bookcaseId <= $section["bookcaseAmount"]) {
                 return true;
             } else {

@@ -19,9 +19,12 @@ class User implements IDatabaseAccess {
     public function fetchLoggedUser() {
         if ($this->authenticate()) {
             try {
-                $result = $this->db->query("select * from users where id='{$_SESSION["uid"]}'");
-                if (mysqli_num_rows($result) == 1) {
-                    $userData = mysqli_fetch_assoc($result);
+                $query = "select * from users where id=:uid";
+                $bind[":uid"] = $_SESSION["uid"];
+                $result = $this->db->preparedQuery($query, $bind);
+                $rows = $result->fetchAll(PDO::FETCH_ASSOC);
+                if (count($rows) == 1) {
+                    $userData = $rows[0];
                     $this->id = $userData["id"];
                     $this->username = $userData["username"];
                     $this->name = $userData["name"];
@@ -36,11 +39,15 @@ class User implements IDatabaseAccess {
 
     public function login(ErrorLogger $errorLogger) {
         try {
-            $result = $this->db->query("select * from users where username='{$this->username}' and password='{$this->password}'");
-            if (mysqli_num_rows($result) == 1) {
-                $userData = mysqli_fetch_assoc($result);
+            $query = "select * from users where username=:username and password=:password";
+            $bind[":username"] = $this->username;
+            $bind[":password"] = $this->password;
+            $result = $this->db->preparedQuery($query, $bind);
+            $rows = $result->fetchAll(PDO::FETCH_ASSOC);
+            if (count($rows) == 1) {
+                $userData = $rows[0];
                 $_SESSION["uid"] = $userData["id"];
-                
+
                 $this->id = $userData["id"];
                 $this->name = $userData["name"];
                 return true;

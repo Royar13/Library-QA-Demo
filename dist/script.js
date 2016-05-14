@@ -1,4 +1,4 @@
-var app = angular.module("library", ["ngRoute", "ngAlertify", "smart-table"]);
+var app = angular.module("library", ["ngRoute", "ngAlertify", "smart-table", "angucomplete-alt"]);
 app.config(function ($routeProvider) {
     $routeProvider
             .when("/", {
@@ -16,6 +16,10 @@ app.config(function ($routeProvider) {
             .when("/addReader", {
                 templateUrl: "app/addReader/addReader.html",
                 controller: "addReaderCtrl"
+            })
+            .when("/addBook", {
+                templateUrl: "app/addBook/addBook.html",
+                controller: "addBookCtrl"
             });
 }).run(function ($rootScope, $location) {
     $rootScope.$on("$routeChangeSuccess", function (event, data) {
@@ -23,6 +27,32 @@ app.config(function ($routeProvider) {
             $rootScope.controllerName = data.$$route.controller;
     });
 });
+angular.module("library").controller("addBookCtrl", function ($scope, $http, alertify) {
+    $scope.fields = {
+        name: "",
+        sectionId: "",
+        bookcaseId: "",
+        author: "",
+        publisher: "",
+        releaseYear: "",
+        copies: ""
+    };
+    $scope.errors = {};
+    $scope.select = {};
+    $http({
+        method: "post",
+        url: "./dist/server/readAuthors.php"
+    }).then(function (response) {
+        $scope.select.authors = response.data.authors;
+    });
+    $http({
+        method: "post",
+        url: "./dist/server/readPublishers.php"
+    }).then(function (response) {
+        $scope.select.publishers = response.data.publishers;
+    });
+});
+
 angular.module("library").controller("addReaderCtrl", function ($scope, $http, alertify) {
     $scope.fields = {
         id: "",
@@ -52,13 +82,13 @@ angular.module("library").controller("addReaderCtrl", function ($scope, $http, a
     }
     $http({
         method: "post",
-        url: "./server/getReaderTypes.php"
+        url: "./dist/server/readReaderTypes.php"
     }).then(function (response) {
         $scope.select.readerTypes = response.data.readerTypes;
     });
     $http({
         method: "post",
-        url: "./server/getBooksNum.php"
+        url: "./dist/server/readBooksNum.php"
     }).then(function (response) {
         $scope.select.maxBooks = response.data.booksNum;
     });
@@ -66,7 +96,7 @@ angular.module("library").controller("addReaderCtrl", function ($scope, $http, a
         $scope.loading = true;
         $http({
             method: "post",
-            url: "./server/addReader.php",
+            url: "./dist/server/addReader.php",
             data: $scope.fields
         }).then(function (response) {
             $scope.loading = false;
@@ -86,7 +116,7 @@ angular.module("library").controller("displayReadersCtrl", function ($scope, $ht
     $scope.quantity = 50;
     $http({
         method: "post",
-        url: "./server/readReaders.php"
+        url: "./dist/server/readReaders.php"
     }).then(function (response) {
         $scope.readers = response.data.readers;
     });
@@ -127,7 +157,7 @@ angular.module("library").controller("loginCtrl", function ($scope, $http, userS
         $scope.loading = true;
         $http({
             method: "post",
-            url: "./server/login.php",
+            url: "./dist/server/login.php",
             data: $scope.fields
         }).then(function (response) {
             $scope.loading = false;
@@ -139,6 +169,8 @@ angular.module("library").controller("loginCtrl", function ($scope, $http, userS
             }
         });
     };
+});
+angular.module("library").controller("mainCtrl", function ($scope) {
 });
 angular.module("library").controller("panelCtrl", function ($scope, $window, $location, alertify) {
     alertify.logPosition("top right");
@@ -161,8 +193,6 @@ angular.module("library").controller("panelCtrl", function ($scope, $window, $lo
     }
     $scope.loading = false;
 });
-angular.module("library").controller("mainCtrl", function ($scope) {
-});
 angular.module("library").service("userService", function ($http, $location) {
     this.updateUser = function (username, name) {
         this.user = {username: username, name: name};
@@ -174,7 +204,7 @@ angular.module("library").service("userService", function ($http, $location) {
         var _this = this;
         return $http({
             method: "post",
-            url: "./server/login.php"
+            url: "./dist/server/login.php"
         }).then(function (response) {
             if (response.data.success) {
                 _this.updateUser(response.data.username, response.data.name);
@@ -204,7 +234,7 @@ angular.module("library").controller("topBarCtrl", function ($scope, $http, $loc
     $scope.disconnect = function () {
         $http({
             method: "post",
-            url: "./server/disconnect.php"
+            url: "./dist/server/disconnect.php"
         }).then(function () {
             userService.user = null;
             $location.path("/");
@@ -279,6 +309,10 @@ angular.module("library").directive("textField", function () {
             $scope.class = "";
             if ($element[0].hasAttribute("add-class")) {
                 $scope.class = $element.attr("add-class");
+            }
+            $scope.fieldType = "text";
+            if ($element[0].hasAttribute("field-type")) {
+                $scope.fieldType = $element.attr("field-type");
             }
         }
     };

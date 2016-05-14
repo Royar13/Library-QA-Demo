@@ -1,4 +1,4 @@
-var app = angular.module("library", ["ngRoute", "ngAlertify", "smart-table"]);
+var app = angular.module("library", ["ngRoute", "ngAlertify", "smart-table", "angucomplete-alt"]);
 app.config(function ($routeProvider) {
     $routeProvider
             .when("/", {
@@ -16,6 +16,10 @@ app.config(function ($routeProvider) {
             .when("/addReader", {
                 templateUrl: "app/addReader/addReader.html",
                 controller: "addReaderCtrl"
+            })
+            .when("/addBook", {
+                templateUrl: "app/addBook/addBook.html",
+                controller: "addBookCtrl"
             });
 }).run(function ($rootScope, $location) {
     $rootScope.$on("$routeChangeSuccess", function (event, data) {

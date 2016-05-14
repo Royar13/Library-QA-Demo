@@ -9,7 +9,7 @@ angular.module("library").service("userService", function ($http, $location) {
         var _this = this;
         return $http({
             method: "post",
-            url: "./server/login.php"
+            url: "./dist/server/login.php"
         }).then(function (response) {
             if (response.data.success) {
                 _this.updateUser(response.data.username, response.data.name);

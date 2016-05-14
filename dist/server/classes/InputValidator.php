@@ -1,8 +1,7 @@
 <?php
 
-class InputValidator implements IDatabaseAccess {
+class InputValidator {
 
-    private $db;
     private $regexes = array();
     private $validations;
     protected $mandatories;
@@ -26,10 +25,6 @@ class InputValidator implements IDatabaseAccess {
         $this->regexes["israeliID"] = new Validation("^[0-9]{9}$", "על תעודת הזהות להיות בת 9 ספרות");
         $this->regexes["nonNegativeInt"] = new Validation("^(0|([1-9][0-9]{0,6}))$", "הערך צריך להיות מספר");
         $this->regexes["positiveInt"] = new Validation("^[1-9][0-9]{0,6}$", "הערך צריך להיות מספר");
-    }
-
-    public function setDatabase($db) {
-        $this->db = $db;
     }
 
     public function setValidation($field, $validation) {

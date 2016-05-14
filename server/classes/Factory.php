@@ -4,6 +4,7 @@ class Factory {
 
     public static $database;
     public static $writer;
+    private static $user;
 
     public static function __initStatic() {
         self::$database = new Database(array("servername" => "localhost", "username" => "root", "password" => "", "dbname" => "library"));
@@ -26,27 +27,12 @@ class Factory {
         return $reader;
     }
 
-    public static function makeUser() {
-        $user = new User();
-        $user->setDatabase(self::$database);
-        return $user;
-    }
-
-    public static function makeInputValidator($type = "base") {
-        switch ($type) {
-            case "base":
-                $inputValidator = new InputValidator();
-                break;
-            case "AddReader":
-                $inputValidator = new AddReaderValidator();
-                break;
-            case "AddBook":
-                $inputValidator = new AddBookValidator();
-                break;
+    public static function getUser() {
+        if (self::$user == null) {
+            self::$user = new User();
+            self::$user->setDatabase(self::$database);
         }
-
-        $inputValidator->setDatabase(self::$database);
-        return $inputValidator;
+        return self::$user;
     }
 
 }

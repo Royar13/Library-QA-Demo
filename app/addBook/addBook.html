@@ -1,0 +1,69 @@
+<h1>קליטת ספר</h1>
+<div class="form">
+    <table class="fields">
+        <tr>
+            <td class="title required">
+                שם:
+            </td>
+            <td text-field field-name="id">
+            </td>
+        </tr>
+        <tr>
+            <td class="title required">
+                סופר:
+            </td>
+            <td angucomplete-alt placeholder="חפש סופרים" selected-object="selectedAuthor" local-data="select.authors" search-fields="name" minlength="1"  title-field="name" match-class="highlight" text-searching="מחפש..." text-no-results="false">
+            </td>
+        </tr>
+        <tr>
+            <td class="title required">
+                מדור:
+            </td>
+            <td select-field field-name="sectionId" options="sections" options-value="id" options-text="name">
+            </td>
+        </tr>
+        <tr>
+            <td class="title required">
+                מס' כוננית:
+            </td>
+            <td select-field field-name="bookcaseId" options="bookcases">
+            </td>
+        </tr>
+        <tr>
+            <td class="title required">
+                מס' ספרים:
+            </td>
+            <td select-field field-name="maxBooks" options="maxBooks">
+            </td>
+        </tr>
+        <tr>
+            <td class="title">
+                הוצאה לאור:
+            </td>
+            <td angucomplete-alt placeholder="חפש הוצאה לאור" selected-object="selectedPublisher" local-data="select.publishers" search-fields="name" minlength="1" title-field="name" match-class="highlight" text-searching="מחפש..." text-no-results="false">
+            </td> 
+        </tr>
+        <tr>
+            <td class="title">
+                שנת פרסום:
+            </td>
+            <td text-field field-name="releaseYear" field-type="number">
+            </td>     
+        </tr>
+        <tr>
+            <td class="title">
+                מס' עותקים:
+            </td>
+            <td text-field field-name="copies" field-type="number">
+            </td>     
+        </tr>
+        <tr>
+            <td colspan="2">
+                <img src="assets/img/loader.gif" class="loader" ng-show="loading">
+                <div general-errors></div>
+                <a class="btn left" ng-click="addBook()" ng-hide="loading">צור ספר</a>
+            </td>
+        </tr>
+    </table>
+    <a class="btn back fixed" ng-click="back()" ng-hide="loading"></a>
+</div>

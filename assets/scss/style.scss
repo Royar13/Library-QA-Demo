@@ -152,7 +152,7 @@ a.btn.short:active {
     padding-left: 2px;
     padding-top: 2px;
 }
-input[type=text], input[type=password], select {
+input, select {
     padding: 4px;
     border-radius: 6px;
     border: 1px solid #999;
@@ -194,6 +194,7 @@ input[type=text], input[type=password], select {
     }
     table.fields {
         td {
+            white-space: nowrap;
             vertical-align: top;
         }
         >tbody>tr {
@@ -281,4 +282,7 @@ input:focus {
         content: '\25BC';
         font-size: 12px;
     }
+}
+.highlight {
+    color: red;
 }

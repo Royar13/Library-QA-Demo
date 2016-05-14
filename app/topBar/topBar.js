@@ -20,7 +20,7 @@ angular.module("library").controller("topBarCtrl", function ($scope, $http, $loc
     $scope.disconnect = function () {
         $http({
             method: "post",
-            url: "./server/disconnect.php"
+            url: "./dist/server/disconnect.php"
         }).then(function () {
             userService.user = null;
             $location.path("/");

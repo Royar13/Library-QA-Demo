@@ -9,6 +9,10 @@ angular.module("library").directive("textField", function () {
             if ($element[0].hasAttribute("add-class")) {
                 $scope.class = $element.attr("add-class");
             }
+            $scope.fieldType = "text";
+            if ($element[0].hasAttribute("field-type")) {
+                $scope.fieldType = $element.attr("field-type");
+            }
         }
     };
 });
