@@ -102,11 +102,10 @@ a.btn.short {
     width: 89px;
     background-image: url('img/btnShort.png');
 }
-a.btn.back {
+a.btn.back, a.btn.edit, a.btn.home {
     width: 89px;
     line-height: 30px;
     height: 30px;
-    background-image: url('img/backIcon.png'), url('img/btnShort.png');
     background-repeat: no-repeat;
     background-position: right 8px center, center center;
     background-size: 22px 22px, 100% 100%;
@@ -115,18 +114,44 @@ a.btn.back {
     font-size: 15px;
     margin-right: 150px;
     margin-top: 4px;
+}
+a.btn.back {
+    background-image: url('img/backIcon.png'), url('img/btnShort.png');
     float: right;
+}
+a.btn.home {
+    background-image: url('img/homeIcon.png'), url('img/btnShort.png');
+    background-size: 20px 20px, 100% 100%;
+    float: right;
+}
+a.btn.edit {
+    background-image: url('img/editIcon.png'), url('img/btnShort.png');
 }
 a.btn.back:before {
     content: "חזרה";
+}
+a.btn.home:before {
+    content: "ראשי";
 }
 a.btn.back.fixed {
     position: absolute;
     left: 25px;
     bottom: 10px;
 }
+.btnsMenu {
+    position: absolute;
+    left: 25px;
+    bottom: 10px;
+    .btn {
+        float: right;
+        margin-right: 10px !important;
+    }
+}
 a.btn.back:hover {
     background-image: url('img/backIcon.png'), url('img/btnShortHover.png');
+}
+a.btn.home:hover {
+    background-image: url('img/homeIcon.png'), url('img/btnShortHover.png');
 }
 a.btn.back:active {
     background-image: url('img/backIcon.png'), url('img/btnShortActive.png');
@@ -173,7 +198,7 @@ input, select {
         width: 70px;
     }
     input.big {
-        width: 220px;
+        width: 280px;
     }
     input.small {
         width: 70px;
@@ -285,4 +310,9 @@ input:focus {
 }
 .highlight {
     color: red;
+}
+img.rightImage {
+    width: 150px;
+    margin-left: 30px;
+    float: right;
 }

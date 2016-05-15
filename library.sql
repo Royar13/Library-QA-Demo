@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 14, 2016 at 10:50 PM
+-- Generation Time: May 15, 2016 at 07:13 PM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -50,14 +50,18 @@ CREATE TABLE IF NOT EXISTS `authors` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` char(255) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=11 ;
 
 --
 -- Dumping data for table `authors`
 --
 
 INSERT INTO `authors` (`id`, `name`) VALUES
-(6, 'ג''. ר. ר. טולקין');
+(6, 'ג''. ר. ר. טולקין'),
+(7, 'דאגלס אדמס'),
+(8, 'דאג'),
+(9, 'דאגב'),
+(10, 'גגג');
 
 -- --------------------------------------------------------
 
@@ -72,24 +76,29 @@ CREATE TABLE IF NOT EXISTS `books` (
   `bookcaseId` int(11) NOT NULL,
   `authorId` int(11) NOT NULL,
   `publisherId` int(11) NOT NULL,
-  `releaseYear` int(11) NOT NULL,
+  `releaseYear` int(11) DEFAULT NULL,
   `copies` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=9 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=15 ;
 
 --
 -- Dumping data for table `books`
 --
 
 INSERT INTO `books` (`id`, `name`, `sectionId`, `bookcaseId`, `authorId`, `publisherId`, `releaseYear`, `copies`) VALUES
-(1, 'אאא', 2, 3, 1, 0, 2002, 2),
+(1, 'הסיפור שאינו נגמר', 6, 2, 10, 3, 10, 4),
 (2, 'שר הטבעות', 6, 1, 2, 0, 12, 0),
 (3, 'שר הטבעות: אחוות הטבעת', 6, 1, 3, 0, 12, 0),
 (4, 'שר הטבעות: אחוות הטבעת', 6, 1, 2, 0, 12, 0),
 (5, 'שר הטבעות: אחוות הטבעת', 6, 1, 5, 0, 12, 0),
 (6, 'שר הטבעות: אחוות הטבעת', 6, 1, 6, 0, 12, 0),
 (7, 'שר הטבעות: בבב', 6, 1, 6, 0, 12, 0),
-(8, 'שר הטבעות: בבב', 6, 1, 6, 1, 12, 0);
+(8, 'שר הטבעות: בבב', 6, 1, 6, 1, 12, 0),
+(9, 'im null', 1, 1, 1, 1, NULL, 0),
+(10, 'מדריך הטרמפיסט לגלקסיה', 1, 2, 7, 2, 1900, 2),
+(11, 'גגדשגדשג', 2, 1, 8, 3, 0, 0),
+(12, 'גשדגשדג', 1, 1, 9, 3, 0, 0),
+(13, 'המסעדה בסוף היקום', 1, 1, 7, 3, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -104,7 +113,7 @@ CREATE TABLE IF NOT EXISTS `books_actions` (
   `description` char(255) COLLATE utf8_bin NOT NULL,
   `actionDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=22 ;
 
 --
 -- Dumping data for table `books_actions`
@@ -112,7 +121,26 @@ CREATE TABLE IF NOT EXISTS `books_actions` (
 
 INSERT INTO `books_actions` (`id`, `userId`, `bookId`, `description`, `actionDate`) VALUES
 (1, 1, 7, 'המשתמש {user} יצר את הספר {book}', '2016-05-14 19:35:11'),
-(2, 1, 8, 'המשתמש {user} יצר את הספר {book}', '2016-05-14 19:39:42');
+(2, 1, 8, 'המשתמש {user} יצר את הספר {book}', '2016-05-14 19:39:42'),
+(3, 1, 10, 'המשתמש {user} יצר את הספר {book}', '2016-05-15 10:09:24'),
+(4, 1, 11, 'המשתמש {user} יצר את הספר {book}', '2016-05-15 10:11:35'),
+(5, 1, 12, 'המשתמש {user} יצר את הספר {book}', '2016-05-15 10:21:45'),
+(6, 1, 13, 'המשתמש {user} יצר את הספר {book}', '2016-05-15 10:23:14'),
+(7, 1, 14, 'המשתמש {user} יצר את הספר {book}', '2016-05-15 12:19:26'),
+(8, 1, 1, 'המשתמש {user} עדכן את הספר {book}', '2016-05-15 12:22:55'),
+(9, 1, 1, 'המשתמש {user} עדכן את הספר {book}', '2016-05-15 16:37:46'),
+(10, 1, 1, 'המשתמש {user} עדכן את הספר {book}', '2016-05-15 16:37:51'),
+(11, 1, 1, 'המשתמש {user} עדכן את הספר {book}', '2016-05-15 16:38:22'),
+(12, 1, 1, 'המשתמש {user} עדכן את הספר {book}', '2016-05-15 16:38:31'),
+(13, 1, 1, 'המשתמש {user} עדכן את הספר {book}', '2016-05-15 16:45:18'),
+(14, 1, 1, 'המשתמש {user} עדכן את הספר {book}', '2016-05-15 16:56:16'),
+(15, 1, 1, 'המשתמש {user} עדכן את הספר {book}', '2016-05-15 16:56:40'),
+(16, 1, 1, 'המשתמש {user} עדכן את הספר {book}', '2016-05-15 16:57:16'),
+(17, 1, 1, 'המשתמש {user} עדכן את הספר {book}', '2016-05-15 16:57:40'),
+(18, 1, 1, 'המשתמש {user} עדכן את הספר {book}', '2016-05-15 16:57:53'),
+(19, 1, 1, 'המשתמש {user} עדכן את הספר {book}', '2016-05-15 16:58:00'),
+(20, 1, 1, 'המשתמש {user} עדכן את הספר {book}', '2016-05-15 16:58:42'),
+(21, 1, 1, 'המשתמש {user} עדכן את הספר {book}', '2016-05-15 16:59:16');
 
 -- --------------------------------------------------------
 
@@ -166,14 +194,17 @@ CREATE TABLE IF NOT EXISTS `publishers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` char(255) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `publishers`
 --
 
 INSERT INTO `publishers` (`id`, `name`) VALUES
-(1, 'בבב');
+(1, 'בבב'),
+(2, 'כדגכדגכ'),
+(3, ''),
+(4, 'גגג');
 
 -- --------------------------------------------------------
 

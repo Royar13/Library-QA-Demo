@@ -1,0 +1,29 @@
+#panel.displayBooksCtrl {
+    h1 {
+        background-image: url('img/displayReadersBigIcon.png');
+    }
+    .actionsInit {
+        width: 13px;
+        .editBtn {
+            display: block;
+            float: right;
+            background: url("img/editIcon.png");
+            background-size: cover;
+            width: 13px;
+            height: 13px;
+            margin-left: 8px;
+
+        }
+        .editBtn:hover {
+            background-image: url("img/editIconHover.png");
+        }
+    }
+    .data-table {
+        th[st-sort=sectionName] {
+            width: 80px;
+        }
+        th[st-sort=bookcaseId] {
+            width: 70px;
+        }
+    }
+}

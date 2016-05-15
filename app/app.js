@@ -17,9 +17,21 @@ app.config(function ($routeProvider) {
                 templateUrl: "app/addReader/addReader.html",
                 controller: "addReaderCtrl"
             })
+            .when("/displayBooks", {
+                templateUrl: "app/displayBooks/displayBooks.html",
+                controller: "displayBooksCtrl"
+            })
             .when("/addBook", {
                 templateUrl: "app/addBook/addBook.html",
                 controller: "addBookCtrl"
+            })
+            .when("/updateBook", {
+                templateUrl: "app/updateBook/updateBook.html",
+                controller: "updateBookCtrl"
+            })
+            .when("/updateBookMenu", {
+                templateUrl: "app/updateBook/updateBookMenu.html",
+                controller: "updateBookMenuCtrl"
             });
 }).run(function ($rootScope, $location) {
     $rootScope.$on("$routeChangeSuccess", function (event, data) {

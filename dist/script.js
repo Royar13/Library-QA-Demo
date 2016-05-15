@@ -17,9 +17,21 @@ app.config(function ($routeProvider) {
                 templateUrl: "app/addReader/addReader.html",
                 controller: "addReaderCtrl"
             })
+            .when("/displayBooks", {
+                templateUrl: "app/displayBooks/displayBooks.html",
+                controller: "displayBooksCtrl"
+            })
             .when("/addBook", {
                 templateUrl: "app/addBook/addBook.html",
                 controller: "addBookCtrl"
+            })
+            .when("/updateBook", {
+                templateUrl: "app/updateBook/updateBook.html",
+                controller: "updateBookCtrl"
+            })
+            .when("/updateBookMenu", {
+                templateUrl: "app/updateBook/updateBookMenu.html",
+                controller: "updateBookMenuCtrl"
             });
 }).run(function ($rootScope, $location) {
     $rootScope.$on("$routeChangeSuccess", function (event, data) {
@@ -28,6 +40,7 @@ app.config(function ($routeProvider) {
     });
 });
 angular.module("library").controller("addBookCtrl", function ($scope, $http, alertify) {
+
     $scope.fields = {
         name: "",
         sectionId: "",
@@ -51,66 +64,64 @@ angular.module("library").controller("addBookCtrl", function ($scope, $http, ale
     }).then(function (response) {
         $scope.select.publishers = response.data.publishers;
     });
-});
+    $http({
+        method: "post",
+        url: "./dist/server/readSections.php"
+    }).then(function (response) {
+        $scope.select.sections = response.data.sections;
 
-angular.module("library").controller("addReaderCtrl", function ($scope, $http, alertify) {
-    $scope.fields = {
-        id: "",
-        name: "",
-        city: "",
-        street: "",
-        maxBooks: 0,
-        readerType: ""
-    };
-    $scope.errors = {};
-    $scope.select = {};
-    $scope.monthlyPay = 0;
-    $scope.$watchGroup(["fields.readerType", "fields.maxBooks"], function (newValues, oldValues, scope) {
+    });
+    $scope.$watch("fields.sectionId", function () {
+        $scope.updateBookcases();
+    });
+    $scope.updateBookcases = function () {
         try {
-            scope.monthlyPay = getReaderType(newValues[0]).bookCost * newValues[1];
-        }
-        catch (ex) {
+            $scope.select.bookcases = new Array();
+            for (var i = 0; i < getSectionById($scope.fields.sectionId).bookcaseAmount; i++) {
+                $scope.select.bookcases[i] = i + 1;
+            }
+        } catch (ex) {
 
         }
-    });
+    };
+    $scope.addBook = function () {
+        $scope.fields.author = $("#author_value").val();
+        $scope.fields.publisher = $("#publisher_value").val();
 
-    function getReaderType(id) {
-        for (var i in $scope.select.readerTypes) {
-            if ($scope.select.readerTypes[i].id == id)
-                return $scope.select.readerTypes[i];
-        }
-    }
-    $http({
-        method: "post",
-        url: "./dist/server/readReaderTypes.php"
-    }).then(function (response) {
-        $scope.select.readerTypes = response.data.readerTypes;
-    });
-    $http({
-        method: "post",
-        url: "./dist/server/readBooksNum.php"
-    }).then(function (response) {
-        $scope.select.maxBooks = response.data.booksNum;
-    });
-    $scope.addReader = function () {
         $scope.loading = true;
         $http({
             method: "post",
-            url: "./dist/server/addReader.php",
+            url: "./dist/server/addBook.php",
             data: $scope.fields
         }).then(function (response) {
             $scope.loading = false;
             if (!response.data.success) {
                 $scope.errors = response.data.errors;
                 alertify.error("הקלט שהוזן אינו תקין");
-            }
-            else {
-                alertify.success("הקורא נוסף בהצלחה!");
+            } else {
+                alertify.success("הספר נוסף בהצלחה!");
             }
         });
     };
+    function getSectionById(id) {
+        for (var i in $scope.select.sections) {
+            var section = $scope.select.sections[i];
+            if (section.id == id)
+                return section;
+        }
+    }
 });
 
+angular.module("library").controller("displayBooksCtrl", function ($scope, $http) {
+    $scope.books = [];
+    $scope.quantity = 50;
+    $http({
+        method: "post",
+        url: "./dist/server/readBooks.php"
+    }).then(function (response) {
+        $scope.books = response.data.books;
+    });
+});
 angular.module("library").controller("displayReadersCtrl", function ($scope, $http) {
     $scope.readers = [];
     $scope.quantity = 50;
@@ -120,23 +131,6 @@ angular.module("library").controller("displayReadersCtrl", function ($scope, $ht
     }).then(function (response) {
         $scope.readers = response.data.readers;
     });
-});
-angular.module("library").filter('dateToISO', function () {
-    return function (input) {
-        return new Date(input).toISOString();
-    };
-});
-app.filter('unique', function () {
-    return function (arr, field) {
-        var o = {}, i, l = arr.length, r = [];
-        for (i = 0; i < l; i += 1) {
-            o[arr[i][field]] = arr[i];
-        }
-        for (i in o) {
-            r.push(o[i]);
-        }
-        return r;
-    };
 });
 angular.module("library").controller("loginCtrl", function ($scope, $http, userService, $location) {
     var request = userService.getUser();
@@ -182,11 +176,6 @@ angular.module("library").controller("panelCtrl", function ($scope, $window, $lo
     $scope.panelStyle.right = Math.max(leftMargin + 20, 20);
     //$scope.panelStyle.width = bgWidth * 0.7;
     //$scope.panelStyle.height = $(window).height() * 0.8;
-
-    $scope.back = function () {
-        //$window.history.back();
-        $location.path("/main");
-    };
 
     $scope.includeTopBar = function () {
         return $location.path() != "/";
@@ -239,6 +228,136 @@ angular.module("library").controller("topBarCtrl", function ($scope, $http, $loc
             userService.user = null;
             $location.path("/");
         });
+    };
+});
+angular.module("library").controller("updateBookCtrl", function ($scope, $http, $routeParams, $location, alertify) {
+    var boolSectionsFinish = false;
+    $scope.editMode = false;
+    var bookId = $routeParams.id;
+    $scope.fields = {
+        id: "",
+        name: "",
+        sectionId: "",
+        bookcaseId: "",
+        author: "",
+        publisher: "",
+        releaseYear: "",
+        copies: ""
+    };
+    $scope.errors = {};
+    $scope.select = {};
+    $http({
+        method: "post",
+        url: "./dist/server/readBook.php",
+        data: {id: bookId}
+    }).then(function (response) {
+        $scope.initialFields = response.data;
+        $scope.fields = response.data;
+        $scope.fields.id = bookId;
+        $scope.fields.releaseYear = Number($scope.fields.releaseYear);
+        $scope.fields.copies = Number($scope.fields.copies);
+        if (boolSectionsFinish)
+            $scope.updateBookcases();
+        boolSectionsFinish = true;
+
+    });
+    $http({
+        method: "post",
+        url: "./dist/server/readAuthors.php"
+    }).then(function (response) {
+        $scope.select.authors = response.data.authors;
+    });
+    $http({
+        method: "post",
+        url: "./dist/server/readPublishers.php"
+    }).then(function (response) {
+        $scope.select.publishers = response.data.publishers;
+    });
+    $http({
+        method: "post",
+        url: "./dist/server/readSections.php"
+    }).then(function (response) {
+        $scope.select.sections = response.data.sections;
+        if (boolSectionsFinish)
+            $scope.updateBookcases();
+        boolSectionsFinish = true;
+    });
+    $scope.$watch("fields.sectionId", function () {
+        $scope.updateBookcases();
+    });
+    $scope.updateBookcases = function () {
+        try {
+            $scope.select.bookcases = new Array();
+            for (var i = 0; i < $scope.getSectionById($scope.fields.sectionId).bookcaseAmount; i++) {
+                $scope.select.bookcases[i] = i + 1;
+            }
+        } catch (ex) {
+
+        }
+    };
+    $scope.getSectionById = function (id) {
+        for (var i in $scope.select.sections) {
+            var section = $scope.select.sections[i];
+            if (section.id == id)
+                return section;
+        }
+    };
+    $scope.updateBook = function () {
+        $scope.fields.author = $("#author_value").val();
+        $scope.fields.publisher = $("#publisher_value").val();
+
+        $scope.loading = true;
+        $http({
+            method: "post",
+            url: "./dist/server/updateBook.php",
+            data: $scope.fields
+        }).then(function (response) {
+            $scope.loading = false;
+            if (!response.data.success) {
+                $scope.errors = response.data.errors;
+                alertify.error("הקלט שהוזן אינו תקין");
+            } else {
+                alertify.success("הספר עודכן בהצלחה!");
+                $scope.editMode = false;
+                $scope.errors = {};
+            }
+        });
+    };
+    $scope.toggleModes = function () {
+        $scope.editMode = !$scope.editMode;
+    };
+});
+
+angular.module("library").filter('dateToISO', function () {
+    return function (input) {
+        return new Date(input).toISOString();
+    };
+});
+app.filter('unique', function () {
+    return function (arr, field) {
+        var o = {}, i, l = arr.length, r = [];
+        for (i = 0; i < l; i += 1) {
+            o[arr[i][field]] = arr[i];
+        }
+        for (i in o) {
+            r.push(o[i]);
+        }
+        return r;
+    };
+});
+angular.module("library").directive("btnsMenu", function () {
+    return {
+        restrict: "A",
+        scope: {},
+        templateUrl: "app/directives/btnsMenu/btnsMenu.html",
+        controller: function ($scope, $location, $window) {
+            $scope.back = function () {
+                $window.history.back();
+            };
+            $scope.home = function () {
+                $location.path("/main");
+            };
+        }
     };
 });
 angular.module("library").directive("error", function () {
@@ -317,4 +436,62 @@ angular.module("library").directive("textField", function () {
         }
     };
 });
+angular.module("library").controller("addReaderCtrl", function ($scope, $http, alertify) {
+    $scope.fields = {
+        id: "",
+        name: "",
+        city: "",
+        street: "",
+        maxBooks: 0,
+        readerType: ""
+    };
+    $scope.errors = {};
+    $scope.select = {};
+    $scope.monthlyPay = 0;
+    $scope.$watchGroup(["fields.readerType", "fields.maxBooks"], function (newValues, oldValues, scope) {
+        try {
+            scope.monthlyPay = getReaderType(newValues[0]).bookCost * newValues[1];
+        }
+        catch (ex) {
+
+        }
+    });
+
+    function getReaderType(id) {
+        for (var i in $scope.select.readerTypes) {
+            if ($scope.select.readerTypes[i].id == id)
+                return $scope.select.readerTypes[i];
+        }
+    }
+    $http({
+        method: "post",
+        url: "./dist/server/readReaderTypes.php"
+    }).then(function (response) {
+        $scope.select.readerTypes = response.data.readerTypes;
+    });
+    $http({
+        method: "post",
+        url: "./dist/server/readBooksNum.php"
+    }).then(function (response) {
+        $scope.select.maxBooks = response.data.booksNum;
+    });
+    $scope.addReader = function () {
+        $scope.loading = true;
+        $http({
+            method: "post",
+            url: "./dist/server/addReader.php",
+            data: $scope.fields
+        }).then(function (response) {
+            $scope.loading = false;
+            if (!response.data.success) {
+                $scope.errors = response.data.errors;
+                alertify.error("הקלט שהוזן אינו תקין");
+            }
+            else {
+                alertify.success("הקורא נוסף בהצלחה!");
+            }
+        });
+    };
+});
+
 //# sourceMappingURL=maps/script.js.map

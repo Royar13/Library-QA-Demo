@@ -5,21 +5,29 @@
             <td class="title required">
                 שם:
             </td>
-            <td text-field field-name="id">
+            <td text-field field-name="name" add-class="big">
             </td>
         </tr>
         <tr>
             <td class="title required">
                 סופר:
             </td>
-            <td angucomplete-alt placeholder="חפש סופרים" selected-object="selectedAuthor" local-data="select.authors" search-fields="name" minlength="1"  title-field="name" match-class="highlight" text-searching="מחפש..." text-no-results="false">
+            <td>
+                <div angucomplete-alt id="author" placeholder="חפש סופרים" selected-object="selectedAuthor" local-data="select.authors" search-fields="name" minlength="1"  title-field="name" match-class="highlight" text-searching="מחפש..." text-no-results="false">
+
+                </div>
+                <div class="errors" ng-hide="loading">
+                    <div ng-repeat="msg in errors.fields.author">
+                        * {{msg}}
+                    </div>
+                </div>
             </td>
         </tr>
         <tr>
             <td class="title required">
                 מדור:
             </td>
-            <td select-field field-name="sectionId" options="sections" options-value="id" options-text="name">
+            <td select-field field-name="sectionId" options="sections" options-value="id" options-text="name" add-class="big">
             </td>
         </tr>
         <tr>
@@ -30,17 +38,18 @@
             </td>
         </tr>
         <tr>
-            <td class="title required">
-                מס' ספרים:
-            </td>
-            <td select-field field-name="maxBooks" options="maxBooks">
-            </td>
-        </tr>
-        <tr>
             <td class="title">
                 הוצאה לאור:
             </td>
-            <td angucomplete-alt placeholder="חפש הוצאה לאור" selected-object="selectedPublisher" local-data="select.publishers" search-fields="name" minlength="1" title-field="name" match-class="highlight" text-searching="מחפש..." text-no-results="false">
+            <td>
+                <div angucomplete-alt id="publisher" placeholder="חפש הוצאה לאור" selected-object="selectedPublisher" local-data="select.publishers" search-fields="name" minlength="1" title-field="name" match-class="highlight" text-searching="מחפש..." text-no-results="false">
+
+                </div>
+                <div class="errors" ng-hide="loading">
+                    <div ng-repeat="msg in errors.fields.publisher">
+                        * {{msg}}
+                    </div>
+                </div>
             </td> 
         </tr>
         <tr>
@@ -65,5 +74,5 @@
             </td>
         </tr>
     </table>
-    <a class="btn back fixed" ng-click="back()" ng-hide="loading"></a>
+    <div btns-menu></div>
 </div>

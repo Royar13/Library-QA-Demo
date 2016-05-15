@@ -1,0 +1,131 @@
+<h1>
+    עדכון ספר
+    <a class="btn short toggleMode" ng-click="toggleModes()">{{editMode?"למצב קריאה":"למצב עריכה"}}</a>
+</h1>
+<img class="rightImage" src="assets/img/viewBook.png">
+<div class="form">
+    <table class="fields" ng-show="editMode">
+        <tr>
+            <td class="title required">
+                שם:
+            </td>
+            <td text-field field-name="name" add-class="big">
+            </td>
+        </tr>
+        <tr>
+            <td class="title required">
+                סופר:
+            </td>
+            <td>
+                <div angucomplete-alt id="author" initial-value="fields.author" placeholder="חפש סופרים" selected-object="selectedAuthor" local-data="select.authors" search-fields="name" minlength="1"  title-field="name" match-class="highlight" text-searching="מחפש..." text-no-results="false">
+
+                </div>
+                <div class="errors" ng-hide="loading">
+                    <div ng-repeat="msg in errors.fields.author">
+                        * {{msg}}
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="title required">
+                מדור:
+            </td>
+            <td select-field field-name="sectionId" options="sections" options-value="id" options-text="name" add-class="big">
+            </td>
+        </tr>
+        <tr>
+            <td class="title required">
+                מס' כוננית:
+            </td>
+            <td select-field field-name="bookcaseId" options="bookcases">
+            </td>
+        </tr>
+        <tr>
+            <td class="title">
+                הוצאה לאור:
+            </td>
+            <td>
+                <div angucomplete-alt id="publisher" selected-object="selectedPublisher" placeholder="חפש הוצאה לאור" local-data="select.publishers" search-fields="name" minlength="1" title-field="name" match-class="highlight" text-searching="מחפש..." text-no-results="false">
+
+                </div>
+                <div class="errors" ng-hide="loading">
+                    <div ng-repeat="msg in errors.fields.publisher">
+                        * {{msg}}
+                    </div>
+                </div>
+            </td> 
+        </tr>
+        <tr>
+            <td class="title">
+                שנת פרסום:
+            </td>
+            <td text-field field-name="releaseYear" field-type="number">
+            </td>     
+        </tr>
+        <tr>
+            <td class="title">
+                מס' עותקים:
+            </td>
+            <td text-field field-name="copies" field-type="number">
+            </td>     
+        </tr>
+        <tr>
+            <td colspan="2">
+                <img src="assets/img/loader.gif" class="loader" ng-show="loading">
+                <div general-errors></div>
+                <a class="btn left" ng-click="updateBook()" ng-hide="loading">עדכן ספר</a>
+            </td>
+        </tr>
+    </table>
+    <table class="fields" ng-hide="editMode">
+        <tr>
+            <td colspan="2">
+                <h2 class="bookTitle" ng-bind="fields.name"></h2>
+            </td>
+        </tr>
+        <tr>
+            <td class="title">
+                סופר:
+            </td>
+            <td ng-bind="fields.author">
+            </td>
+        </tr>
+        <tr>
+            <td class="title">
+                מדור:
+            </td>
+            <td ng-bind="getSectionById(fields.sectionId).name">
+            </td>
+        </tr>
+        <tr>
+            <td class="title">
+                מס' כוננית:
+            </td>
+            <td ng-bind="fields.bookcaseId">
+            </td>
+        </tr>
+        <tr>
+            <td class="title">
+                הוצאה לאור:
+            </td>
+            <td ng-bind="fields.publisher">
+            </td>
+        </tr>
+        <tr>
+            <td class="title">
+                שנת פרסום:
+            </td>
+            <td ng-bind="fields.releaseYear">
+            </td>
+        </tr>
+        <tr>
+            <td class="title">
+                מס' עותקים:
+            </td>
+            <td ng-bind="fields.copies">
+            </td>
+            </trf
+    </table>
+    <div btns-menu></div>
+</div>
