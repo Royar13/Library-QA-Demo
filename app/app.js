@@ -32,6 +32,14 @@ app.config(function ($routeProvider) {
             .when("/updateBookMenu", {
                 templateUrl: "app/updateBook/updateBookMenu.html",
                 controller: "updateBookMenuCtrl"
+            })
+            .when("/updateReader", {
+                templateUrl: "app/updateReader/updateReader.html",
+                controller: "updateReaderCtrl"
+            })
+            .when("/updateReaderMenu", {
+                templateUrl: "app/updateReader/updateReaderMenu.html",
+                controller: "updateReaderMenuCtrl"
             });
 }).run(function ($rootScope, $location) {
     $rootScope.$on("$routeChangeSuccess", function (event, data) {

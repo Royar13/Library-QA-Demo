@@ -1,4 +1,4 @@
-angular.module("library").controller("updateBookCtrl", function ($scope, $http, $routeParams, $location, alertify) {
+angular.module("library").controller("updateBookCtrl", function ($scope, $http, $routeParams, $location, $route, alertify) {
     var boolSectionsFinish = false;
     $scope.editMode = false;
     var bookId = $routeParams.id;
@@ -19,7 +19,6 @@ angular.module("library").controller("updateBookCtrl", function ($scope, $http, 
         url: "./dist/server/readBook.php",
         data: {id: bookId}
     }).then(function (response) {
-        $scope.initialFields = response.data;
         $scope.fields = response.data;
         $scope.fields.id = bookId;
         $scope.fields.releaseYear = Number($scope.fields.releaseYear);
@@ -92,6 +91,9 @@ angular.module("library").controller("updateBookCtrl", function ($scope, $http, 
         });
     };
     $scope.toggleModes = function () {
-        $scope.editMode = !$scope.editMode;
+        if ($scope.editMode)
+            $route.reload();
+        else
+            $scope.editMode = !$scope.editMode;
     };
 });

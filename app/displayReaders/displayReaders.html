@@ -45,7 +45,7 @@
             <td>{{reader.maxBooks}}</td>
             <td>{{reader.joinDate| dateToISO | date:'dd/MM/yy'}}</td>
             <td class="actionsInit">
-                <a class="editBtn" title="ערוך"></a>
+                <a class="editBtn" href="#/updateReader?id={{reader.id}}" title="ערוך"></a>
                 <a class="borrowBtn" title="השאלה/החזרה"></a>
             </td>
         </tr>

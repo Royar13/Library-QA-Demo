@@ -1,0 +1,106 @@
+<h1>
+    עדכון קורא
+    <a class="btn short toggleMode" ng-click="toggleModes()">{{editMode?"למצב קריאה":"למצב עריכה"}}</a>
+</h1>
+<img class="rightImage" src="assets/img/viewReader.png">
+<div class="form">
+    <div ng-show="editMode">
+        <table class="fields">
+            <tr>
+                <td class="title required">
+                    שם:
+                </td>
+                <td text-field field-name="name">
+                </td>
+            </tr>
+            <tr>
+                <td class="title">
+                    כתובת:
+                </td>
+                <td>
+                    <div class="fieldInit">
+                        <label>עיר:</label>
+                        <div text-field field-name="city"></div>
+                    </div>
+                    <div class="fieldInit">
+                        <label>רחוב:</label>
+                        <div text-field field-name="street"></div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="title required">
+                    מס' ספרים:
+                </td>
+                <td select-field field-name="maxBooks" options="maxBooks">
+                </td>
+            </tr>
+            <tr>
+                <td class="title required">
+                    סוג קורא:
+                </td>
+                <td select-field field-name="readerType" add-class="big" options="readerTypes" options-value="id" options-text="title">
+                </td>
+            </tr>
+            <tr>
+                <td class="title">
+                    תשלום חודשי:
+                </td>
+                <td>
+                    <input type="text" class="small" disabled="disabled" value="{{monthlyPay| number:2}}">
+                    ₪
+                </td>        
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <img src="assets/img/loader.gif" class="loader" ng-show="loading">
+                    <div general-errors></div>
+                    <a class="btn left" ng-click="updateReader()" ng-hide="loading">עדכן קורא</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div ng-hide="editMode">
+        <h2 class="readerTitle" ng-bind="fields.name"></h2>
+        <table class="fields">
+            <tr>
+                <td class="title">
+                    ת.ז.:
+                </td>
+                <td ng-bind="fields.id">
+                </td>
+            </tr>
+            <tr>
+                <td class="title">
+                    כתובת:
+                </td>
+                <td ng-bind="address()">
+                </td>
+            </tr>
+            <tr>
+                <td class="title">
+                    מס' ספרים:
+                </td>
+                <td ng-bind="fields.maxBooks">
+                </td>
+            </tr>
+            <tr>
+                <td class="title">
+                    סוג קורא:
+                </td>
+                <td ng-bind="getReaderType(fields.readerType).title">
+                </td>
+            </tr>
+            <tr>
+                <td class="title">
+                    תשלום חודשי:
+                </td>
+                <td>
+                    {{monthlyPay| number:2}}
+                    ₪
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div btns-menu></div>

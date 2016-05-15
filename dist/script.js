@@ -32,6 +32,14 @@ app.config(function ($routeProvider) {
             .when("/updateBookMenu", {
                 templateUrl: "app/updateBook/updateBookMenu.html",
                 controller: "updateBookMenuCtrl"
+            })
+            .when("/updateReader", {
+                templateUrl: "app/updateReader/updateReader.html",
+                controller: "updateReaderCtrl"
+            })
+            .when("/updateReaderMenu", {
+                templateUrl: "app/updateReader/updateReaderMenu.html",
+                controller: "updateReaderMenuCtrl"
             });
 }).run(function ($rootScope, $location) {
     $rootScope.$on("$routeChangeSuccess", function (event, data) {
@@ -112,6 +120,64 @@ angular.module("library").controller("addBookCtrl", function ($scope, $http, ale
     }
 });
 
+angular.module("library").controller("addReaderCtrl", function ($scope, $http, alertify) {
+    $scope.fields = {
+        id: "",
+        name: "",
+        city: "",
+        street: "",
+        maxBooks: 0,
+        readerType: ""
+    };
+    $scope.errors = {};
+    $scope.select = {};
+    $scope.monthlyPay = 0;
+    $scope.$watchGroup(["fields.readerType", "fields.maxBooks"], function (newValues, oldValues, scope) {
+        try {
+            scope.monthlyPay = getReaderType(newValues[0]).bookCost * newValues[1];
+        }
+        catch (ex) {
+
+        }
+    });
+
+    function getReaderType(id) {
+        for (var i in $scope.select.readerTypes) {
+            if ($scope.select.readerTypes[i].id == id)
+                return $scope.select.readerTypes[i];
+        }
+    }
+    $http({
+        method: "post",
+        url: "./dist/server/readReaderTypes.php"
+    }).then(function (response) {
+        $scope.select.readerTypes = response.data.readerTypes;
+    });
+    $http({
+        method: "post",
+        url: "./dist/server/readBooksNum.php"
+    }).then(function (response) {
+        $scope.select.maxBooks = response.data.booksNum;
+    });
+    $scope.addReader = function () {
+        $scope.loading = true;
+        $http({
+            method: "post",
+            url: "./dist/server/addReader.php",
+            data: $scope.fields
+        }).then(function (response) {
+            $scope.loading = false;
+            if (!response.data.success) {
+                $scope.errors = response.data.errors;
+                alertify.error("הקלט שהוזן אינו תקין");
+            }
+            else {
+                alertify.success("הקורא נוסף בהצלחה!");
+            }
+        });
+    };
+});
+
 angular.module("library").controller("displayBooksCtrl", function ($scope, $http) {
     $scope.books = [];
     $scope.quantity = 50;
@@ -131,6 +197,23 @@ angular.module("library").controller("displayReadersCtrl", function ($scope, $ht
     }).then(function (response) {
         $scope.readers = response.data.readers;
     });
+});
+angular.module("library").filter('dateToISO', function () {
+    return function (input) {
+        return new Date(input).toISOString();
+    };
+});
+app.filter('unique', function () {
+    return function (arr, field) {
+        var o = {}, i, l = arr.length, r = [];
+        for (i = 0; i < l; i += 1) {
+            o[arr[i][field]] = arr[i];
+        }
+        for (i in o) {
+            r.push(o[i]);
+        }
+        return r;
+    };
 });
 angular.module("library").controller("loginCtrl", function ($scope, $http, userService, $location) {
     var request = userService.getUser();
@@ -230,7 +313,7 @@ angular.module("library").controller("topBarCtrl", function ($scope, $http, $loc
         });
     };
 });
-angular.module("library").controller("updateBookCtrl", function ($scope, $http, $routeParams, $location, alertify) {
+angular.module("library").controller("updateBookCtrl", function ($scope, $http, $routeParams, $location, $route, alertify) {
     var boolSectionsFinish = false;
     $scope.editMode = false;
     var bookId = $routeParams.id;
@@ -251,7 +334,6 @@ angular.module("library").controller("updateBookCtrl", function ($scope, $http, 
         url: "./dist/server/readBook.php",
         data: {id: bookId}
     }).then(function (response) {
-        $scope.initialFields = response.data;
         $scope.fields = response.data;
         $scope.fields.id = bookId;
         $scope.fields.releaseYear = Number($scope.fields.releaseYear);
@@ -324,27 +406,100 @@ angular.module("library").controller("updateBookCtrl", function ($scope, $http, 
         });
     };
     $scope.toggleModes = function () {
-        $scope.editMode = !$scope.editMode;
+        if ($scope.editMode)
+            $route.reload();
+        else
+            $scope.editMode = !$scope.editMode;
     };
 });
 
-angular.module("library").filter('dateToISO', function () {
-    return function (input) {
-        return new Date(input).toISOString();
+angular.module("library").controller("updateReaderCtrl", function ($scope, $http, $routeParams, $location, $route, alertify) {
+    var boolData = false;
+    $scope.editMode = false;
+    var readerId = $routeParams.id;
+    $scope.fields = {
+        id: "",
+        name: "",
+        city: "",
+        street: "",
+        maxBooks: 0,
+        readerType: ""
+    };
+    $scope.errors = {};
+    $scope.select = {};
+    $scope.monthlyPay = 0;
+    $scope.$watchGroup(["fields.readerType", "fields.maxBooks"], function (newValues, oldValues, scope) {
+        updatePay();
+    });
+    function updatePay() {
+        try {
+            $scope.monthlyPay = $scope.getReaderType($scope.fields.readerType).bookCost * $scope.fields.maxBooks;
+        }
+        catch (ex) {
+
+        }
+    }
+
+    $scope.getReaderType = function (id) {
+        for (var i in $scope.select.readerTypes) {
+            if ($scope.select.readerTypes[i].id == id)
+                return $scope.select.readerTypes[i];
+        }
+    }
+    $scope.address = function () {
+        if ($scope.fields.city != "") {
+            return $scope.fields.street + ", " + $scope.fields.city;
+        }
+        return "";
+    };
+    $http({
+        method: "post",
+        url: "./dist/server/readReader.php",
+        data: {id: readerId}
+    }).then(function (response) {
+        $scope.fields = response.data;
+        $scope.fields.id = readerId;
+        updatePay();
+    });
+    $http({
+        method: "post",
+        url: "./dist/server/readReaderTypes.php"
+    }).then(function (response) {
+        $scope.select.readerTypes = response.data.readerTypes;
+        updatePay();
+    });
+    $http({
+        method: "post",
+        url: "./dist/server/readBooksNum.php"
+    }).then(function (response) {
+        $scope.select.maxBooks = response.data.booksNum;
+    });
+    $scope.updateReader = function () {
+        $scope.loading = true;
+        $http({
+            method: "post",
+            url: "./dist/server/updateReader.php",
+            data: $scope.fields
+        }).then(function (response) {
+            $scope.loading = false;
+            if (!response.data.success) {
+                $scope.errors = response.data.errors;
+                alertify.error("הקלט שהוזן אינו תקין");
+            } else {
+                alertify.success("הקורא עודכן בהצלחה!");
+                $scope.editMode = false;
+                $scope.errors = {};
+            }
+        });
+    };
+    $scope.toggleModes = function () {
+        if ($scope.editMode)
+            $route.reload();
+        else
+            $scope.editMode = !$scope.editMode;
     };
 });
-app.filter('unique', function () {
-    return function (arr, field) {
-        var o = {}, i, l = arr.length, r = [];
-        for (i = 0; i < l; i += 1) {
-            o[arr[i][field]] = arr[i];
-        }
-        for (i in o) {
-            r.push(o[i]);
-        }
-        return r;
-    };
-});
+
 angular.module("library").directive("btnsMenu", function () {
     return {
         restrict: "A",
@@ -400,9 +555,7 @@ angular.module("library").directive("selectField", function () {
             if ($element[0].hasAttribute("options-text")) {
                 textName = $element.attr("options-text");
             }
-            //$scope.$watch("select", function () {
-            //updateOptions();
-            //});
+
             $scope.getOptionValue = function (option) {
                 if (valueName == null)
                     return option;
@@ -436,62 +589,4 @@ angular.module("library").directive("textField", function () {
         }
     };
 });
-angular.module("library").controller("addReaderCtrl", function ($scope, $http, alertify) {
-    $scope.fields = {
-        id: "",
-        name: "",
-        city: "",
-        street: "",
-        maxBooks: 0,
-        readerType: ""
-    };
-    $scope.errors = {};
-    $scope.select = {};
-    $scope.monthlyPay = 0;
-    $scope.$watchGroup(["fields.readerType", "fields.maxBooks"], function (newValues, oldValues, scope) {
-        try {
-            scope.monthlyPay = getReaderType(newValues[0]).bookCost * newValues[1];
-        }
-        catch (ex) {
-
-        }
-    });
-
-    function getReaderType(id) {
-        for (var i in $scope.select.readerTypes) {
-            if ($scope.select.readerTypes[i].id == id)
-                return $scope.select.readerTypes[i];
-        }
-    }
-    $http({
-        method: "post",
-        url: "./dist/server/readReaderTypes.php"
-    }).then(function (response) {
-        $scope.select.readerTypes = response.data.readerTypes;
-    });
-    $http({
-        method: "post",
-        url: "./dist/server/readBooksNum.php"
-    }).then(function (response) {
-        $scope.select.maxBooks = response.data.booksNum;
-    });
-    $scope.addReader = function () {
-        $scope.loading = true;
-        $http({
-            method: "post",
-            url: "./dist/server/addReader.php",
-            data: $scope.fields
-        }).then(function (response) {
-            $scope.loading = false;
-            if (!response.data.success) {
-                $scope.errors = response.data.errors;
-                alertify.error("הקלט שהוזן אינו תקין");
-            }
-            else {
-                alertify.success("הקורא נוסף בהצלחה!");
-            }
-        });
-    };
-});
-
 //# sourceMappingURL=maps/script.js.map

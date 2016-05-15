@@ -20,9 +20,7 @@ angular.module("library").directive("selectField", function () {
             if ($element[0].hasAttribute("options-text")) {
                 textName = $element.attr("options-text");
             }
-            //$scope.$watch("select", function () {
-            //updateOptions();
-            //});
+
             $scope.getOptionValue = function (option) {
                 if (valueName == null)
                     return option;

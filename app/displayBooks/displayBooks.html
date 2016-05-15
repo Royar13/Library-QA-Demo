@@ -2,6 +2,7 @@
 <table st-table="displayedBooks" st-safe-src="books" class="data-table">
     <thead>
         <tr>
+            <th st-sort="id">קוד</th>
             <th st-sort="name" st-sort-default="true">שם</th>
             <th st-sort="sectionName">מדור</th>
             <th st-sort="bookcaseId">מס' כוננית</th>
@@ -11,6 +12,9 @@
             <th></th>
         </tr>
         <tr>
+            <th>
+                <input type="number" st-search="id">
+            </th>
             <th>
                 <input type="text" st-search="name" placeholder="חפש שם">
             </th>
@@ -28,7 +32,7 @@
 
             </th>
             <th>
-                <input type="text" st-search="publisherName" placeholder="חפש הוצאה לאור">
+                <input type="text" st-search="publisherName" placeholder="חפש הוצאה">
             </th>
             <th>
                 <input type="text" st-search="releaseYear" placeholder="חפש שנה">
@@ -38,6 +42,7 @@
     </thead>
     <tbody>
         <tr ng-repeat="book in displayedBooks| limitTo: quantity">
+            <td>{{book.id}}</td>
             <td>{{book.name}}</td>
             <td>{{book.sectionName}}</td>
             <td>{{book.bookcaseId}}</td>
