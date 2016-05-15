@@ -1,6 +1,9 @@
-angular.module("library").controller("addBookCtrl", function ($scope, $http, alertify) {
-
+angular.module("library").controller("updateBookCtrl", function ($scope, $http, $routeParams, $location, alertify) {
+    var boolSectionsFinish = false;
+    $scope.editMode = false;
+    var bookId = $routeParams.id;
     $scope.fields = {
+        id: "",
         name: "",
         sectionId: "",
         bookcaseId: "",
@@ -11,6 +14,21 @@ angular.module("library").controller("addBookCtrl", function ($scope, $http, ale
     };
     $scope.errors = {};
     $scope.select = {};
+    $http({
+        method: "post",
+        url: "./dist/server/readBook.php",
+        data: {id: bookId}
+    }).then(function (response) {
+        $scope.initialFields = response.data;
+        $scope.fields = response.data;
+        $scope.fields.id = bookId;
+        $scope.fields.releaseYear = Number($scope.fields.releaseYear);
+        $scope.fields.copies = Number($scope.fields.copies);
+        if (boolSectionsFinish)
+            $scope.updateBookcases();
+        boolSectionsFinish = true;
+
+    });
     $http({
         method: "post",
         url: "./dist/server/readAuthors.php"
@@ -28,7 +46,9 @@ angular.module("library").controller("addBookCtrl", function ($scope, $http, ale
         url: "./dist/server/readSections.php"
     }).then(function (response) {
         $scope.select.sections = response.data.sections;
-
+        if (boolSectionsFinish)
+            $scope.updateBookcases();
+        boolSectionsFinish = true;
     });
     $scope.$watch("fields.sectionId", function () {
         $scope.updateBookcases();
@@ -36,21 +56,28 @@ angular.module("library").controller("addBookCtrl", function ($scope, $http, ale
     $scope.updateBookcases = function () {
         try {
             $scope.select.bookcases = new Array();
-            for (var i = 0; i < getSectionById($scope.fields.sectionId).bookcaseAmount; i++) {
+            for (var i = 0; i < $scope.getSectionById($scope.fields.sectionId).bookcaseAmount; i++) {
                 $scope.select.bookcases[i] = i + 1;
             }
         } catch (ex) {
 
         }
     };
-    $scope.addBook = function () {
+    $scope.getSectionById = function (id) {
+        for (var i in $scope.select.sections) {
+            var section = $scope.select.sections[i];
+            if (section.id == id)
+                return section;
+        }
+    };
+    $scope.updateBook = function () {
         $scope.fields.author = $("#author_value").val();
         $scope.fields.publisher = $("#publisher_value").val();
 
         $scope.loading = true;
         $http({
             method: "post",
-            url: "./dist/server/addBook.php",
+            url: "./dist/server/updateBook.php",
             data: $scope.fields
         }).then(function (response) {
             $scope.loading = false;
@@ -58,15 +85,13 @@ angular.module("library").controller("addBookCtrl", function ($scope, $http, ale
                 $scope.errors = response.data.errors;
                 alertify.error("הקלט שהוזן אינו תקין");
             } else {
-                alertify.success("הספר נוסף בהצלחה!");
+                alertify.success("הספר עודכן בהצלחה!");
+                $scope.editMode = false;
+                $scope.errors = {};
             }
         });
     };
-    function getSectionById(id) {
-        for (var i in $scope.select.sections) {
-            var section = $scope.select.sections[i];
-            if (section.id == id)
-                return section;
-        }
-    }
+    $scope.toggleModes = function () {
+        $scope.editMode = !$scope.editMode;
+    };
 });

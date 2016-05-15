@@ -9,11 +9,6 @@ angular.module("library").controller("panelCtrl", function ($scope, $window, $lo
     //$scope.panelStyle.width = bgWidth * 0.7;
     //$scope.panelStyle.height = $(window).height() * 0.8;
 
-    $scope.back = function () {
-        //$window.history.back();
-        $location.path("/main");
-    };
-
     $scope.includeTopBar = function () {
         return $location.path() != "/";
     }
