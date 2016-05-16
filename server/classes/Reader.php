@@ -187,22 +187,23 @@ class Reader implements IDatabaseAccess {
             //$this->db->query("UNLOCK TABLES");
             $this->validateCanBorrowBooks($borrowBooksId, $errorLogger);
 
-            if (!$errorLogger->isValid()) {
-                return false;
-            }
             $borrowedBooks = $this->getBorrowedBooks()->fetchAll(PDO::FETCH_ASSOC);
-            if (!$this->validateNotBorrowed()) {
-                $errorLogger->addGeneralError("אי אפשר להשאיל ספר שכבר מושאל");
+            if (!$this->validateNotBorrowed($borrowBooksId, $borrowedBooks)) {
+                $errorLogger->addGeneralError("אי אפשר להשאיל שוב ספר שכבר מושאל על ידי הקורא");
             }
-            if (!$this->validateNoBorrowRepeat()) {
+            if (!$this->validateNoBorrowRepeat($borrowBooksId)) {
                 $errorLogger->addGeneralError("אי אפשר להשאיל פעמיים את אותו הספר");
             }
-            if (!$this->validateCanReturnBooks()) {
-                $errorLogger->addGeneralError("ספרים מוחזרים לא תקינים");
+            if (!$this->validateCanReturnBooks($borrowedBooks, $returnBooksId)) {
+                $errorLogger->addGeneralError("ספרים להחזרה לא תקינים");
             }
             $allowedBorrowNum = $this->maxBooks - count($borrowedBooks) + count($returnBooksId);
             if (count($borrowBooksId) > $allowedBorrowNum) {
                 $errorLogger->addGeneralError("חרגת ממס' הספרים המותר להשאלה במקביל");
+            }
+
+            if (!$errorLogger->isValid()) {
+                return false;
             }
             foreach ($borrowBooksId as $id) {
                 $fields = array();
@@ -211,7 +212,22 @@ class Reader implements IDatabaseAccess {
                 $fields["borrowUserId"] = $userId;
                 $this->db->insert("borrowed_books", $fields);
             }
-
+            if (count($returnBooksId) > 0) {
+                $bind = array();
+                $bind["returnUserId"] = $userId;
+                for ($i = 0; $i < count($borrowedBooks); $i++) {
+                    $borrow = $borrowedBooks[$i];
+                    if (in_array($borrow["bookId"], $returnBooksId)) {
+                        $condition[] = ":where" . $i;
+                        $bind[":where" . $i] = $borrow["id"];
+                    }
+                }
+                $conditionStr = join(",", $condition);
+                $query = "UPDATE borrowed_books"
+                        . " SET boolReturn=1, returnDate=now(), returnUserId=:returnUserId"
+                        . " WHERE id in({$conditionStr})";
+                $result = $this->db->preparedQuery($query, $bind);
+            }
             return true;
         } catch (Exception $ex) {
             $errorLogger->addGeneralError("שגיאת מסד נתונים: " . $ex->getMessage());
@@ -221,8 +237,8 @@ class Reader implements IDatabaseAccess {
 
     private function validateCanReturnBooks($borrowedBooks, $returnBooksId) {
         $count = 0;
-        foreach ($borrowedBooks as $book) {
-            if (isset($returnBooksId[$book->id])) {
+        foreach ($borrowedBooks as $borrow) {
+            if (in_array($borrow["bookId"], $returnBooksId)) {
                 $count++;
             }
         }
@@ -231,8 +247,8 @@ class Reader implements IDatabaseAccess {
 
     private function validateNotBorrowed($borrowBooksId, $borrowedBooks) {
         foreach ($borrowBooksId as $id) {
-            foreach ($borrowedBooks as $book) {
-                if ($id == $book->id) {
+            foreach ($borrowedBooks as $borrow) {
+                if ($id == $borrow["bookId"]) {
                     return false;
                 }
             }
@@ -241,11 +257,11 @@ class Reader implements IDatabaseAccess {
         return true;
     }
 
-    private function validateNoBorrowRepeat($borrowedBooks) {
+    private function validateNoBorrowRepeat($borrowBooksId) {
         $repeats = array();
-        foreach ($borrowedBooks as $book) {
-            if (!isset($repeats[$book->id])) {
-                $repeats[$book->id] = 1;
+        foreach ($borrowBooksId as $id) {
+            if (!isset($repeats[$id])) {
+                $repeats[$id] = 1;
             } else {
                 return false;
             }
@@ -254,6 +270,8 @@ class Reader implements IDatabaseAccess {
     }
 
     private function validateCanBorrowBooks($borrowBooksId, $errorLogger) {
+        if (count($borrowBooksId) == 0)
+            return;
         for ($i = 0; $i < count($borrowBooksId); $i++) {
             $bind[":borrow" . $i] = $borrowBooksId[$i];
             $strArr[] = ":borrow" . $i;

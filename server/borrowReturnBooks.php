@@ -14,7 +14,7 @@ function borrowReturnBooks() {
     if ($reader->readOne()) {
         $borrowBooksId = $param->get("borrowBooksId");
         $returnBooksId = $param->get("returnBooksId");
-        $reader->borrowReturnBooks($borrowBooksId, $returnBooksId, $errorLogger);
+        $reader->borrowReturnBooks($borrowBooksId, $returnBooksId, $errorLogger, Factory::getUser()->id);
     }
     else {
         $errorLogger->addGeneralError("לא נמצא קורא עם ת.ז. זו");
