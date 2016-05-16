@@ -1,0 +1,23 @@
+<h1>השאלת/החזרת ספרים</h1>
+<h2 class="readerTitle">{{readerName}}
+    <span class="readerId">ת.ז. {{readerId}}</span>
+</h2>
+<div id="return">
+    <h3>החזרה</h3>
+
+</div>
+<div id="borrow">
+    <h3>השאלה</h3>
+    <div ng-repeat="book in borrows">
+        <div class="book">
+            <div class="searchBook" angucomplete-alt placeholder="חפש ספר" selected-object="m" local-data="books" search-fields="name,author,id" minlength="2" title-field="name" match-class="highlight" text-searching="מחפש..." text-no-results="לא נמצאו תוצאות">
+
+            </div>
+                מאת: {{m.authorName}} (קוד {{m.id}})
+        </div>
+    </div>
+</div>
+
+
+<div btns-menu></div>
+

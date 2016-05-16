@@ -33,7 +33,7 @@ app.config(function ($routeProvider) {
                 templateUrl: "app/updateBook/updateBookMenu.html",
                 controller: "updateBookMenuCtrl"
             })
-            
+
             .when("/updateReader", {
                 templateUrl: "app/updateReader/updateReader.html",
                 controller: "updateReaderCtrl"
@@ -42,7 +42,14 @@ app.config(function ($routeProvider) {
                 templateUrl: "app/updateReader/updateReaderMenu.html",
                 controller: "updateReaderMenuCtrl"
             })
-            ;
+            .when("/borrowBooksMenu", {
+                templateUrl: "app/borrowBooks/borrowBooksMenu.html",
+                controller: "borrowBooksMenuCtrl"
+            })
+            .when("/borrowBooks", {
+                templateUrl: "app/borrowBooks/borrowBooks.html",
+                controller: "borrowBooksCtrl"
+            });
 }).run(function ($rootScope, $location) {
     $rootScope.$on("$routeChangeSuccess", function (event, data) {
         if (data.$$route && data.$$route.controller)

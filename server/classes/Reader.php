@@ -105,9 +105,10 @@ class Reader implements IDatabaseAccess {
     }
 
     public function getBorrowedBooks() {
-        $query = "SELECT borrowed_books.*, books.name"
+        $query = "SELECT borrowed_books.*, books.name as bookName, authors.name as authorName"
                 . " FROM borrowed_books"
                 . " JOIN books ON borrowed_books.bookId=books.id"
+                . " LEFT JOIN authors ON books.authorId=authors.id"
                 . " WHERE readerId=:id AND boolReturn=0";
         $bind[":id"] = $this->id;
         $result = $this->db->preparedQuery($query, $bind);

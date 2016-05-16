@@ -1,0 +1,30 @@
+#panel.borrowBooksCtrl {
+    h1 {
+        background-image: url('img/borrowBooksBigIcon.png');
+    }
+    .readerTitle {
+        margin: 0px;
+        font-size: 25px;
+        line-height: 30px;
+        color: #008;
+        padding-right: 35px;
+        background-repeat: no-repeat;
+        background-position: right center;
+        background-size: 30px;
+        background-image: url('img/displayReadersIcon.png');
+        .readerId {
+            font-size: 15px;
+            margin-right: 20px;
+        }
+    }
+    h3 {
+        font-size: 20px;
+        margin-top: 20px;
+        margin-bottom: 5px;
+    }
+}
+#panel.borrowBooksMenuCtrl {
+    h1 {
+        background-image: url('img/borrowBooksBigIcon.png');
+    }
+}
