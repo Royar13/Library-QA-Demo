@@ -1,10 +1,9 @@
 angular.module("library").controller("borrowBooksCtrl", function ($scope, $http, $routeParams, alertify) {
     $scope.readerId = $routeParams.id;
     $scope.isReturn = [];
-    $scope.borrows = [{}];
-    $scope.m={};
-    $scope.$watch("m", function() {
-    });
+    $scope.borrows = [];
+    $scope.allowedBooksNum = 2;
+
     $scope.fields = {
         readerId: "",
         borrowBooksId: [],
@@ -24,11 +23,11 @@ angular.module("library").controller("borrowBooksCtrl", function ($scope, $http,
         url: "./server/readBorrowedBooks.php",
         data: {id: $scope.readerId}
     }).then(function (response) {
-        $scope.readerName = response.data.name;
+        $scope.borrowedBooks = response.data.borrows;
     });
     $http({
         method: "post",
-        url: "./server/readBooks.php"
+        url: "./server/readBooksBorrowAPI.php"
     }).then(function (response) {
         $scope.books = response.data.books;
     });
@@ -42,8 +41,12 @@ angular.module("library").controller("borrowBooksCtrl", function ($scope, $http,
                 $scope.fields.returnBooksId.push(i);
             }
         }
-        $("#borrow .book").each(function () {
-
-        });
+        for (var i in $scope.borrows) {
+            $scope.fields.borrowBooksId.push($scope.borrows[i].description.id);
+        }
+    };
+    $scope.getBorrowLength = function () {
+        var len = Math.min($scope.borrows.length + 1, $scope.allowedBooksNum);
+        return new Array(len);
     };
 });

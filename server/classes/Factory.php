@@ -27,6 +27,12 @@ class Factory {
         return $reader;
     }
 
+    public static function makeBookBorrow() {
+        $borrow = new BookBorrow();
+        $borrow->setDatabase(self::$database);
+        return $borrow;
+    }
+    
     public static function getUser() {
         if (self::$user == null) {
             self::$user = new User();

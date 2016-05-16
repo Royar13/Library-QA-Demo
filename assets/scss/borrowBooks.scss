@@ -1,26 +1,84 @@
 #panel.borrowBooksCtrl {
+    .container {
+        padding-right: 30px;
+    }
     h1 {
         background-image: url('img/borrowBooksBigIcon.png');
     }
     .readerTitle {
         margin: 0px;
         font-size: 25px;
-        line-height: 30px;
         color: #008;
-        padding-right: 35px;
+        padding-right: 50px;
         background-repeat: no-repeat;
         background-position: right center;
-        background-size: 30px;
-        background-image: url('img/displayReadersIcon.png');
+        background-size: 45px;
+        background-image: url('img/displayReadersBigIcon.png');
         .readerId {
             font-size: 15px;
-            margin-right: 20px;
+            margin-right: 10px;
+            font-style: italic;
         }
     }
     h3 {
         font-size: 20px;
         margin-top: 20px;
         margin-bottom: 5px;
+    }
+    div.book {
+        padding: 8px 20px;
+        background-color: #eee;
+        margin-right: 20px;
+        border-bottom: 1px solid #999;
+        background-repeat: no-repeat;
+        background-position: right 5px center;
+        background-size: 25px;
+        .title {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .info {
+            width: 200px;
+            float: right;
+            .bookCode {
+                font-size: 12px;
+            }
+        }
+        .borrowInfo {
+            float: right;
+        }
+        div:last-child {
+            clear: both;
+        }
+        .descNotAvail {
+            display: none;
+            color: red;
+            font-size: 16px;
+        }
+    }
+    .book.notavail {
+        background-color: #FFCDBF !important;
+        .descNotAvail {
+            display: inline;
+        }
+    }
+    .book.added {
+        background-color: #C6FF91;
+    }
+    .allowedBooks {
+        font-size: 14px;
+    }
+    #borrow {
+        .book.added {
+            padding-right: 40px;
+            background-image: url('img/greenArrow.png');
+        }
+    }
+    #return {
+        .book.added {
+            padding-right: 40px;
+            background-image: url('img/redArrow.png');
+        }    
     }
 }
 #panel.borrowBooksMenuCtrl {

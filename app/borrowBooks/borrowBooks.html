@@ -1,23 +1,43 @@
 <h1>השאלת/החזרת ספרים</h1>
-<h2 class="readerTitle">{{readerName}}
-    <span class="readerId">ת.ז. {{readerId}}</span>
-</h2>
-<div id="return">
-    <h3>החזרה</h3>
-
-</div>
-<div id="borrow">
-    <h3>השאלה</h3>
-    <div ng-repeat="book in borrows">
-        <div class="book">
-            <div class="searchBook" angucomplete-alt placeholder="חפש ספר" selected-object="m" local-data="books" search-fields="name,author,id" minlength="2" title-field="name" match-class="highlight" text-searching="מחפש..." text-no-results="לא נמצאו תוצאות">
-
+<div class="container form">
+    <h2 class="readerTitle">{{readerName}}
+        <div class="readerId">-ת.ז. {{readerId}}</div>
+    </h2>
+    <div id="return">
+        <h3>החזרה</h3>
+        <div ng-repeat="borrow in borrowedBooks">
+            <div class="book">
+                <div class="title">{{borrow.bookName}}</div>
+                <div class="info">
+                    מאת: <span class="author">{{borrow.authorName}}</span>
+                    <span class="bookCode">(קוד ספר #{{borrow.bookId}})</span>
+                </div>
+                <div></div>
             </div>
-                מאת: {{m.authorName}} (קוד {{m.id}})
         </div>
     </div>
-</div>
+    <div id="borrow">
+        <h3>השאלה
+            <span class="allowedBooks">{{borrows.length}}/{{allowedBooksNum}}</span>
+        </h3>
+        <div ng-repeat="x in getBorrowLength() track by $index">
+            <div class="book" ng-class="{'added':borrows[$index] != null, 'notavail':(borrows[$index] != null && !borrows[$index].originalObject.available)}">
+                <div class="searchBook" ng-show="borrows[$index] == null" angucomplete-alt placeholder="חפש ספר" input-class="big" selected-object="borrows[$index]" local-data="books" search-fields="name,authorName,id" description-field="authorName" minlength="2" title-field="name" match-class="highlight" text-searching="מחפש..." text-no-results="לא נמצאו תוצאות">
 
+                </div>
+                <div ng-show="borrows[$index] != null">
+                    <div class="title">{{borrows[$index].originalObject.name}}<span class="descNotAvail"> - כל העותקים מושאלים</span></div>
+                    <div class="info">
+                        מאת: <span class="author">{{borrows[$index].originalObject.authorName}}</span>
+                        <span class="bookCode">(קוד ספר #{{borrows[$index].originalObject.id}})</span>
+                    </div>
+                </div>
+                <div></div>
+            </div>
+        </div>
+    </div>
+    <div general-errors></div>
+</div>
 
 <div btns-menu></div>
 
