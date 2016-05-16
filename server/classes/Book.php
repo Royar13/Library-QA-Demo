@@ -115,7 +115,7 @@ class Book implements IDatabaseAccess {
         }
     }
 
-    private function validateIdExist($errorLogger) {
+    public function validateIdExist($errorLogger) {
         $query = "select id from books where id=:id";
         $bind[":id"] = $this->id;
         $result = $this->db->preparedQuery($query, $bind);

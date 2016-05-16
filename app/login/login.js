@@ -17,7 +17,7 @@ angular.module("library").controller("loginCtrl", function ($scope, $http, userS
         $scope.loading = true;
         $http({
             method: "post",
-            url: "./dist/server/login.php",
+            url: "./server/login.php",
             data: $scope.fields
         }).then(function (response) {
             $scope.loading = false;

@@ -16,4 +16,8 @@ html,body{height:100%;overflow:hidden}body,input,select{font-family:arial;font-s
 
 #panel.updateBookCtrl h1{background-image:url("img/updateBookBigIcon.png")}#panel.updateBookCtrl h2.bookTitle{font-size:25px;color:#01579b;margin:0px;margin-bottom:15px}#panel.updateBookCtrl .toggleMode{display:inline-block;margin-right:10px;font-weight:normal;font-size:15px;line-height:28px;height:28px}#panel.updateBookCtrl td{vertical-align:middle}
 
+#panel.updateBookMenuCtrl h1{background-image:url("img/updateBookBigIcon.png")}
+
 #panel.updateReaderCtrl h1{background-image:url("img/updateReaderBigIcon.png")}#panel.updateReaderCtrl h2.readerTitle{font-size:25px;color:#01579b;margin:0px;margin-bottom:15px}#panel.updateReaderCtrl .toggleMode{display:inline-block;margin-right:10px;font-weight:normal;font-size:15px;line-height:28px;height:28px}#panel.updateReaderCtrl td{vertical-align:middle}
+
+#panel.updateReaderMenuCtrl h1{background-image:url("img/updateReaderBigIcon.png")}

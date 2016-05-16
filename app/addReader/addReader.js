@@ -27,13 +27,13 @@ angular.module("library").controller("addReaderCtrl", function ($scope, $http, a
     }
     $http({
         method: "post",
-        url: "./dist/server/readReaderTypes.php"
+        url: "./server/readReaderTypes.php"
     }).then(function (response) {
         $scope.select.readerTypes = response.data.readerTypes;
     });
     $http({
         method: "post",
-        url: "./dist/server/readBooksNum.php"
+        url: "./server/readBooksNum.php"
     }).then(function (response) {
         $scope.select.maxBooks = response.data.booksNum;
     });
@@ -41,7 +41,7 @@ angular.module("library").controller("addReaderCtrl", function ($scope, $http, a
         $scope.loading = true;
         $http({
             method: "post",
-            url: "./dist/server/addReader.php",
+            url: "./server/addReader.php",
             data: $scope.fields
         }).then(function (response) {
             $scope.loading = false;

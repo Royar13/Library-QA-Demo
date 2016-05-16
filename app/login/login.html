@@ -21,11 +21,7 @@
         <tr>
             <td colspan="2">
                 <img src="assets/img/loader.gif" class="loader" ng-show="loading">
-                <div class="errors" ng-hide="loading">
-                    <div ng-repeat="error in errors.general">
-                        * {{error}}
-                    </div>
-                </div>
+                <div general-errors></div>
                 <a id="loginBtn" class="btn" ng-click="login()" ng-hide="loading">התחבר</a>
 
             </td>

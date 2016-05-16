@@ -48,19 +48,9 @@ gulp.task("images", function () {
             .pipe(gulp.dest("dist/img"));
 });
 
-gulp.task("php", function () {
-    return gulp.src("server/*.php")
-            .pipe(gulp.dest("dist/server"));
-});
-gulp.task("phpClasses", function () {
-    return gulp.src("server/classes/**/*.php")
-            .pipe(rename({dirname: ''}))
-            .pipe(gulp.dest("dist/server/classes"));
-});
-
 gulp.task("browser-sync", function () {
     browserSync.init({
-        proxy: "localhost/library-qa-demo/index.html"
+        proxy: "localhost:8080/library-qa-demo/index.html"
     });
 });
 
@@ -75,9 +65,7 @@ gulp.task("watch", function () {
     gulp.watch("app/**/*.js", ["uglify", "bs-reload"]);
     gulp.watch("assets/scss/*", ["sass"]);
     gulp.watch("assets/img/*", ["images"]);
-    gulp.watch("server/*.php", ["php"]);
-    gulp.watch("server/*/**/*.php", ["phpClasses"]);
 
 });
 
-gulp.task("default", ["browser-sync", "uglify", "sass", "php", "phpClasses", "images", "watch"]);
+gulp.task("default", ["browser-sync", "uglify", "sass", "images", "watch"]);

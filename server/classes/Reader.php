@@ -18,12 +18,13 @@ class Reader implements IDatabaseAccess {
         $this->validateReaderType($errorLogger);
         $this->validateMaxBooks($errorLogger);
         $this->validateIDNew($errorLogger);
-        if (empty($this->city) && !empty($this->street)) {
+        if (!$this->validateCity()) {
             $errorLogger->addError("city", "יש למלא גם את העיר");
         }
-        if (!empty($this->city) && empty($this->street)) {
+        if (!$this->validateStreet()) {
             $errorLogger->addError("street", "יש למלא גם את הרחוב");
         }
+
         if (!$errorLogger->isValid()) {
             return false;
         }
@@ -53,6 +54,12 @@ class Reader implements IDatabaseAccess {
         $this->validateReaderType($errorLogger);
         $this->validateMaxBooks($errorLogger);
         $this->validateIDExist($errorLogger);
+        if (!$this->validateCity()) {
+            $errorLogger->addError("city", "יש למלא גם את העיר");
+        }
+        if (!$this->validateStreet()) {
+            $errorLogger->addError("street", "יש למלא גם את הרחוב");
+        }
         if (!$errorLogger->isValid()) {
             return false;
         }
@@ -97,11 +104,29 @@ class Reader implements IDatabaseAccess {
         return false;
     }
 
+    public function getBorrowedBooks() {
+        $query = "SELECT borrowed_books.*, books.name"
+                . " FROM borrowed_books"
+                . " JOIN books ON borrowed_books.bookId=books.id"
+                . " WHERE readerId=:id AND boolReturn=0";
+        $bind[":id"] = $this->id;
+        $result = $this->db->preparedQuery($query, $bind);
+        return $result;
+    }
+
     public function readAll() {
         return $this->db->query("SELECT readers.id, readers.name, readers.city, readers.street, reader_types.title as readerType, readers.maxBooks, readers.joinDate"
                         . " FROM readers"
                         . " JOIN reader_types"
                         . " ON readers.readerType=reader_types.id");
+    }
+
+    public function validateCity() {
+        return !(empty($this->city) && !empty($this->street));
+    }
+
+    public function validateStreet() {
+        return !(!empty($this->city) && empty($this->street));
     }
 
     private function validateReaderType($errorLogger) {
@@ -144,7 +169,7 @@ class Reader implements IDatabaseAccess {
           $errorLogger->addError("id", "ת.ז. לא תקינה");
           } */
     }
-    
+
     public function validateIDExist($errorLogger) {
         $query = "select id from readers where id=:id";
         $bind[":id"] = $this->id;
@@ -156,28 +181,99 @@ class Reader implements IDatabaseAccess {
         }
     }
 
-    public function borrowReturnBooks($borrowBooksId, $returnBooksId, $errorLogger) {
+    public function borrowReturnBooks($borrowBooksId, $returnBooksId, $errorLogger, $userId) {
         try {
-            $this->db->query("LOCK TABLES borrowed_books READ");
-            $borrowIdsStr = join(",", $borrowBooksId);
-            $query = "SELECT COUNT(borrowed_books.bookId) as borrows, books.copies"
-                    . " FROM books"
-                    . " LEFT JOIN borrowed_books ON books.id = borrowed_books.bookId"
-                    . " GROUP BY books.id"
-                    . " HAVING books.id in(:borrowIdsStr) AND borrowed_books.boolReturn=0";
-            $bind[":borrowIdsStr"] = $borrowIdsStr;
-            $result = $this->db->preparedQuery($query, $bind);
-            $con = true;
-            while ($row = $result->fetch(PDO::FETCH_ASSOC) && $con) {
-                if ($row["borrows"] >= $row["copies"]) {
-                    $errorLogger->addGeneralError("לא כל הספרים המבוקשים פנויים להשאלה");
-                    $con = false;
-                }
+            //$this->db->query("LOCK TABLES borrowed_books read, books read");
+            //$this->db->query("UNLOCK TABLES");
+            $this->validateCanBorrowBooks($borrowBooksId, $errorLogger);
+
+            if (!$errorLogger->isValid()) {
+                return false;
             }
-            $this->db->query("UNLOCK TABLES");
+            $borrowedBooks = $this->getBorrowedBooks()->fetchAll(PDO::FETCH_ASSOC);
+            if (!$this->validateNotBorrowed()) {
+                $errorLogger->addGeneralError("אי אפשר להשאיל ספר שכבר מושאל");
+            }
+            if (!$this->validateNoBorrowRepeat()) {
+                $errorLogger->addGeneralError("אי אפשר להשאיל פעמיים את אותו הספר");
+            }
+            if (!$this->validateCanReturnBooks()) {
+                $errorLogger->addGeneralError("ספרים מוחזרים לא תקינים");
+            }
+            $allowedBorrowNum = $this->maxBooks - count($borrowedBooks) + count($returnBooksId);
+            if (count($borrowBooksId) > $allowedBorrowNum) {
+                $errorLogger->addGeneralError("חרגת ממס' הספרים המותר להשאלה במקביל");
+            }
+            foreach ($borrowBooksId as $id) {
+                $fields = array();
+                $fields["bookId"] = $id;
+                $fields["readerId"] = $this->id;
+                $fields["borrowUserId"] = $userId;
+                $this->db->insert("borrowed_books", $fields);
+            }
+
             return true;
         } catch (Exception $ex) {
+            $errorLogger->addGeneralError("שגיאת מסד נתונים: " . $ex->getMessage());
             return false;
+        }
+    }
+
+    private function validateCanReturnBooks($borrowedBooks, $returnBooksId) {
+        $count = 0;
+        foreach ($borrowedBooks as $book) {
+            if (isset($returnBooksId[$book->id])) {
+                $count++;
+            }
+        }
+        return count($returnBooksId) == $count;
+    }
+
+    private function validateNotBorrowed($borrowBooksId, $borrowedBooks) {
+        foreach ($borrowBooksId as $id) {
+            foreach ($borrowedBooks as $book) {
+                if ($id == $book->id) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private function validateNoBorrowRepeat($borrowedBooks) {
+        $repeats = array();
+        foreach ($borrowedBooks as $book) {
+            if (!isset($repeats[$book->id])) {
+                $repeats[$book->id] = 1;
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private function validateCanBorrowBooks($borrowBooksId, $errorLogger) {
+        for ($i = 0; $i < count($borrowBooksId); $i++) {
+            $bind[":borrow" . $i] = $borrowBooksId[$i];
+            $strArr[] = ":borrow" . $i;
+        }
+        $str = join(",", $strArr);
+        $query = "SELECT books.name, COUNT(borrowed_books.bookId) as borrows, books.copies"
+                . " FROM books"
+                . " LEFT JOIN borrowed_books ON books.id = borrowed_books.bookId AND borrowed_books.boolReturn=0"
+                . " GROUP BY books.id"
+                . " HAVING books.id in({$str})";
+        $result = $this->db->preparedQuery($query, $bind);
+        $count = 0;
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $count++;
+            if ($row["borrows"] >= $row["copies"] || $row["copies"] == 0) {
+                $errorLogger->addGeneralError("הספר '{$row["name"]}' אינו פנוי להשאלה");
+            }
+        }
+        if ($count < count($borrowBooksId)) {
+            $errorLogger->addGeneralError("לא נמצאו כל הספרים להשאלה");
         }
     }
 

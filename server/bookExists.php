@@ -3,11 +3,11 @@
 include "globalFunctions.php";
 include "userPermission.php";
 
-$reader = Factory::makeReader();
+$book = Factory::makeBook();
 $param = new Param();
-$reader->id = $param->get("id");
+$book->id = $param->get("id");
 $errorLogger = new ErrorLogger();
-$result = $reader->validateIDExist($errorLogger);
+$result = $book->validateIdExist($errorLogger);
 if ($errorLogger->isValid()) {
     $output["success"] = true;
 } else {

@@ -1,0 +1,23 @@
+<h1>עדכון ספר</h1>
+
+<div class="form">
+    <table class="fields">
+        <tr>
+            <td>
+                קוד ספר:
+            </td>
+            <td>
+                <input type="text" class="big" dir="ltr" ng-model="fields.id">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <img src="assets/img/loader.gif" class="loader" ng-show="loading">
+                <div general-errors></div>
+                <a class="btn left" ng-click="searchBook()" ng-hide="loading">חפש</a>
+
+            </td>
+        </tr>
+    </table>
+</div>
+<div btns-menu></div>

@@ -13,19 +13,19 @@ angular.module("library").controller("addBookCtrl", function ($scope, $http, ale
     $scope.select = {};
     $http({
         method: "post",
-        url: "./dist/server/readAuthors.php"
+        url: "./server/readAuthors.php"
     }).then(function (response) {
         $scope.select.authors = response.data.authors;
     });
     $http({
         method: "post",
-        url: "./dist/server/readPublishers.php"
+        url: "./server/readPublishers.php"
     }).then(function (response) {
         $scope.select.publishers = response.data.publishers;
     });
     $http({
         method: "post",
-        url: "./dist/server/readSections.php"
+        url: "./server/readSections.php"
     }).then(function (response) {
         $scope.select.sections = response.data.sections;
 
@@ -50,7 +50,7 @@ angular.module("library").controller("addBookCtrl", function ($scope, $http, ale
         $scope.loading = true;
         $http({
             method: "post",
-            url: "./dist/server/addBook.php",
+            url: "./server/addBook.php",
             data: $scope.fields
         }).then(function (response) {
             $scope.loading = false;

@@ -51,7 +51,7 @@ class Database {
         $this->preparedQuery($query, $bind);
     }
 
-    public function update($table, $data, $condition) {
+    public function update($table, $data, $condition, $conditionType = "AND") {
         $set = "";
         foreach ($data as $field => $value) {
             if ($set != "") {
@@ -63,7 +63,7 @@ class Database {
         $where = "";
         foreach ($condition as $field => $value) {
             if ($where != "") {
-                $where.=" AND ";
+                $where.=" {$conditionType} ";
             }
             $where.="{$field}=:where{$field}";
             $bind[":where{$field}"] = $condition[$field];

@@ -16,7 +16,7 @@ angular.module("library").controller("updateBookCtrl", function ($scope, $http, 
     $scope.select = {};
     $http({
         method: "post",
-        url: "./dist/server/readBook.php",
+        url: "./server/readBook.php",
         data: {id: bookId}
     }).then(function (response) {
         $scope.fields = response.data;
@@ -30,19 +30,19 @@ angular.module("library").controller("updateBookCtrl", function ($scope, $http, 
     });
     $http({
         method: "post",
-        url: "./dist/server/readAuthors.php"
+        url: "./server/readAuthors.php"
     }).then(function (response) {
         $scope.select.authors = response.data.authors;
     });
     $http({
         method: "post",
-        url: "./dist/server/readPublishers.php"
+        url: "./server/readPublishers.php"
     }).then(function (response) {
         $scope.select.publishers = response.data.publishers;
     });
     $http({
         method: "post",
-        url: "./dist/server/readSections.php"
+        url: "./server/readSections.php"
     }).then(function (response) {
         $scope.select.sections = response.data.sections;
         if (boolSectionsFinish)
@@ -76,7 +76,7 @@ angular.module("library").controller("updateBookCtrl", function ($scope, $http, 
         $scope.loading = true;
         $http({
             method: "post",
-            url: "./dist/server/updateBook.php",
+            url: "./server/updateBook.php",
             data: $scope.fields
         }).then(function (response) {
             $scope.loading = false;

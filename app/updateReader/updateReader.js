@@ -39,7 +39,7 @@ angular.module("library").controller("updateReaderCtrl", function ($scope, $http
     };
     $http({
         method: "post",
-        url: "./dist/server/readReader.php",
+        url: "./server/readReader.php",
         data: {id: readerId}
     }).then(function (response) {
         $scope.fields = response.data;
@@ -48,14 +48,14 @@ angular.module("library").controller("updateReaderCtrl", function ($scope, $http
     });
     $http({
         method: "post",
-        url: "./dist/server/readReaderTypes.php"
+        url: "./server/readReaderTypes.php"
     }).then(function (response) {
         $scope.select.readerTypes = response.data.readerTypes;
         updatePay();
     });
     $http({
         method: "post",
-        url: "./dist/server/readBooksNum.php"
+        url: "./server/readBooksNum.php"
     }).then(function (response) {
         $scope.select.maxBooks = response.data.booksNum;
     });
@@ -63,7 +63,7 @@ angular.module("library").controller("updateReaderCtrl", function ($scope, $http
         $scope.loading = true;
         $http({
             method: "post",
-            url: "./dist/server/updateReader.php",
+            url: "./server/updateReader.php",
             data: $scope.fields
         }).then(function (response) {
             $scope.loading = false;
