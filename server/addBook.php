@@ -23,6 +23,7 @@ function addBook() {
 
     if ($book->create($validator->errorLogger, Factory::getUser()->id)) {
         $output["success"] = true;
+        $output["id"] = $book->id;
     } else {
         $output = $validator->errorLogger->getErrors();
     }

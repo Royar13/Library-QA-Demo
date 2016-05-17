@@ -2,7 +2,7 @@
     עדכון ספר
     <a class="btn short toggleMode" ng-click="toggleModes()">{{editMode?"למצב קריאה":"למצב עריכה"}}</a>
 </h1>
-<img class="rightImage" src="assets/img/viewBook.png">
+<img class="rightImage" src="dist/img/viewBook.png">
 <div class="form">
     <div ng-show="editMode">
         <table class="fields">
@@ -73,7 +73,7 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <img src="assets/img/loader.gif" class="loader" ng-show="loading">
+                    <img src="dist/img/loader.gif" class="loader" ng-show="loading">
                     <div general-errors></div>
                     <a class="btn left" ng-click="updateBook()" ng-hide="loading">עדכן ספר</a>
                 </td>

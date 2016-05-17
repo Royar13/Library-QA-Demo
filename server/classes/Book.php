@@ -38,10 +38,11 @@ class Book implements IDatabaseAccess {
             $fields["releaseYear"] = $this->releaseYear;
             $fields["copies"] = $this->copies;
             $this->db->insert("books", $fields);
+            $this->id = $this->db->getLastId();
 
             $fields = array();
             $fields["userId"] = $userId;
-            $fields["bookId"] = $this->db->getLastId();
+            $fields["bookId"] = $this->id;
             $fields["description"] = "המשתמש {user} יצר את הספר {book}";
             $this->db->insert("books_actions", $fields);
             return true;
