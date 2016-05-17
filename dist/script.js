@@ -56,7 +56,7 @@ app.config(function ($routeProvider) {
             $rootScope.controllerName = data.$$route.controller;
     });
 });
-angular.module("library").controller("addBookCtrl", function ($scope, $http, alertify) {
+angular.module("library").controller("addBookCtrl", function ($scope, $http, $location, alertify) {
 
     $scope.fields = {
         name: "",
@@ -117,6 +117,7 @@ angular.module("library").controller("addBookCtrl", function ($scope, $http, ale
                 alertify.error("הקלט שהוזן אינו תקין");
             } else {
                 alertify.success("הספר נוסף בהצלחה!");
+                $location.path("/updateBook").search({id: response.data.id});
             }
         });
     };
@@ -129,7 +130,7 @@ angular.module("library").controller("addBookCtrl", function ($scope, $http, ale
     }
 });
 
-angular.module("library").controller("addReaderCtrl", function ($scope, $http, alertify) {
+angular.module("library").controller("addReaderCtrl", function ($scope, $http, $location, alertify) {
     $scope.fields = {
         id: "",
         name: "",
@@ -182,6 +183,7 @@ angular.module("library").controller("addReaderCtrl", function ($scope, $http, a
             }
             else {
                 alertify.success("הקורא נוסף בהצלחה!");
+                $location.path("/updateReader").search({id: $scope.fields.id});
             }
         });
     };

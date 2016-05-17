@@ -1,4 +1,4 @@
-angular.module("library").controller("addReaderCtrl", function ($scope, $http, alertify) {
+angular.module("library").controller("addReaderCtrl", function ($scope, $http, $location, alertify) {
     $scope.fields = {
         id: "",
         name: "",
@@ -51,6 +51,7 @@ angular.module("library").controller("addReaderCtrl", function ($scope, $http, a
             }
             else {
                 alertify.success("הקורא נוסף בהצלחה!");
+                $location.path("/updateReader").search({id: $scope.fields.id});
             }
         });
     };

@@ -1,4 +1,4 @@
-angular.module("library").controller("addBookCtrl", function ($scope, $http, alertify) {
+angular.module("library").controller("addBookCtrl", function ($scope, $http, $location, alertify) {
 
     $scope.fields = {
         name: "",
@@ -59,6 +59,7 @@ angular.module("library").controller("addBookCtrl", function ($scope, $http, ale
                 alertify.error("הקלט שהוזן אינו תקין");
             } else {
                 alertify.success("הספר נוסף בהצלחה!");
+                $location.path("/updateBook").search({id: response.data.id});
             }
         });
     };
