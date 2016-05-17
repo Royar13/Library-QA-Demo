@@ -9,7 +9,7 @@ function borrowReturnBooks() {
     $success = false;
     $reader = Factory::makeReader();
     $param = new Param();
-    $reader->id = $param->get("id");
+    $reader->id = $param->get("readerId");
     $errorLogger = new ErrorLogger();
     if ($reader->readOne()) {
         $borrowBooksId = $param->get("borrowBooksId");

@@ -196,12 +196,12 @@ class Book implements IDatabaseAccess {
     }
 
     public function readAllBorrowAPI() {
-        return $this->db->query("SELECT books.id, books.name, authors.name as authorName, IF(COUNT(borrowed_books.bookId)>=books.copies, false, true) as available, borrowed_books.boolReturn"
+        return $this->db->query("SELECT books.id, books.name, authors.name as authorName, IF(COUNT(borrowed_books.bookId)>=books.copies OR books.copies=0, false, true) as available, borrowed_books.boolReturn"
                         . " FROM books"
                         . " LEFT JOIN authors ON books.authorId=authors.id"
-                        . " LEFT JOIN borrowed_books ON books.id = borrowed_books.bookId"
+                        . " LEFT JOIN borrowed_books ON books.id = borrowed_books.bookId AND borrowed_books.boolReturn=0"
                         . " GROUP BY books.id"
-                        . " HAVING borrowed_books.boolReturn=0"
         );
     }
+
 }

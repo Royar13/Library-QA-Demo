@@ -46,7 +46,7 @@
             <td>{{reader.joinDate| dateToISO | date:'dd/MM/yy'}}</td>
             <td class="actionsInit">
                 <a class="editBtn" href="#/updateReader?id={{reader.id}}" title="ערוך"></a>
-                <a class="borrowBtn" title="השאלה/החזרה"></a>
+                <a class="borrowBtn" href="#/borrowBooks?id={{reader.id}}" title="השאלה/החזרה"></a>
             </td>
         </tr>
     </tbody>

@@ -177,7 +177,7 @@ a.btn.short:active {
     padding-left: 2px;
     padding-top: 2px;
 }
-input, select {
+input:not([type=checkbox]), select {
     padding: 4px;
     border-radius: 6px;
     border: 1px solid #999;
@@ -185,7 +185,7 @@ input, select {
     box-sizing: border-box;
 }
 .form {
-    input {
+    input:not([type=checkbox]) {
         width: 180px;
     }
     select {
@@ -315,4 +315,8 @@ img.rightImage {
     width: 150px;
     margin-left: 30px;
     float: right;
+}
+.angucomplete-dropdown {
+    overflow-y: auto;
+    max-height: 150px;
 }

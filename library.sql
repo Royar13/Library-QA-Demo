@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 16, 2016 at 06:29 PM
+-- Generation Time: May 17, 2016 at 09:29 PM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -113,7 +113,7 @@ CREATE TABLE IF NOT EXISTS `books_actions` (
   `description` char(255) COLLATE utf8_bin NOT NULL,
   `actionDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=24 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=25 ;
 
 --
 -- Dumping data for table `books_actions`
@@ -142,7 +142,8 @@ INSERT INTO `books_actions` (`id`, `userId`, `bookId`, `description`, `actionDat
 (20, 1, 1, 'המשתמש {user} עדכן את הספר {book}', '2016-05-15 16:58:42'),
 (21, 1, 1, 'המשתמש {user} עדכן את הספר {book}', '2016-05-15 16:59:16'),
 (22, 1, 11, 'המשתמש {user} עדכן את הספר {book}', '2016-05-16 09:32:06'),
-(23, 1, 13, 'המשתמש {user} עדכן את הספר {book}', '2016-05-16 16:16:45');
+(23, 1, 13, 'המשתמש {user} עדכן את הספר {book}', '2016-05-16 16:16:45'),
+(24, 1, 11, 'המשתמש {user} עדכן את הספר {book}', '2016-05-17 22:28:24');
 
 -- --------------------------------------------------------
 
@@ -160,15 +161,18 @@ CREATE TABLE IF NOT EXISTS `borrowed_books` (
   `borrowUserId` int(11) NOT NULL,
   `returnUserId` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=9 ;
 
 --
 -- Dumping data for table `borrowed_books`
 --
 
 INSERT INTO `borrowed_books` (`id`, `bookId`, `readerId`, `borrowDate`, `boolReturn`, `returnDate`, `borrowUserId`, `returnUserId`) VALUES
-(4, 1, 315524695, '2016-05-16 14:32:47', 0, '2016-05-16 15:15:51', 1, 1),
-(5, 2, 315524695, '2016-05-16 14:32:47', 0, '2016-05-16 15:15:51', 1, 1);
+(4, 1, 315524695, '2016-03-14 14:32:47', 1, '2016-05-17 20:09:06', 1, 1),
+(5, 2, 315524695, '2016-05-16 14:32:47', 1, '2016-05-17 20:39:08', 1, 1),
+(6, 1, 315524695, '2016-05-17 20:39:08', 1, '2016-05-17 20:41:18', 1, 1),
+(7, 2, 315524695, '2016-05-17 22:03:45', 1, '2016-05-17 22:22:25', 1, 1),
+(8, 2, 315524696, '2016-05-17 22:27:44', 1, '2016-05-17 22:27:56', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -187,7 +191,7 @@ CREATE TABLE IF NOT EXISTS `borrow_rules` (
 --
 
 INSERT INTO `borrow_rules` (`borrowDays`, `dailyFine`) VALUES
-(30, '2.00');
+(20, '2.00');
 
 -- --------------------------------------------------------
 
@@ -235,7 +239,7 @@ CREATE TABLE IF NOT EXISTS `readers` (
 INSERT INTO `readers` (`id`, `name`, `city`, `street`, `readerType`, `maxBooks`, `joinDate`) VALUES
 (123456789, 'רועי', 'מודיעין', 'יוסף 43', 3, 6, '2016-05-13 17:32:26'),
 (222222222, 'גדשג', 'רמת גן', 'בגין 4', 2, 4, '2016-05-14 19:17:05'),
-(315524695, 'משאיל הספרים', 'גדשג', 'גדשג 534', 4, 2, '2016-05-13 17:32:26'),
+(315524695, 'משאיל הספרים', 'גדשג', 'גדשג 534', 4, 2, '2016-03-01 17:32:26'),
 (315524696, 'גשדג', 'גדשג', 'גדשג 534', 1, 4, '2016-05-13 17:32:26'),
 (315524697, 'גשדג', 'גדשג', 'גדשג 534', 1, 4, '2016-05-13 17:32:26'),
 (315524698, 'גשדג', 'גדשג', 'גדשג 534', 1, 4, '2016-05-13 17:32:26'),
@@ -255,7 +259,7 @@ CREATE TABLE IF NOT EXISTS `readers_actions` (
   `description` char(255) COLLATE utf8_bin NOT NULL,
   `actionDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=21 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=22 ;
 
 --
 -- Dumping data for table `readers_actions`
@@ -273,7 +277,8 @@ INSERT INTO `readers_actions` (`id`, `userId`, `readerId`, `description`, `actio
 (17, 1, 315524695, 'המשתמש {user} עדכן את הקורא {reader}', '2016-05-16 09:09:08'),
 (18, 1, 315524695, 'המשתמש {user} עדכן את הקורא {reader}', '2016-05-16 09:29:59'),
 (19, 1, 315524695, 'המשתמש {user} עדכן את הקורא {reader}', '2016-05-16 09:30:06'),
-(20, 1, 222222222, 'המשתמש {user} עדכן את הקורא {reader}', '2016-05-16 16:21:59');
+(20, 1, 222222222, 'המשתמש {user} עדכן את הקורא {reader}', '2016-05-16 16:21:59'),
+(21, 1, 315524699, 'המשתמש {user} עדכן את הקורא {reader}', '2016-05-17 22:10:27');
 
 -- --------------------------------------------------------
 

@@ -14,6 +14,8 @@ $output["city"] = $reader->city;
 $output["street"] = $reader->street;
 $output["readerType"] = $reader->readerType;
 $output["maxBooks"] = $reader->maxBooks;
+$output["joinDate"] = $reader->joinDate;
+$output["payments"] = $reader->payments;
 
 Factory::write($output);
 

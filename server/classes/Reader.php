@@ -9,6 +9,8 @@ class Reader implements IDatabaseAccess {
     public $street;
     public $readerType;
     public $maxBooks;
+    public $joinDate;
+    public $payments;
 
     public function setDatabase($db) {
         $this->db = $db;
@@ -88,7 +90,7 @@ class Reader implements IDatabaseAccess {
     }
 
     public function readOne() {
-        $query = "select * from readers where id=:id";
+        $query = "select readers.*, reader_types.bookCost from readers join reader_types on readers.readerType=reader_types.id where readers.id=:id";
         $bind[":id"] = $this->id;
         $result = $this->db->preparedQuery($query, $bind);
         $rows = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -99,6 +101,11 @@ class Reader implements IDatabaseAccess {
             $this->street = $reader["street"];
             $this->readerType = $reader["readerType"];
             $this->maxBooks = $reader["maxBooks"];
+            $this->joinDate = $reader["joinDate"];
+            $joinDate = new DateTime($this->joinDate);
+            $now = new DateTime();
+            $months = $now->diff($joinDate)->format("%m");
+            $this->payments = $reader["bookCost"] * $this->maxBooks * $months;
             return true;
         }
         return false;
@@ -183,6 +190,10 @@ class Reader implements IDatabaseAccess {
     }
 
     public function borrowReturnBooks($borrowBooksId, $returnBooksId, $errorLogger, $userId) {
+        if (count($borrowBooksId) == 0 && count($returnBooksId) == 0) {
+            $errorLogger->addGeneralError("לא נבחרו ספרים");
+            return false;
+        }
         try {
             //$this->db->query("LOCK TABLES borrowed_books read, books read");
             //$this->db->query("UNLOCK TABLES");

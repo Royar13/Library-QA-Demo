@@ -1,8 +1,15 @@
-angular.module("library").controller("borrowBooksCtrl", function ($scope, $http, $routeParams, alertify) {
+angular.module("library").controller("borrowBooksCtrl", function ($scope, $http, $location, $routeParams, alertify) {
     $scope.readerId = $routeParams.id;
     $scope.isReturn = [];
     $scope.borrows = [];
-    $scope.allowedBooksNum = 2;
+    $scope.allowedBooksNum = function () {
+        try {
+            return Number($scope.maxBooks) + returnedAmount() - $scope.borrowedBooks.length;
+        }
+        catch ($ex) {
+            return 0;
+        }
+    };
 
     $scope.fields = {
         readerId: "",
@@ -17,11 +24,12 @@ angular.module("library").controller("borrowBooksCtrl", function ($scope, $http,
         data: {id: $scope.readerId}
     }).then(function (response) {
         $scope.readerName = response.data.name;
+        $scope.maxBooks = response.data.maxBooks;
     });
     $http({
         method: "post",
-        url: "./server/readBorrowedBooks.php",
-        data: {id: $scope.readerId}
+        url: "./server/readBorrowsForDisplay.php",
+        data: {readerId: $scope.readerId}
     }).then(function (response) {
         $scope.borrowedBooks = response.data.borrows;
     });
@@ -42,11 +50,44 @@ angular.module("library").controller("borrowBooksCtrl", function ($scope, $http,
             }
         }
         for (var i in $scope.borrows) {
-            $scope.fields.borrowBooksId.push($scope.borrows[i].description.id);
+            $scope.fields.borrowBooksId.push($scope.borrows[i].originalObject.id);
         }
+        $http({
+            method: "post",
+            url: "./server/borrowReturnBooks.php",
+            data: $scope.fields
+        }).then(function (response) {
+            if (response.data.success) {
+                alertify.success("הספרים הוחזרו/הושאלו בהצלחה!");
+                $location.path("/updateReader").search({id: $scope.readerId});
+            }
+            else {
+                alertify.error("קלט לא תקין");
+                $scope.errors = response.data.errors;
+            }
+        });
     };
     $scope.getBorrowLength = function () {
-        var len = Math.min($scope.borrows.length + 1, $scope.allowedBooksNum);
-        return new Array(len);
+        var len = Math.min($scope.borrows.length + 1, $scope.allowedBooksNum());
+        var arr = new Array();
+        for (var i = 0; i < len; i++) {
+            arr[i] = "";
+        }
+        return arr;
+    };
+    function returnedAmount() {
+        var c = 0;
+        for (var i in $scope.isReturn) {
+            if ($scope.isReturn[i]) {
+                c++;
+            }
+        }
+        return c;
+    }
+    ;
+    $scope.switchCb = function ($event, key) {
+        if ($event.target.className == "cbInit") {
+            $scope.isReturn[key] = !$scope.isReturn[key];
+        }
     };
 });

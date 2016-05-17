@@ -67,7 +67,9 @@
                 <td class="title">
                     ת.ז.:
                 </td>
-                <td ng-bind="fields.id">
+                <td>
+                    {{fields.id}}
+                    <a id="borrowBtn" href="#/borrowBooks?id={{fields.id}}" class="btn">השאל/החזר ספרים</a>
                 </td>
             </tr>
             <tr>
@@ -93,6 +95,14 @@
             </tr>
             <tr>
                 <td class="title">
+                    תאריך הצטרפות:
+                </td>
+                <td>
+                    {{fields.joinDate| dateToISO |date:'dd/MM/yy'}}
+                </td>
+            </tr>            
+            <tr>
+                <td class="title">
                     תשלום חודשי:
                 </td>
                 <td>
@@ -100,6 +110,68 @@
                     ₪
                 </td>
             </tr>
+            <tr>
+                <td class="title">
+                    סך תשלומים:
+                </td>
+                <td>
+                    {{fields.payments|number:2}}
+                    ₪
+                </td>
+            </tr>
+            <tr>
+                <td class="title">
+                    סך קנסות:
+                </td>
+                <td>
+                    {{fine|number:2}}
+                    ₪
+                </td>
+            </tr> 
+        </table>
+        <h3>השאלות</h3>
+        <table st-table="displayedBorrows" st-safe-src="borrows" class="data-table">
+            <thead>
+                <tr>
+                    <th st-sort="bookName">ספר</th>
+                    <th st-sort="borrowDate" st-sort-default="reverse">תאריך השאלה</th>
+                    <th st-sort="boolReturn">האם הוחזר</th>
+                    <th st-sort="returnDate">תאריך החזרה</th>
+                    <th>איחור</th>
+                    <th>קנס (₪)</th>
+
+                </tr>
+                <tr>
+                    <th>
+                        <input type="text" st-search="bookName" placeholder="חפש ספר">
+                    </th>
+                    <th>
+                    </th>
+                    <th>
+                        <select st-search="boolReturn">
+                            <option value=""></option>
+                            <option value="1">כן</option>
+                            <option value="0">לא</option>
+                        </select>                    
+                    </th>
+                    <th>
+                    </th>
+                    <th>
+                    </th>
+                    <th>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="borrow in displayedBorrows">
+                    <td>{{borrow.bookName}} (קוד #{{borrow.bookId}})</td>
+                    <td>{{borrow.borrowDate| dateToISO | date:'dd/MM/yy'}}</td>
+                    <td>{{(borrow.boolReturn==1)?"כן":"לא"}}</td>
+                    <td>{{(borrow.boolReturn==0)?"":(borrow.returnDate| dateToISO | date:'dd/MM/yy')}}</td>
+                    <td>{{(borrow.isLate==0)?"ללא":borrow.lateDays+" ימים"}}</td>
+                    <td>{{(borrow.isLate==0)?"0":borrow.fine}}</td>
+                </tr>
+            </tbody>
         </table>
     </div>
 </div>

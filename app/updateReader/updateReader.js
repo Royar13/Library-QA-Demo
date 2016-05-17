@@ -8,8 +8,10 @@ angular.module("library").controller("updateReaderCtrl", function ($scope, $http
         city: "",
         street: "",
         maxBooks: 0,
-        readerType: ""
+        readerType: "",
+        joinDate: 0
     };
+    $scope.fine = 0;
     $scope.errors = {};
     $scope.select = {};
     $scope.monthlyPay = 0;
@@ -58,6 +60,20 @@ angular.module("library").controller("updateReaderCtrl", function ($scope, $http
         url: "./server/readBooksNum.php"
     }).then(function (response) {
         $scope.select.maxBooks = response.data.booksNum;
+    });
+
+    $http({
+        method: "post",
+        url: "./server/readAllReaderBorrows.php",
+        data: {readerId: readerId}
+    }).then(function (response) {
+        $scope.borrows = response.data.borrows;
+        for (var i in $scope.borrows) {
+            var borrow = $scope.borrows[i];
+            if (borrow.isLate == 1) {
+                $scope.fine += borrow.fine;
+            }
+        }
     });
     $scope.updateReader = function () {
         $scope.loading = true;
