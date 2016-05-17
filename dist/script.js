@@ -388,25 +388,6 @@ angular.module("library").controller("panelCtrl", function ($scope, $window, $lo
     }
     $scope.loading = false;
 });
-angular.module("library").service("userService", function ($http, $location) {
-    this.updateUser = function (username, name) {
-        this.user = {username: username, name: name};
-    };
-    this.getUser = function () {
-        if (this.user != null) {
-            return true;
-        }
-        var _this = this;
-        return $http({
-            method: "post",
-            url: "./server/login.php"
-        }).then(function (response) {
-            if (response.data.success) {
-                _this.updateUser(response.data.username, response.data.name);
-            }
-        });
-    };
-});
 angular.module("library").controller("topBarCtrl", function ($scope, $http, $location, userService) {
     $scope.user = {};
     function retrieveUser() {
@@ -433,6 +414,25 @@ angular.module("library").controller("topBarCtrl", function ($scope, $http, $loc
         }).then(function () {
             userService.user = null;
             $location.path("/");
+        });
+    };
+});
+angular.module("library").service("userService", function ($http, $location) {
+    this.updateUser = function (username, name) {
+        this.user = {username: username, name: name};
+    };
+    this.getUser = function () {
+        if (this.user != null) {
+            return true;
+        }
+        var _this = this;
+        return $http({
+            method: "post",
+            url: "./server/login.php"
+        }).then(function (response) {
+            if (response.data.success) {
+                _this.updateUser(response.data.username, response.data.name);
+            }
         });
     };
 });
