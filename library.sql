@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 17, 2016 at 09:29 PM
+-- Generation Time: May 18, 2016 at 02:50 PM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `authors` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` char(255) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=11 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=12 ;
 
 --
 -- Dumping data for table `authors`
@@ -61,7 +61,8 @@ INSERT INTO `authors` (`id`, `name`) VALUES
 (7, 'דאגלס אדמס'),
 (8, 'דאג'),
 (9, 'דאגב'),
-(10, 'גגג');
+(10, 'גגג'),
+(11, 'שש');
 
 -- --------------------------------------------------------
 
@@ -79,7 +80,7 @@ CREATE TABLE IF NOT EXISTS `books` (
   `releaseYear` int(11) DEFAULT NULL,
   `copies` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=15 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=18 ;
 
 --
 -- Dumping data for table `books`
@@ -98,7 +99,11 @@ INSERT INTO `books` (`id`, `name`, `sectionId`, `bookcaseId`, `authorId`, `publi
 (10, 'מדריך הטרמפיסט לגלקסיה', 1, 2, 7, 2, 1900, 2),
 (11, 'גגדשגדשג', 2, 1, 8, 3, 0, 0),
 (12, 'גשדגשדג', 1, 1, 9, 3, 0, 0),
-(13, 'המסעדה בסוף היקום', 1, 1, 7, 3, 0, 0);
+(13, 'המסעדה בסוף היקום', 1, 1, 7, 3, 0, 0),
+(14, 'גגג', 2, 3, 11, 3, 0, 0),
+(15, 'מדריך הטרמפיסט לגלקסיה', 1, 1, 7, 3, 1979, 5),
+(16, 'מדריך הטרמפיסט לגלקסיה', 1, 1, 7, 3, 1979, 5),
+(17, 'מדריך הטרמפיסט לגלקסיה', 1, 1, 7, 3, 1979, 5);
 
 -- --------------------------------------------------------
 
@@ -113,7 +118,7 @@ CREATE TABLE IF NOT EXISTS `books_actions` (
   `description` char(255) COLLATE utf8_bin NOT NULL,
   `actionDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=25 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=30 ;
 
 --
 -- Dumping data for table `books_actions`
@@ -143,7 +148,12 @@ INSERT INTO `books_actions` (`id`, `userId`, `bookId`, `description`, `actionDat
 (21, 1, 1, 'המשתמש {user} עדכן את הספר {book}', '2016-05-15 16:59:16'),
 (22, 1, 11, 'המשתמש {user} עדכן את הספר {book}', '2016-05-16 09:32:06'),
 (23, 1, 13, 'המשתמש {user} עדכן את הספר {book}', '2016-05-16 16:16:45'),
-(24, 1, 11, 'המשתמש {user} עדכן את הספר {book}', '2016-05-17 22:28:24');
+(24, 1, 11, 'המשתמש {user} עדכן את הספר {book}', '2016-05-17 22:28:24'),
+(25, 1, 14, 'המשתמש {user} יצר את הספר {book}', '2016-05-17 23:28:05'),
+(26, 1, 15, 'המשתמש {user} יצר את הספר {book}', '2016-05-18 00:13:16'),
+(27, 1, 16, 'המשתמש {user} יצר את הספר {book}', '2016-05-18 00:36:21'),
+(28, 1, 17, 'המשתמש {user} יצר את הספר {book}', '2016-05-18 00:37:41'),
+(29, 1, 1, 'המשתמש {user} עדכן את הספר {book}', '2016-05-18 00:53:33');
 
 -- --------------------------------------------------------
 
@@ -159,7 +169,7 @@ CREATE TABLE IF NOT EXISTS `borrowed_books` (
   `boolReturn` tinyint(1) DEFAULT '0',
   `returnDate` datetime DEFAULT NULL,
   `borrowUserId` int(11) NOT NULL,
-  `returnUserId` int(11) NOT NULL,
+  `returnUserId` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=9 ;
 
@@ -244,7 +254,10 @@ INSERT INTO `readers` (`id`, `name`, `city`, `street`, `readerType`, `maxBooks`,
 (315524697, 'גשדג', 'גדשג', 'גדשג 534', 1, 4, '2016-05-13 17:32:26'),
 (315524698, 'גשדג', 'גדשג', 'גדשג 534', 1, 4, '2016-05-13 17:32:26'),
 (315524699, 'גשדג', 'גדשג', 'בבב 4', 4, 4, '2016-05-13 17:32:26'),
-(315524700, 'גשדג', 'גדשג', 'גדשג 534', 1, 4, '2016-05-11 17:32:26');
+(315524700, 'גשדג', 'גדשג', 'גדשג 534', 1, 4, '2016-05-11 17:32:26'),
+(333333333, 'רקר', '', '', 2, 2, '2016-05-17 23:28:28'),
+(777777777, 'גדשגדשג', '', '', 4, 6, '2016-05-17 23:40:03'),
+(999999999, 'בבבבב', '', '', 1, 2, '2016-05-17 23:33:03');
 
 -- --------------------------------------------------------
 
@@ -259,7 +272,7 @@ CREATE TABLE IF NOT EXISTS `readers_actions` (
   `description` char(255) COLLATE utf8_bin NOT NULL,
   `actionDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=22 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=25 ;
 
 --
 -- Dumping data for table `readers_actions`
@@ -278,7 +291,10 @@ INSERT INTO `readers_actions` (`id`, `userId`, `readerId`, `description`, `actio
 (18, 1, 315524695, 'המשתמש {user} עדכן את הקורא {reader}', '2016-05-16 09:29:59'),
 (19, 1, 315524695, 'המשתמש {user} עדכן את הקורא {reader}', '2016-05-16 09:30:06'),
 (20, 1, 222222222, 'המשתמש {user} עדכן את הקורא {reader}', '2016-05-16 16:21:59'),
-(21, 1, 315524699, 'המשתמש {user} עדכן את הקורא {reader}', '2016-05-17 22:10:27');
+(21, 1, 315524699, 'המשתמש {user} עדכן את הקורא {reader}', '2016-05-17 22:10:27'),
+(22, 1, 333333333, 'המשתמש {user} יצר את הקורא {reader}', '2016-05-17 23:28:28'),
+(23, 1, 999999999, 'המשתמש {user} יצר את הקורא {reader}', '2016-05-17 23:33:03'),
+(24, 1, 777777777, 'המשתמש {user} יצר את הקורא {reader}', '2016-05-17 23:40:03');
 
 -- --------------------------------------------------------
 

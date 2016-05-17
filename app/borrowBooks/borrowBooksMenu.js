@@ -8,6 +8,10 @@ angular.module("library").controller("borrowBooksMenuCtrl", function ($scope, $h
             url: "./server/readerExists.php",
             data: $scope.fields
         }).then(function (response) {
+            if (!response.data.success && $scope.fields.id != "" && $scope.fields.id != null) {
+                $scope.generateSarcasm();
+                return;
+            }
             $scope.loading = false;
             if (!response.data.success) {
                 $scope.errors = response.data.errors;

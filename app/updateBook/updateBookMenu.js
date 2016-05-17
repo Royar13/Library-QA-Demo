@@ -8,6 +8,11 @@ angular.module("library").controller("updateBookMenuCtrl", function ($scope, $ht
             url: "./server/bookExists.php",
             data: $scope.fields
         }).then(function (response) {
+            if (!response.data.success && $scope.fields.id != "" && $scope.fields.id != null) {
+                $scope.generateSarcasm();
+                return;
+            }
+
             $scope.loading = false;
             if (!response.data.success) {
                 $scope.errors = response.data.errors;

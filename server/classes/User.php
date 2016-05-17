@@ -38,25 +38,22 @@ class User implements IDatabaseAccess {
     }
 
     public function login(ErrorLogger $errorLogger) {
-        try {
-            $query = "select * from users where username=:username and password=:password";
-            $bind[":username"] = $this->username;
-            $bind[":password"] = $this->password;
-            $result = $this->db->preparedQuery($query, $bind);
-            $rows = $result->fetchAll(PDO::FETCH_ASSOC);
-            if (count($rows) == 1) {
-                $userData = $rows[0];
-                $_SESSION["uid"] = $userData["id"];
+        $query = "select * from users where username=:username and password=:password";
+        $bind[":username"] = $this->username;
+        $bind[":password"] = $this->password;
+        $result = $this->db->preparedQuery($query, $bind);
+        $rows = $result->fetchAll(PDO::FETCH_ASSOC);
+        if (count($rows) == 1) {
+            $userData = $rows[0];
+            $_SESSION["uid"] = $userData["id"];
 
-                $this->id = $userData["id"];
-                $this->name = $userData["name"];
-                return true;
-            } else {
-                $errorLogger->addGeneralError("פרטי התחברות שגויים");
-                return false;
-            }
-        } catch (Exception $ex) {
-            $errorLogger->addGeneralError("שגיאת מסד נתונים");
+            $this->id = $userData["id"];
+            $this->name = $userData["name"];
+            return true;
+        } else {
+            //bug
+            throw new Exception();
+            $errorLogger->addGeneralError("פרטי התחברות שגויים");
             return false;
         }
     }

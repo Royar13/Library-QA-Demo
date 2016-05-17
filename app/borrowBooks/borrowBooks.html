@@ -7,11 +7,11 @@
     </h2>
     <div id="return">
         <h3>החזרה
-            <div class="returnTitle" ng-show="borrowedBooks.length>0">
+            <div class="returnTitle" ng-show="borrowedBooks.length > 0">
                 החזר:
             </div>
         </h3>
-        <div ng-show="borrowedBooks.length==0">
+        <div ng-show="borrowedBooks.length == 0">
             אין ספרים מושאלים
         </div>
         <div ng-repeat="borrow in borrowedBooks">
@@ -57,7 +57,10 @@
             </div>
         </div>
     </div>
-    <a class="btn" ng-click="borrowReturn()">החזר והשאל ספרים</a>
+    <div style="overflow: hidden;">
+        <a class="btn right" ng-click="borrowReturn()">החזר והשאל ספרים</a>
+        <a class="btn left short">בטל</a>
+    </div>
     <div general-errors></div>
 </div>
 

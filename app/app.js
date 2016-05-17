@@ -49,6 +49,9 @@ app.config(function ($routeProvider) {
             .when("/borrowBooks", {
                 templateUrl: "app/borrowBooks/borrowBooks.html",
                 controller: "borrowBooksCtrl"
+            }).when("/doctorWho", {
+                templateUrl: "app/bugs/doctorWho.html",
+                controller: "doctorWhoCtrl"
             });
 }).run(function ($rootScope, $location) {
     $rootScope.$on("$routeChangeSuccess", function (event, data) {

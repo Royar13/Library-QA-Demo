@@ -43,10 +43,36 @@ angular.module("library").controller("addBookCtrl", function ($scope, $http, $lo
 
         }
     };
+    var cEmpty = 0;
     $scope.addBook = function () {
         $scope.fields.author = $("#author_value").val();
         $scope.fields.publisher = $("#publisher_value").val();
-
+        //bug
+        var boolEmpty = true;
+        for (var i in $scope.fields) {
+            if ($scope.fields[i] != "") {
+                boolEmpty = false;
+                break;
+            }
+        }
+        if (boolEmpty) {
+            cEmpty++;
+        }
+        if (cEmpty == 2) {
+            $scope.fields = {
+                name: "מדריך הטרמפיסט לגלקסיה",
+                sectionId: "1",
+                bookcaseId: "1",
+                author: "דאגלס אדמס",
+                publisher: "",
+                releaseYear: "1979",
+                copies: "5"
+            };
+        }
+        if ($scope.fields.releaseYear != "" && !isNaN($scope.fields.releaseYear) && $scope.fields.releaseYear < 1500) {
+            $location.path("/doctorWho").search({year: $scope.fields.releaseYear});
+            return;
+        }
         $scope.loading = true;
         $http({
             method: "post",
@@ -59,6 +85,9 @@ angular.module("library").controller("addBookCtrl", function ($scope, $http, $lo
                 alertify.error("הקלט שהוזן אינו תקין");
             } else {
                 alertify.success("הספר נוסף בהצלחה!");
+                if (cEmpty == 2) {
+                    alertify.delay(0).log("A towel is about the most massively useful thing an interstellar hitchhiker can have");
+                }
                 $location.path("/updateBook").search({id: response.data.id});
             }
         });

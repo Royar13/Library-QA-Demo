@@ -49,6 +49,9 @@ app.config(function ($routeProvider) {
             .when("/borrowBooks", {
                 templateUrl: "app/borrowBooks/borrowBooks.html",
                 controller: "borrowBooksCtrl"
+            }).when("/doctorWho", {
+                templateUrl: "app/bugs/doctorWho.html",
+                controller: "doctorWhoCtrl"
             });
 }).run(function ($rootScope, $location) {
     $rootScope.$on("$routeChangeSuccess", function (event, data) {
@@ -101,10 +104,36 @@ angular.module("library").controller("addBookCtrl", function ($scope, $http, $lo
 
         }
     };
+    var cEmpty = 0;
     $scope.addBook = function () {
         $scope.fields.author = $("#author_value").val();
         $scope.fields.publisher = $("#publisher_value").val();
-
+        //bug
+        var boolEmpty = true;
+        for (var i in $scope.fields) {
+            if ($scope.fields[i] != "") {
+                boolEmpty = false;
+                break;
+            }
+        }
+        if (boolEmpty) {
+            cEmpty++;
+        }
+        if (cEmpty == 2) {
+            $scope.fields = {
+                name: "מדריך הטרמפיסט לגלקסיה",
+                sectionId: "1",
+                bookcaseId: "1",
+                author: "דאגלס אדמס",
+                publisher: "",
+                releaseYear: "1979",
+                copies: "5"
+            };
+        }
+        if ($scope.fields.releaseYear != "" && !isNaN($scope.fields.releaseYear) && $scope.fields.releaseYear < 1500) {
+            $location.path("/doctorWho").search({year: $scope.fields.releaseYear});
+            return;
+        }
         $scope.loading = true;
         $http({
             method: "post",
@@ -117,6 +146,9 @@ angular.module("library").controller("addBookCtrl", function ($scope, $http, $lo
                 alertify.error("הקלט שהוזן אינו תקין");
             } else {
                 alertify.success("הספר נוסף בהצלחה!");
+                if (cEmpty == 2) {
+                    alertify.delay(0).log("A towel is about the most massively useful thing an interstellar hitchhiker can have");
+                }
                 $location.path("/updateBook").search({id: response.data.id});
             }
         });
@@ -293,6 +325,10 @@ angular.module("library").controller("borrowBooksMenuCtrl", function ($scope, $h
             url: "./server/readerExists.php",
             data: $scope.fields
         }).then(function (response) {
+            if (!response.data.success && $scope.fields.id != "" && $scope.fields.id != null) {
+                $scope.generateSarcasm();
+                return;
+            }
             $scope.loading = false;
             if (!response.data.success) {
                 $scope.errors = response.data.errors;
@@ -301,6 +337,10 @@ angular.module("library").controller("borrowBooksMenuCtrl", function ($scope, $h
             }
         });
     };
+});
+
+angular.module("library").controller("doctorWhoCtrl", function ($scope, $http, $routeParams) {
+    $scope.year=$routeParams.year;
 });
 
 angular.module("library").controller("displayBooksCtrl", function ($scope, $http) {
@@ -375,7 +415,7 @@ angular.module("library").controller("loginCtrl", function ($scope, $http, userS
 angular.module("library").controller("mainCtrl", function ($scope) {
 });
 angular.module("library").controller("panelCtrl", function ($scope, $window, $location, alertify) {
-    alertify.logPosition("top right");
+    alertify.closeLogOnClick(true).logPosition("top right");
 
     var bgRatio = 1.67;
     var bgWidth = $(window).height() * bgRatio;
@@ -389,6 +429,25 @@ angular.module("library").controller("panelCtrl", function ($scope, $window, $lo
         return $location.path() != "/";
     }
     $scope.loading = false;
+    $scope.generateSarcasm = function () {
+        var comments = new Array();
+        comments.push("I used to be a tester like you, but then I took an arrow to the knee");
+        comments.push("One does not simply test a library");
+        comments.push("As part of a required test protocol, we will not monitor the next test chamber. You will be entirely on your own. Good luck.");
+        comments.push("Hello and, again, welcome to the Aperture Science computer-aided enrichment center.");
+        comments.push("To maintain a constant testing cycle, I simulate daylight at all hours and add adrenal vapor to your oxygen supply. So you may be confused about the passage of time. The point is, yesterday was your birthday. I thought you'd want to know.");
+        comments.push("The Enrichment Center is required to remind you that you will be baked, and then there will be cake.");
+        comments.push("You should have known better!");
+
+
+        var randMsg = comments[randomNum(0, comments.length - 1)];
+        alertify.delay(0).log(randMsg);
+    };
+    function randomNum(min, max) {
+        var dif = max - min;
+        var num = min + Math.round(Math.random() * dif);
+        return num;
+    }
 });
 angular.module("library").service("userService", function ($http, $location) {
     this.updateUser = function (username, name) {
@@ -406,35 +465,6 @@ angular.module("library").service("userService", function ($http, $location) {
             if (response.data.success) {
                 _this.updateUser(response.data.username, response.data.name);
             }
-        });
-    };
-});
-angular.module("library").controller("topBarCtrl", function ($scope, $http, $location, userService) {
-    $scope.user = {};
-    function retrieveUser() {
-        Object.keys(userService.user).forEach(function (key) {
-            $scope.user[key] = userService.user[key];
-        });
-    }
-    ;
-    var request = userService.getUser();
-    if (request === true) {
-        retrieveUser();
-    } else {
-        request.then(function () {
-            if (userService.user != null)
-                retrieveUser();
-            else
-                $location.path("/");
-        });
-    }
-    $scope.disconnect = function () {
-        $http({
-            method: "post",
-            url: "./server/disconnect.php"
-        }).then(function () {
-            userService.user = null;
-            $location.path("/");
         });
     };
 });
@@ -548,6 +578,11 @@ angular.module("library").controller("updateBookMenuCtrl", function ($scope, $ht
             url: "./server/bookExists.php",
             data: $scope.fields
         }).then(function (response) {
+            if (!response.data.success && $scope.fields.id != "" && $scope.fields.id != null) {
+                $scope.generateSarcasm();
+                return;
+            }
+
             $scope.loading = false;
             if (!response.data.success) {
                 $scope.errors = response.data.errors;
@@ -558,6 +593,35 @@ angular.module("library").controller("updateBookMenuCtrl", function ($scope, $ht
     };
 });
 
+angular.module("library").controller("topBarCtrl", function ($scope, $http, $location, userService) {
+    $scope.user = {};
+    function retrieveUser() {
+        Object.keys(userService.user).forEach(function (key) {
+            $scope.user[key] = userService.user[key];
+        });
+    }
+    ;
+    var request = userService.getUser();
+    if (request === true) {
+        retrieveUser();
+    } else {
+        request.then(function () {
+            if (userService.user != null)
+                retrieveUser();
+            else
+                $location.path("/");
+        });
+    }
+    $scope.disconnect = function () {
+        $http({
+            method: "post",
+            url: "./server/disconnect.php"
+        }).then(function () {
+            userService.user = null;
+            $location.path("/");
+        });
+    };
+});
 angular.module("library").controller("updateReaderCtrl", function ($scope, $http, $routeParams, $location, $route, alertify) {
     var boolData = false;
     $scope.editMode = false;
@@ -696,10 +760,6 @@ angular.module("library").directive("btnsMenu", function () {
         }
     };
 });
-angular.module("library").directive("error", function () {
-    return {
-    };
-});
 angular.module("library").directive("errors", function () {
     return {
         restrict: "A",
@@ -768,6 +828,10 @@ angular.module("library").directive("textField", function () {
                 $scope.fieldType = $element.attr("field-type");
             }
         }
+    };
+});
+angular.module("library").directive("error", function () {
+    return {
     };
 });
 //# sourceMappingURL=maps/script.js.map
