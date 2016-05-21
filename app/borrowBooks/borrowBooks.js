@@ -12,34 +12,34 @@ angular.module("library").controller("borrowBooksCtrl", function ($scope, $http,
     };
 
     $scope.fields = {
-        readerId: "",
-        borrowBooksId: [],
-        returnBooksId: []
+        action: "borrowReturnBooks"
     };
-    $scope.errors = {};
     $scope.select = {};
     $http({
         method: "post",
-        url: "./server/readReader.php",
-        data: {id: $scope.readerId}
+        url: "./server/index.php",
+        data: {action: "readReader", id: $scope.readerId}
     }).then(function (response) {
         $scope.readerName = response.data.name;
         $scope.maxBooks = response.data.maxBooks;
     });
     $http({
         method: "post",
-        url: "./server/readBorrowsForDisplay.php",
-        data: {readerId: $scope.readerId}
+        url: "./server/index.php",
+        data: {action: "readBorrowsByReaderForDisplay", readerId: $scope.readerId}
     }).then(function (response) {
         $scope.borrowedBooks = response.data.borrows;
     });
     $http({
         method: "post",
-        url: "./server/readBooksBorrowAPI.php"
+        url: "./server/index.php",
+        data: {action: "readAllBooksForBorrow"}
     }).then(function (response) {
         $scope.books = response.data.books;
     });
     $scope.borrowReturn = function () {
+        $scope.loading = true;
+        $scope.errors = {};
         $scope.fields.readerId = $scope.readerId;
         $scope.fields.borrowBooksId = [];
         $scope.fields.returnBooksId = [];
@@ -54,16 +54,18 @@ angular.module("library").controller("borrowBooksCtrl", function ($scope, $http,
         }
         $http({
             method: "post",
-            url: "./server/borrowReturnBooks.php",
+            url: "./server/index.php",
             data: $scope.fields
         }).then(function (response) {
-            if (response.data.success) {
-                alertify.success("הספרים הוחזרו/הושאלו בהצלחה!");
-                $location.path("/updateReader").search({id: $scope.readerId});
-            }
-            else {
+            if (!response.data.success) {
+                $scope.loading = false;
                 alertify.error("קלט לא תקין");
                 $scope.errors = response.data.errors;
+            }
+            else {
+                alertify.success("הספרים הוחזרו/הושאלו בהצלחה!");
+                $location.path("/updateReader").search({id: $scope.readerId});
+
             }
         });
     };

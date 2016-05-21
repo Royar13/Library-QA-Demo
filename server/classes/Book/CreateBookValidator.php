@@ -1,6 +1,6 @@
 <?php
 
-class AddBookValidator extends InputValidator {
+class CreateBookValidator extends InputValidator {
 
     public function __construct() {
         parent::__construct();

@@ -1,11 +1,13 @@
 angular.module("library").controller("updateReaderMenuCtrl", function ($scope, $http, $location) {
-    $scope.fields = {};
+    $scope.fields = {
+        action: "readerExists"
+    };
 
     $scope.searchReader = function () {
         $scope.loading = true;
         $http({
             method: "post",
-            url: "./server/readerExists.php",
+            url: "./server/index.php",
             data: $scope.fields
         }).then(function (response) {
             $scope.loading = false;

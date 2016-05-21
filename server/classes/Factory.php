@@ -6,11 +6,6 @@ class Factory {
     public static $writer;
     private static $user;
 
-    public static function __initStatic() {
-        self::$database = new Database(array("servername" => "localhost", "username" => "root", "password" => "", "dbname" => "library"));
-        self::$writer = new JSONWriter();
-    }
-
     public static function write($arr) {
         self::$writer->write($arr);
     }

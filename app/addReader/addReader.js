@@ -1,13 +1,7 @@
 angular.module("library").controller("addReaderCtrl", function ($scope, $http, $location, alertify) {
     $scope.fields = {
-        id: "",
-        name: "",
-        city: "",
-        street: "",
-        maxBooks: 0,
-        readerType: ""
+        action: "createReader"
     };
-    $scope.errors = {};
     $scope.select = {};
     $scope.monthlyPay = 0;
     $scope.$watchGroup(["fields.readerType", "fields.maxBooks"], function (newValues, oldValues, scope) {
@@ -27,25 +21,28 @@ angular.module("library").controller("addReaderCtrl", function ($scope, $http, $
     }
     $http({
         method: "post",
-        url: "./server/readReaderTypes.php"
+        url: "./server/index.php",
+        data: {action: "readReaderTypes"}
     }).then(function (response) {
         $scope.select.readerTypes = response.data.readerTypes;
     });
     $http({
         method: "post",
-        url: "./server/readBooksNum.php"
+        url: "./server/index.php",
+        data: {action: "readBooksNum"}
     }).then(function (response) {
         $scope.select.maxBooks = response.data.booksNum;
     });
     $scope.addReader = function () {
         $scope.loading = true;
+        $scope.errors = {};
         $http({
             method: "post",
-            url: "./server/addReader.php",
+            url: "./server/index.php",
             data: $scope.fields
         }).then(function (response) {
-            $scope.loading = false;
             if (!response.data.success) {
+                $scope.loading = false;
                 $scope.errors = response.data.errors;
                 alertify.error("הקלט שהוזן אינו תקין");
             }

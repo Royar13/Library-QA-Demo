@@ -1,31 +1,28 @@
 angular.module("library").controller("addBookCtrl", function ($scope, $http, $location, alertify) {
 
     $scope.fields = {
-        name: "",
-        sectionId: "",
-        bookcaseId: "",
-        author: "",
-        publisher: "",
-        releaseYear: "",
-        copies: ""
+        action: "createBook",
+        copies: 1
     };
-    $scope.errors = {};
     $scope.select = {};
     $http({
         method: "post",
-        url: "./server/readAuthors.php"
+        url: "./server/index.php",
+        data: {action: "readAllAuthors"}
     }).then(function (response) {
         $scope.select.authors = response.data.authors;
     });
     $http({
         method: "post",
-        url: "./server/readPublishers.php"
+        url: "./server/index.php",
+        data: {action: "readAllPublishers"}
     }).then(function (response) {
         $scope.select.publishers = response.data.publishers;
     });
     $http({
         method: "post",
-        url: "./server/readSections.php"
+        url: "./server/index.php",
+        data: {action: "readAllSections"}
     }).then(function (response) {
         $scope.select.sections = response.data.sections;
 
@@ -48,13 +45,14 @@ angular.module("library").controller("addBookCtrl", function ($scope, $http, $lo
         $scope.fields.publisher = $("#publisher_value").val();
 
         $scope.loading = true;
+        $scope.errors = {};
         $http({
             method: "post",
-            url: "./server/addBook.php",
+            url: "./server/index.php",
             data: $scope.fields
         }).then(function (response) {
-            $scope.loading = false;
             if (!response.data.success) {
+                $scope.loading = false;
                 $scope.errors = response.data.errors;
                 alertify.error("הקלט שהוזן אינו תקין");
             } else {

@@ -9,15 +9,14 @@ angular.module("library").controller("loginCtrl", function ($scope, $http, userS
         });
     }
     $scope.fields = {
-        username: "",
-        password: ""
+        action: "login"
     };
     $scope.errors = {};
     $scope.login = function () {
         $scope.loading = true;
         $http({
             method: "post",
-            url: "./server/login.php",
+            url: "./server/index.php",
             data: $scope.fields
         }).then(function (response) {
             $scope.loading = false;

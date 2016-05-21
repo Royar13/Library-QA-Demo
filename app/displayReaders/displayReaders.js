@@ -3,7 +3,8 @@ angular.module("library").controller("displayReadersCtrl", function ($scope, $ht
     $scope.quantity = 50;
     $http({
         method: "post",
-        url: "./server/readReaders.php"
+        url: "./server/index.php",
+        data: {action: "readAllReaders"}
     }).then(function (response) {
         $scope.readers = response.data.readers;
     });

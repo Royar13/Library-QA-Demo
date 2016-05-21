@@ -29,14 +29,8 @@ class Book implements IDatabaseAccess {
             $this->resolveAuthor();
             $this->resolvePublisher();
 
-            $fields = array();
-            $fields["name"] = $this->name;
-            $fields["sectionId"] = $this->sectionId;
-            $fields["bookcaseId"] = $this->bookcaseId;
-            $fields["authorId"] = $this->authorId;
-            $fields["publisherId"] = $this->publisherId;
-            $fields["releaseYear"] = $this->releaseYear;
-            $fields["copies"] = $this->copies;
+            $fields = $this->toArray();
+            
             $this->db->insert("books", $fields);
             $this->id = $this->db->getLastId();
 
@@ -52,6 +46,17 @@ class Book implements IDatabaseAccess {
         }
     }
 
+    private function toArray() {
+        $fields["name"] = $this->name;
+        $fields["sectionId"] = $this->sectionId;
+        $fields["bookcaseId"] = $this->bookcaseId;
+        $fields["authorId"] = $this->authorId;
+        $fields["publisherId"] = $this->publisherId;
+        $fields["releaseYear"] = $this->releaseYear;
+        $fields["copies"] = $this->copies;
+        return $fields;
+    }
+
     public function update(ErrorLogger $errorLogger, $userId) {
         $this->validateIdExist($errorLogger);
         $this->validateSection($errorLogger);
@@ -64,14 +69,7 @@ class Book implements IDatabaseAccess {
             $this->resolveAuthor();
             $this->resolvePublisher();
 
-            $fields = array();
-            $fields["name"] = $this->name;
-            $fields["sectionId"] = $this->sectionId;
-            $fields["bookcaseId"] = $this->bookcaseId;
-            $fields["authorId"] = $this->authorId;
-            $fields["publisherId"] = $this->publisherId;
-            $fields["releaseYear"] = $this->releaseYear;
-            $fields["copies"] = $this->copies;
+            $fields = $this->toArray();
 
             $condition["id"] = $this->id;
             $this->db->update("books", $fields, $condition);
