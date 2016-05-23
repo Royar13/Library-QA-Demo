@@ -54,8 +54,6 @@ abstract class InputValidator {
         return $this->isValid();
     }
 
-    abstract public function validate($obj);
-
     public function validateItem($value, $type) {
         if (empty($value)) {
             //validate function gives error about mandatory fields without value

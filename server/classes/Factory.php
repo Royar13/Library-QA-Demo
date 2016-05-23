@@ -36,6 +36,9 @@ class Factory {
             case "Reader":
                 $validator = new ReaderValidator();
                 break;
+            case "Borrow":
+                $validator = new BorrowValidator();
+                break;
         }
         $validator->setDatabase(self::$database);
         return $validator;

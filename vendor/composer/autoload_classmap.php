@@ -7,8 +7,9 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Book' => $baseDir . '/server/classes/Book/Book.php',
-    'BookBorrow' => $baseDir . '/server/classes/Book/BookBorrow.php',
+    'BookBorrow' => $baseDir . '/server/classes/Borrow/BookBorrow.php',
     'BookValidator' => $baseDir . '/server/classes/Book/BookValidator.php',
+    'BorrowValidator' => $baseDir . '/server/classes/Borrow/BorrowValidator.php',
     'Database' => $baseDir . '/server/classes/Database.php',
     'ErrorLogger' => $baseDir . '/server/classes/Validation/ErrorLogger.php',
     'Factory' => $baseDir . '/server/classes/Factory.php',

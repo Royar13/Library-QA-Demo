@@ -227,16 +227,16 @@ angular.module("library").controller("borrowBooksCtrl", function ($scope, $http,
         $scope.loading = true;
         $scope.errors = {};
         $scope.fields.readerId = $scope.readerId;
-        $scope.fields.borrowBooksId = [];
-        $scope.fields.returnBooksId = [];
+        $scope.fields.borrowBooksIds = [];
+        $scope.fields.returnBooksIds = [];
 
         for (var i in $scope.isReturn) {
             if ($scope.isReturn[i]) {
-                $scope.fields.returnBooksId.push(i);
+                $scope.fields.returnBooksIds.push(i);
             }
         }
         for (var i in $scope.borrows) {
-            $scope.fields.borrowBooksId.push($scope.borrows[i].originalObject.id);
+            $scope.fields.borrowBooksIds.push($scope.borrows[i].originalObject.id);
         }
         $http({
             method: "post",
@@ -314,6 +314,17 @@ angular.module("library").controller("displayBooksCtrl", function ($scope, $http
         $scope.books = response.data.books;
     });
 });
+angular.module("library").controller("displayReadersCtrl", function ($scope, $http) {
+    $scope.readers = [];
+    $scope.quantity = 50;
+    $http({
+        method: "post",
+        url: "./server/index.php",
+        data: {action: "readAllReaders"}
+    }).then(function (response) {
+        $scope.readers = response.data.readers;
+    });
+});
 angular.module("library").filter('dateToISO', function () {
     return function (input) {
         return new Date(input).toISOString();
@@ -330,17 +341,6 @@ app.filter('unique', function () {
         }
         return r;
     };
-});
-angular.module("library").controller("displayReadersCtrl", function ($scope, $http) {
-    $scope.readers = [];
-    $scope.quantity = 50;
-    $http({
-        method: "post",
-        url: "./server/index.php",
-        data: {action: "readAllReaders"}
-    }).then(function (response) {
-        $scope.readers = response.data.readers;
-    });
 });
 angular.module("library").controller("loginCtrl", function ($scope, $http, userService, $location) {
     var request = userService.getUser();

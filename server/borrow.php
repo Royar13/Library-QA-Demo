@@ -1,20 +1,9 @@
 <?php
 
-function readBorrowsByReader() { //fix to borrow class
-    $reader = Factory::makeReader();
-    $reader->id = (new Param())->get("readerId");
-    $result = $reader->getBorrowedBooks();
-    $output["borrows"] = array();
-    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-        $output["borrows"][] = $row;
-    }
-    Factory::write($output);
-}
-
-function readBorrowsByReaderForDisplay() { //fix to borrow class
+function readBorrowsByReader() {
     $borrow = Factory::makeBookBorrow();
     $borrow->readerId = (new Param())->get("readerId");
-    $result = $borrow->readBorrowsForDisplay();
+    $result = $borrow->readBorrowsByReader();
     $output["borrows"] = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
         $output["borrows"][] = $row;
@@ -22,7 +11,18 @@ function readBorrowsByReaderForDisplay() { //fix to borrow class
     Factory::write($output);
 }
 
-function readAllBorrowsByReader() { //fix to borrow class
+function readBorrowsByReaderForDisplay() {
+    $borrow = Factory::makeBookBorrow();
+    $borrow->readerId = (new Param())->get("readerId");
+    $result = $borrow->readBorrowsByReaderForDisplay();
+    $output["borrows"] = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $output["borrows"][] = $row;
+    }
+    Factory::write($output);
+}
+
+function readAllBorrowsByReader() {
     $borrow = Factory::makeBookBorrow();
     $borrow->readerId = (new Param())->get("readerId");
     $result = $borrow->readAllReaderBorrows();
@@ -34,23 +34,26 @@ function readAllBorrowsByReader() { //fix to borrow class
 }
 
 function borrowReturnBooks() {
-    $success = false;
+    $borrow = Factory::makeBookBorrow();
     $reader = Factory::makeReader();
+
     $param = new Param();
+    $borrow->readerId = $param->get("readerId");
+    $borrow->borrowBooksIds = $param->get("borrowBooksIds");
+    $borrow->returnBooksIds = $param->get("returnBooksIds");
+
     $reader->id = $param->get("readerId");
-    $errorLogger = new ErrorLogger();
+    $validator = Factory::makeValidator("Borrow");
     if ($reader->readOne()) {
-        $borrowBooksId = $param->get("borrowBooksId");
-        $returnBooksId = $param->get("returnBooksId");
-        $reader->borrowReturnBooks($borrowBooksId, $returnBooksId, $errorLogger, Factory::getUser()->id);
+        $borrow->borrowReturnBooks($validator, $reader->maxBooks, Factory::getUser()->id);
     } else {
-        $errorLogger->addGeneralError("לא נמצא קורא עם ת.ז. זו");
+        $validator->addGeneralError("לא נמצא קורא עם ת.ז. זו");
     }
 
-    if ($errorLogger->isValid()) {
+    if ($validator->isValid()) {
         $output["success"] = true;
     } else {
-        $output = $errorLogger->getErrors();
+        $output = $validator->getErrors();
     }
     Factory::write($output);
 }

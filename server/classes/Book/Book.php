@@ -52,8 +52,8 @@ class Book implements IDatabaseAccess {
         return $fields;
     }
 
-    public function update(CreateBookValidator $validator, $userId) {
-        if (!$validator->validateUpdate($fields))
+    public function update(BookValidator $validator, $userId) {
+        if (!$validator->validateUpdate($this))
             return false;
 
         try {

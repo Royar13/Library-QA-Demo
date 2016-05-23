@@ -80,15 +80,13 @@ function readAllReaders() {
 }
 
 function readerExists() {
-    $reader = Factory::makeReader();
     $param = new Param();
-    $reader->id = $param->get("id");
-    $errorLogger = new ErrorLogger();
-    $result = $reader->validateIDExist($errorLogger);
-    if ($errorLogger->isValid()) {
+    $validator = Factory::makeValidator("Reader");
+    if ($validator->validateIDExist($param->get("id"))) {
         $output["success"] = true;
     } else {
-        $output = $errorLogger->getErrors();
+        $output["success"] = false;
+        $output["errors"]["general"][] = "לא קיים קורא עם ת.ז. זו";
     }
     Factory::write($output);
 }

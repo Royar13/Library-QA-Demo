@@ -8,8 +8,9 @@ class ComposerStaticInit0c953c4534aff2246b0a4427e162077e
 {
     public static $classMap = array (
         'Book' => __DIR__ . '/../..' . '/server/classes/Book/Book.php',
-        'BookBorrow' => __DIR__ . '/../..' . '/server/classes/Book/BookBorrow.php',
+        'BookBorrow' => __DIR__ . '/../..' . '/server/classes/Borrow/BookBorrow.php',
         'BookValidator' => __DIR__ . '/../..' . '/server/classes/Book/BookValidator.php',
+        'BorrowValidator' => __DIR__ . '/../..' . '/server/classes/Borrow/BorrowValidator.php',
         'Database' => __DIR__ . '/../..' . '/server/classes/Database.php',
         'ErrorLogger' => __DIR__ . '/../..' . '/server/classes/Validation/ErrorLogger.php',
         'Factory' => __DIR__ . '/../..' . '/server/classes/Factory.php',

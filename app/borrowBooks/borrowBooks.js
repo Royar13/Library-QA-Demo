@@ -41,16 +41,16 @@ angular.module("library").controller("borrowBooksCtrl", function ($scope, $http,
         $scope.loading = true;
         $scope.errors = {};
         $scope.fields.readerId = $scope.readerId;
-        $scope.fields.borrowBooksId = [];
-        $scope.fields.returnBooksId = [];
+        $scope.fields.borrowBooksIds = [];
+        $scope.fields.returnBooksIds = [];
 
         for (var i in $scope.isReturn) {
             if ($scope.isReturn[i]) {
-                $scope.fields.returnBooksId.push(i);
+                $scope.fields.returnBooksIds.push(i);
             }
         }
         for (var i in $scope.borrows) {
-            $scope.fields.borrowBooksId.push($scope.borrows[i].originalObject.id);
+            $scope.fields.borrowBooksIds.push($scope.borrows[i].originalObject.id);
         }
         $http({
             method: "post",
