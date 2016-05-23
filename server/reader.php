@@ -3,25 +3,38 @@
 function createReader() {
     $reader = Factory::makeReader();
     $param = new Param();
-    $validator = new CreateReaderValidator();
-    $arr = &$param->getArray();
-    if (!$validator->validate($arr)) {
-        Factory::write($validator->errorLogger->getErrors());
-        return;
+    assignReaderData($reader, $param);
+    $validator = Factory::makeValidator("Reader");
+
+    if ($reader->create($validator, Factory::getUser()->id)) {
+        $output["success"] = true;
+    } else {
+        $output = $validator->getErrors();
     }
+    Factory::write($output);
+}
+
+function updateReader() {
+    $reader = Factory::makeReader();
+    $param = new Param();
+    assignReaderData($reader, $param);
+    $validator = Factory::makeValidator("Reader");
+
+    if ($reader->update($validator, Factory::getUser()->id)) {
+        $output["success"] = true;
+    } else {
+        $output = $validator->getErrors();
+    }
+    Factory::write($output);
+}
+
+function assignReaderData($reader, $param) {
     $reader->id = $param->get("id");
     $reader->name = $param->get("name");
     $reader->city = $param->get("city");
     $reader->street = $param->get("street");
     $reader->readerType = $param->get("readerType");
     $reader->maxBooks = $param->get("maxBooks");
-
-    if ($reader->create($validator->errorLogger, Factory::getUser()->id)) {
-        $output["success"] = true;
-    } else {
-        $output = $validator->errorLogger->getErrors();
-    }
-    Factory::write($output);
 }
 
 function readReader() {
@@ -62,30 +75,6 @@ function readAllReaders() {
             $row["address"] = $row["street"] . ", " . $row["city"];
         }
         $output["readers"][] = $row;
-    }
-    Factory::write($output);
-}
-
-function updateReader() {
-    $reader = Factory::makeReader();
-    $param = new Param();
-    $validator = new CreateReaderValidator();
-    $arr = &$param->getArray();
-    if (!$validator->validate($arr)) {
-        Factory::write($validator->errorLogger->getErrors());
-        return;
-    }
-    $reader->id = $param->get("id");
-    $reader->name = $param->get("name");
-    $reader->city = $param->get("city");
-    $reader->street = $param->get("street");
-    $reader->readerType = $param->get("readerType");
-    $reader->maxBooks = $param->get("maxBooks");
-
-    if ($reader->update($validator->errorLogger, Factory::getUser()->id)) {
-        $output["success"] = true;
-    } else {
-        $output = $validator->errorLogger->getErrors();
     }
     Factory::write($output);
 }

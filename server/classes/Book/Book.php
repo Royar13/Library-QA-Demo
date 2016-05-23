@@ -18,35 +18,30 @@ class Book implements IDatabaseAccess {
         $this->db = $db;
     }
 
-    public function create(ErrorLogger $errorLogger, $userId) {
-        $this->validateSection($errorLogger);
-        $this->validateName($errorLogger);
-        if (!$errorLogger->isValid()) {
+    public function create(BookValidator $validator, $userId) {
+        if (!$validator->validate($this))
             return false;
-        }
 
         try {
             $this->resolveAuthor();
             $this->resolvePublisher();
 
             $fields = $this->toArray();
-            
             $this->db->insert("books", $fields);
             $this->id = $this->db->getLastId();
 
-            $fields = array();
-            $fields["userId"] = $userId;
-            $fields["bookId"] = $this->id;
-            $fields["description"] = "המשתמש {user} יצר את הספר {book}";
-            $this->db->insert("books_actions", $fields);
+            $actionFields["userId"] = $userId;
+            $actionFields["bookId"] = $this->id;
+            $actionFields["description"] = "המשתמש {user} יצר את הספר {book}";
+            $this->db->insert("books_actions", $actionFields);
             return true;
         } catch (Exception $ex) {
-            $errorLogger->addGeneralError("שגיאת מסד נתונים: " . $ex->getMessage());
             return false;
         }
     }
 
-    private function toArray() {
+    public function toArray() {
+        $fields["id"] = $this->id;
         $fields["name"] = $this->name;
         $fields["sectionId"] = $this->sectionId;
         $fields["bookcaseId"] = $this->bookcaseId;
@@ -57,31 +52,24 @@ class Book implements IDatabaseAccess {
         return $fields;
     }
 
-    public function update(ErrorLogger $errorLogger, $userId) {
-        $this->validateIdExist($errorLogger);
-        $this->validateSection($errorLogger);
-        $this->validateName($errorLogger);
-        if (!$errorLogger->isValid()) {
+    public function update(CreateBookValidator $validator, $userId) {
+        if (!$validator->validateUpdate($fields))
             return false;
-        }
 
         try {
             $this->resolveAuthor();
             $this->resolvePublisher();
-
+            
             $fields = $this->toArray();
-
-            $condition["id"] = $this->id;
+            $condition["id"] = $fields["id"];
             $this->db->update("books", $fields, $condition);
 
-            $fields = array();
-            $fields["userId"] = $userId;
-            $fields["bookId"] = $this->id;
-            $fields["description"] = "המשתמש {user} עדכן את הספר {book}";
-            $this->db->insert("books_actions", $fields);
+            $actionFields["userId"] = $userId;
+            $actionFields["bookId"] = $this->id;
+            $actionFields["description"] = "המשתמש {user} עדכן את הספר {book}";
+            $this->db->insert("books_actions", $actionFields);
             return true;
         } catch (Exception $ex) {
-            $errorLogger->addGeneralError("שגיאת מסד נתונים: " . $ex->getMessage());
             return false;
         }
     }
@@ -111,46 +99,6 @@ class Book implements IDatabaseAccess {
             $this->publisherId = $this->db->getLastId();
         } else {
             $this->publisherId = $rows[0]["id"];
-        }
-    }
-
-    public function validateIdExist($errorLogger) {
-        $query = "select id from books where id=:id";
-        $bind[":id"] = $this->id;
-        $result = $this->db->preparedQuery($query, $bind);
-        $rows = $result->fetchAll(PDO::FETCH_ASSOC);
-        if (count($rows) == 0) {
-            $errorLogger->addGeneralError("לא נמצא הספר");
-        }
-    }
-
-    private function validateName($errorLogger) {
-        $query = "select id from books where name=:name and id!=:id";
-        $bind[":id"] = $this->id;
-        $bind[":name"] = $this->name;
-        $result = $this->db->preparedQuery($query, $bind);
-        $rows = $result->fetchAll(PDO::FETCH_ASSOC);
-        if (count($rows) >= 1) {
-            $errorLogger->addError("name", "כבר קיים ספר עם שם זה");
-        }
-    }
-
-    private function validateSection($errorLogger) {
-        $query = "select bookcaseAmount from sections where id=:sectionId";
-        $bind[":sectionId"] = $this->sectionId;
-        $result = $this->db->preparedQuery($query, $bind);
-        $rows = $result->fetchAll(PDO::FETCH_ASSOC);
-        if (count($rows) == 1) {
-            $section = $rows[0];
-            if ($this->bookcaseId <= $section["bookcaseAmount"]) {
-                return true;
-            } else {
-                $errorLogger->addError("bookcaseId", "ערך לא תקין");
-                return false;
-            }
-        } else {
-            $errorLogger->addError("sectionId", "ערך לא תקין");
-            return false;
         }
     }
 

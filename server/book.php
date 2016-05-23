@@ -3,20 +3,14 @@
 function createBook() {
     $book = Factory::makeBook();
     $param = new Param();
-    $validator = new CreateBookValidator();
-    $arr = &$param->getArray();
-    if (!$validator->validate($arr)) {
-        Factory::write($validator->errorLogger->getErrors());
-        return;
-    }
-
     assignBookData($book, $param);
+    $validator = Factory::makeValidator("Book");
 
-    if ($book->create($validator->errorLogger, Factory::getUser()->id)) {
+    if ($book->create($validator, Factory::getUser()->id)) {
         $output["success"] = true;
         $output["id"] = $book->id;
     } else {
-        $output = $validator->errorLogger->getErrors();
+        $output = $validator->getErrors();
     }
     Factory::write($output);
 }
@@ -24,19 +18,13 @@ function createBook() {
 function updateBook() {
     $book = Factory::makeBook();
     $param = new Param();
-    $validator = new CreateBookValidator();
-    $arr = &$param->getArray();
-    if (!$validator->validate($arr)) {
-        Factory::write($validator->errorLogger->getErrors());
-        return;
-    }
+    assignBookData($book, $param->getArray());
+    $validator = Factory::makeValidator("CreateBook");
 
-    assignBookData($book, $param);
-
-    if ($book->update($validator->errorLogger, Factory::getUser()->id)) {
+    if ($book->update($validator, Factory::getUser()->id)) {
         $output["success"] = true;
     } else {
-        $output = $validator->errorLogger->getErrors();
+        $output = $validator->getErrors();
     }
     Factory::write($output);
 }
@@ -73,17 +61,9 @@ function readBook() {
     $book = Factory::makeBook();
     $param = new Param();
     $book->id = $param->get("id");
-    if ($book->readOne()) {
-        $output["name"] = $book->name;
-        $output["sectionId"] = $book->sectionId;
-        $output["bookcaseId"] = $book->bookcaseId;
-        $output["author"] = $book->author;
-        $output["publisher"] = $book->publisher;
-        $output["releaseYear"] = $book->releaseYear;
-        $output["copies"] = $book->copies;
-
-        Factory::write($output);
-    }
+    $book->readOne();
+    $output = $book->toArray();
+    Factory::write($output);
 }
 
 function readAllBooks() {

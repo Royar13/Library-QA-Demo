@@ -3,11 +3,7 @@
 function login() {
     $param = new Param();
     $user = Factory::getUser();
-    $validator = new InputValidator();
-    if (!$validator->validate($param)) {
-        Factory::write($validator->errorLogger->getErrors());
-        return;
-    }
+
     $user->username = $param->get("username");
     $user->password = $param->get("password");
     if ($user->login()) {

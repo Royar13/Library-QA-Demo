@@ -27,7 +27,20 @@ class Factory {
         $borrow->setDatabase(self::$database);
         return $borrow;
     }
-    
+
+    public static function makeValidator($type) {
+        switch ($type) {
+            case "Book":
+                $validator = new BookValidator();
+                break;
+            case "Reader":
+                $validator = new ReaderValidator();
+                break;
+        }
+        $validator->setDatabase(self::$database);
+        return $validator;
+    }
+
     public static function getUser() {
         if (self::$user == null) {
             self::$user = new User();
