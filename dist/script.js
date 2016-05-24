@@ -391,26 +391,6 @@ angular.module("library").controller("panelCtrl", function ($scope, $window, $lo
     }
     $scope.loading = false;
 });
-angular.module("library").service("userService", function ($http, $location) {
-    this.updateUser = function (username, name) {
-        this.user = {username: username, name: name};
-    };
-    this.getUser = function () {
-        if (this.user != null) {
-            return true;
-        }
-        var _this = this;
-        return $http({
-            method: "post",
-            url: "./server/index.php",
-            data: {action: "fetchLoggedUser"}
-        }).then(function (response) {
-            if (response.data.success) {
-                _this.updateUser(response.data.username, response.data.name);
-            }
-        });
-    };
-});
 angular.module("library").controller("topBarCtrl", function ($scope, $http, $location, userService) {
     $scope.user = {};
     function retrieveUser() {
@@ -438,6 +418,26 @@ angular.module("library").controller("topBarCtrl", function ($scope, $http, $loc
         }).then(function () {
             userService.user = null;
             $location.path("/");
+        });
+    };
+});
+angular.module("library").service("userService", function ($http, $location) {
+    this.updateUser = function (username, name) {
+        this.user = {username: username, name: name};
+    };
+    this.getUser = function () {
+        if (this.user != null) {
+            return true;
+        }
+        var _this = this;
+        return $http({
+            method: "post",
+            url: "./server/index.php",
+            data: {action: "fetchLoggedUser"}
+        }).then(function (response) {
+            if (response.data.success) {
+                _this.updateUser(response.data.username, response.data.name);
+            }
         });
     };
 });
@@ -791,6 +791,51 @@ angular.module("library").directive("textField", function () {
             if ($element[0].hasAttribute("field-type")) {
                 $scope.fieldType = $element.attr("field-type");
             }
+        }
+    };
+});
+angular.module("library").directive("tabBody", function () {
+    return {
+        restrict: "A",
+        scope: true,
+        transclude: true,
+        replace: true,
+        templateUrl: "app/directives/tabs/tabBody.html",
+        controller: function ($scope, $element) {
+            $scope.$watch("selectedIndex", function () {
+                var index = $element.parent().find(".tab-body").index($element);
+                $scope.show = (index == $scope.selectedIndex);
+            });
+        }
+    };
+});
+angular.module("library").directive("tabHead", function () {
+    return {
+        restrict: "A",
+        scope: true,
+        transclude: true,
+        replace: true,
+        templateUrl: "app/directives/tabs/tabHead.html",
+        controller: function($scope, $element) {
+            $scope.$watch("selectedIndex", function () {
+                var index = $element.parent().find(".tab-head").index($element);
+                $scope.class = (index == $scope.selectedIndex)?"selected":"";
+            });        },
+        link: function (scope, elem, attrs) {
+            elem.bind("click", function () {
+                scope.$apply(function () {
+                    scope.$parent.selectedIndex = elem.parent().find(".tab-head").index(elem);
+                });
+            });
+        }
+    };
+});
+angular.module("library").directive("tabs", function () {
+    return {
+        restrict: "C",
+        scope: true,
+        controller: function ($scope) {
+            $scope.selectedIndex = 0;                
         }
     };
 });

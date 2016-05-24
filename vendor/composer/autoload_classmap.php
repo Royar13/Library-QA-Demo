@@ -6,7 +6,9 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Action' => $baseDir . '/server/classes/Action/Action.php',
     'Book' => $baseDir . '/server/classes/Book/Book.php',
+    'BookAction' => $baseDir . '/server/classes/Action/BookAction.php',
     'BookBorrow' => $baseDir . '/server/classes/Borrow/BookBorrow.php',
     'BookValidator' => $baseDir . '/server/classes/Book/BookValidator.php',
     'BorrowValidator' => $baseDir . '/server/classes/Borrow/BorrowValidator.php',
@@ -19,6 +21,7 @@ return array(
     'JSONWriter' => $baseDir . '/server/classes/JSONWriter.php',
     'Param' => $baseDir . '/server/classes/Param.php',
     'Reader' => $baseDir . '/server/classes/Reader/Reader.php',
+    'ReaderAction' => $baseDir . '/server/classes/Action/ReaderAction.php',
     'ReaderValidator' => $baseDir . '/server/classes/Reader/ReaderValidator.php',
     'User' => $baseDir . '/server/classes/User/User.php',
     'Validation' => $baseDir . '/server/classes/Validation/Validation.php',

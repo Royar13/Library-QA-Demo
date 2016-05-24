@@ -86,10 +86,8 @@ class Book implements IDatabaseAccess {
             $condition["id"] = $this->id;
             $this->db->delete("books", $condition);
 
-            $query = "INSERT INTO books_actions(userId, description) VALUES(:userId, :description)";
-            $bind["userId"] = $userId;
-            $bind["description"] = "המשתמש {user} מחק את הספר '{$this->name}'";
-            $this->db->preparedQuery($query, $bind);
+            $action=new BookAction();
+            
             return true;
         } catch (Exception $ex) {
             return false;
