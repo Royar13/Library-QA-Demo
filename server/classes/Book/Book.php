@@ -40,7 +40,7 @@ class Book implements IDatabaseAccess {
         }
     }
 
-    public function toArray() {
+    private function toArray() {
         $fields["id"] = $this->id;
         $fields["name"] = $this->name;
         $fields["sectionId"] = $this->sectionId;
@@ -48,6 +48,10 @@ class Book implements IDatabaseAccess {
         $fields["authorId"] = $this->authorId;
         $fields["publisherId"] = $this->publisherId;
         $fields["releaseYear"] = $this->releaseYear;
+
+        if (empty($fields["releaseYear"]))
+            $fields["releaseYear"] = null;
+
         $fields["copies"] = $this->copies;
         return $fields;
     }
@@ -59,15 +63,33 @@ class Book implements IDatabaseAccess {
         try {
             $this->resolveAuthor();
             $this->resolvePublisher();
-            
+
             $fields = $this->toArray();
-            $condition["id"] = $fields["id"];
+            $condition["id"] = $this->id;
             $this->db->update("books", $fields, $condition);
 
             $actionFields["userId"] = $userId;
             $actionFields["bookId"] = $this->id;
             $actionFields["description"] = "המשתמש {user} עדכן את הספר {book}";
             $this->db->insert("books_actions", $actionFields);
+            return true;
+        } catch (Exception $ex) {
+            return false;
+        }
+    }
+
+    public function delete(BookValidator $validator, $userId) {
+        if (!$validator->validateDelete($this))
+            return false;
+
+        try {
+            $condition["id"] = $this->id;
+            $this->db->delete("books", $condition);
+
+            $query = "INSERT INTO books_actions(userId, description) VALUES(:userId, :description)";
+            $bind["userId"] = $userId;
+            $bind["description"] = "המשתמש {user} מחק את הספר '{$this->name}'";
+            $this->db->preparedQuery($query, $bind);
             return true;
         } catch (Exception $ex) {
             return false;
@@ -142,7 +164,7 @@ class Book implements IDatabaseAccess {
         );
     }
 
-    public function readAllBorrowAPI() {
+    public function readAllBooksForBorrow() {
         return $this->db->query("SELECT books.id, books.name, authors.name as authorName, IF(COUNT(borrowed_books.bookId)>=books.copies OR books.copies=0, false, true) as available, borrowed_books.boolReturn"
                         . " FROM books"
                         . " LEFT JOIN authors ON books.authorId=authors.id"

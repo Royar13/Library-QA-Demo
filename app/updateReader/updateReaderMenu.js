@@ -10,8 +10,8 @@ angular.module("library").controller("updateReaderMenuCtrl", function ($scope, $
             url: "./server/index.php",
             data: $scope.fields
         }).then(function (response) {
-            $scope.loading = false;
             if (!response.data.success) {
+                $scope.loading = false;
                 $scope.errors = response.data.errors;
             } else {
                 $location.path("/updateReader").search({id: $scope.fields.id});

@@ -88,6 +88,26 @@ angular.module("library").controller("updateBookCtrl", function ($scope, $http, 
             }
         });
     };
+    $scope.deleteBook = function () {
+        alertify.confirm("האם אתה בטוח שברצונך למחוק את הספר '" + $scope.fields.name + "'?", function () {
+            $scope.loading = true;
+            $scope.errors = {};
+            $http({
+                method: "post",
+                url: "./server/index.php",
+                data: {action: "deleteBook", id: $scope.fields.id}
+            }).then(function (response) {
+                if (!response.data.success) {
+                    $scope.loading = false;
+                    $scope.errors = response.data.errors;
+                    alertify.error("אי אפשר למחוק את הספר");
+                } else {
+                    alertify.success("הספר נמחק בהצלחה!");
+                    $location.path("/");
+                }
+            });
+        });
+    };
     $scope.toggleModes = function () {
         if ($scope.editMode)
             $route.reload();

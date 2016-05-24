@@ -531,6 +531,26 @@ angular.module("library").controller("updateBookCtrl", function ($scope, $http, 
             }
         });
     };
+    $scope.deleteBook = function () {
+        alertify.confirm("האם אתה בטוח שברצונך למחוק את הספר '" + $scope.fields.name + "'?", function () {
+            $scope.loading = true;
+            $scope.errors = {};
+            $http({
+                method: "post",
+                url: "./server/index.php",
+                data: {action: "deleteBook", id: $scope.fields.id}
+            }).then(function (response) {
+                if (!response.data.success) {
+                    $scope.loading = false;
+                    $scope.errors = response.data.errors;
+                    alertify.error("אי אפשר למחוק את הספר");
+                } else {
+                    alertify.success("הספר נמחק בהצלחה!");
+                    $location.path("/");
+                }
+            });
+        });
+    };
     $scope.toggleModes = function () {
         if ($scope.editMode)
             $route.reload();
@@ -551,8 +571,8 @@ angular.module("library").controller("updateBookMenuCtrl", function ($scope, $ht
             url: "./server/index.php",
             data: $scope.fields
         }).then(function (response) {
-            $scope.loading = false;
             if (!response.data.success) {
+                $scope.loading = false;
                 $scope.errors = response.data.errors;
             } else {
                 $location.path("/updateBook").search({id: $scope.fields.id});
@@ -675,8 +695,8 @@ angular.module("library").controller("updateReaderMenuCtrl", function ($scope, $
             url: "./server/index.php",
             data: $scope.fields
         }).then(function (response) {
-            $scope.loading = false;
             if (!response.data.success) {
+                $scope.loading = false;
                 $scope.errors = response.data.errors;
             } else {
                 $location.path("/updateReader").search({id: $scope.fields.id});

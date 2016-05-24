@@ -18,8 +18,8 @@ function createBook() {
 function updateBook() {
     $book = Factory::makeBook();
     $param = new Param();
-    assignBookData($book, $param->getArray());
-    $validator = Factory::makeValidator("CreateBook");
+    assignBookData($book, $param);
+    $validator = Factory::makeValidator("Book");
 
     if ($book->update($validator, Factory::getUser()->id)) {
         $output["success"] = true;
@@ -37,22 +37,17 @@ function assignBookData($book, $param) {
     $book->author = $param->get("author");
     $book->publisher = $param->get("publisher");
     $book->releaseYear = $param->get("releaseYear");
-    if (empty($book->releaseYear)) {
-        $book->releaseYear = null;
-    }
     $book->copies = $param->get("copies");
 }
 
 function bookExists() {
-    $book = Factory::makeBook();
+    $validator = Factory::makeValidator("Book");
     $param = new Param();
-    $book->id = $param->get("id");
-    $errorLogger = new ErrorLogger();
-    $result = $book->validateIdExist($errorLogger);
-    if ($errorLogger->isValid()) {
+    if ($validator->validateIdExist($param->get("id"))) {
         $output["success"] = true;
     } else {
-        $output = $errorLogger->getErrors();
+        $output["success"] = false;
+        $output["errors"]["general"][] = "לא נמצא ספר עם קוד זה";
     }
     Factory::write($output);
 }
@@ -62,7 +57,14 @@ function readBook() {
     $param = new Param();
     $book->id = $param->get("id");
     $book->readOne();
-    $output = $book->toArray();
+    $output["id"] = $book->id;
+    $output["name"] = $book->name;
+    $output["sectionId"] = $book->sectionId;
+    $output["bookcaseId"] = $book->bookcaseId;
+    $output["author"] = $book->author;
+    $output["publisher"] = $book->publisher;
+    $output["releaseYear"] = $book->releaseYear;
+    $output["copies"] = $book->copies;
     Factory::write($output);
 }
 
@@ -85,11 +87,25 @@ function readBooksNum() {
     Factory::write($output);
 }
 
-function readAllBooksForBorrow() { //change class function name to this
+function readAllBooksForBorrow() {
     $book = Factory::makeBook();
-    $result = $book->readAllBorrowAPI();
+    $result = $book->readAllBooksForBorrow();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
         $output["books"][] = $row;
+    }
+    Factory::write($output);
+}
+
+function deleteBook() {
+    $book = Factory::makeBook();
+    $param = new Param();
+    $book->id = $param->get("id");
+    $book->readOne();
+    $validator = Factory::makeValidator("Book");
+    if ($book->delete($validator, Factory::getUser()->id)) {
+        $output["success"] = true;
+    } else {
+        $output = $validator->getErrors();
     }
     Factory::write($output);
 }

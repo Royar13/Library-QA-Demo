@@ -3,7 +3,7 @@
 include "globalFunctions.php";
 
 $pageActions["user.php"] = array("login", "fetchLoggedUser", "disconnect");
-$pageActions["book.php"] = array("createBook", "bookExists", "readBook", "readAllBooks", "readBooksNum", "updateBook", "readAllBooksForBorrow");
+$pageActions["book.php"] = array("createBook", "deleteBook", "bookExists", "readBook", "readAllBooks", "readBooksNum", "updateBook", "readAllBooksForBorrow");
 $pageActions["author.php"] = array("readAllAuthors");
 $pageActions["borrow.php"] = array("readBorrowsByReader", "readBorrowsByReaderForDisplay", "readAllBorrowsByReader", "borrowReturnBooks");
 $pageActions["publisher.php"] = array("readAllPublishers");
@@ -42,6 +42,9 @@ if ($action == "login") {
             break;
         case "updateBook":
             updateBook();
+            break;
+        case "deleteBook":
+            deleteBook();
             break;
         case "readAllBooksForBorrow":
             readAllBooksForBorrow();

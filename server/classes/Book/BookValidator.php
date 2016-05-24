@@ -19,7 +19,7 @@ class BookValidator extends InputValidator implements IDatabaseAccess {
     public function setDatabase($db) {
         $this->db = $db;
     }
-    
+
     public function validate($obj) {
         if (!$this->validateSyntax($obj))
             return false;
@@ -29,7 +29,7 @@ class BookValidator extends InputValidator implements IDatabaseAccess {
 
         if (!$this->validateName($obj->id, $obj->name))
             $this->addError("name", "כבר קיים ספר עם שם זה");
-        
+
         return $this->isValid();
     }
 
@@ -38,6 +38,16 @@ class BookValidator extends InputValidator implements IDatabaseAccess {
             return false;
         if (!$this->validateIdExist($obj->id))
             $this->addGeneralError("לא נמצא הספר");
+        if (!$this->validateNotBorrowedMoreThanCopies($obj->id, $obj->copies))
+            $this->addError("copies", "הספר מושאל יותר מ-{$obj->copies} פעמים, לכן אי אפשר להפחית את מס' העותקים לערך זה");
+        return $this->isValid();
+    }
+
+    public function validateDelete($book) {
+        if (!$this->validateIdExist($book->id))
+            $this->addGeneralError("לא נמצא הספר");
+        if (!$this->validateNotBorrowed($book->id))
+            $this->addGeneralError("אי אפשר למחוק ספר שנמצא בהשאלה");
         return $this->isValid();
     }
 
@@ -76,6 +86,22 @@ class BookValidator extends InputValidator implements IDatabaseAccess {
             }
         }
         return false;
+    }
+
+    public function validateNotBorrowed($id) {
+        $query = "select id from borrowed_books where bookId=:bookId AND boolReturn=0";
+        $bind[":bookId"] = $id;
+        $result = $this->db->preparedQuery($query, $bind);
+        $rows = $result->fetchAll(PDO::FETCH_ASSOC);
+        return (count($rows) == 0);
+    }
+
+    public function validateNotBorrowedMoreThanCopies($id, $copies) {
+        $query = "select id from borrowed_books where bookId=:bookId AND boolReturn=0";
+        $bind[":bookId"] = $id;
+        $result = $this->db->preparedQuery($query, $bind);
+        $rows = $result->fetchAll(PDO::FETCH_ASSOC);
+        return (count($rows) <= $copies);
     }
 
 }
