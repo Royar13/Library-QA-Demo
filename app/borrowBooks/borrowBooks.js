@@ -12,60 +12,58 @@ angular.module("library").controller("borrowBooksCtrl", function ($scope, $http,
     };
 
     $scope.fields = {
-        action: "borrowReturnBooks"
+        readerId: "",
+        borrowBooksId: [],
+        returnBooksId: []
     };
+    $scope.errors = {};
     $scope.select = {};
     $http({
         method: "post",
-        url: "./server/index.php",
-        data: {action: "readReader", id: $scope.readerId}
+        url: "./server/readReader.php",
+        data: {id: $scope.readerId}
     }).then(function (response) {
         $scope.readerName = response.data.name;
         $scope.maxBooks = response.data.maxBooks;
     });
     $http({
         method: "post",
-        url: "./server/index.php",
-        data: {action: "readBorrowsByReaderForDisplay", readerId: $scope.readerId}
+        url: "./server/readBorrowsForDisplay.php",
+        data: {readerId: $scope.readerId}
     }).then(function (response) {
         $scope.borrowedBooks = response.data.borrows;
     });
     $http({
         method: "post",
-        url: "./server/index.php",
-        data: {action: "readAllBooksForBorrow"}
+        url: "./server/readBooksBorrowAPI.php"
     }).then(function (response) {
         $scope.books = response.data.books;
     });
     $scope.borrowReturn = function () {
-        $scope.loading = true;
-        $scope.errors = {};
         $scope.fields.readerId = $scope.readerId;
-        $scope.fields.borrowBooksIds = [];
-        $scope.fields.returnBooksIds = [];
+        $scope.fields.borrowBooksId = [];
+        $scope.fields.returnBooksId = [];
 
         for (var i in $scope.isReturn) {
             if ($scope.isReturn[i]) {
-                $scope.fields.returnBooksIds.push(i);
+                $scope.fields.returnBooksId.push(i);
             }
         }
         for (var i in $scope.borrows) {
-            $scope.fields.borrowBooksIds.push($scope.borrows[i].originalObject.id);
+            $scope.fields.borrowBooksId.push($scope.borrows[i].originalObject.id);
         }
         $http({
             method: "post",
-            url: "./server/index.php",
+            url: "./server/borrowReturnBooks.php",
             data: $scope.fields
         }).then(function (response) {
-            if (!response.data.success) {
-                $scope.loading = false;
-                alertify.error("קלט לא תקין");
-                $scope.errors = response.data.errors;
-            }
-            else {
+            if (response.data.success) {
                 alertify.success("הספרים הוחזרו/הושאלו בהצלחה!");
                 $location.path("/updateReader").search({id: $scope.readerId});
-
+            }
+            else {
+                alertify.error("קלט לא תקין");
+                $scope.errors = response.data.errors;
             }
         });
     };

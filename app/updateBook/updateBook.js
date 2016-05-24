@@ -3,17 +3,23 @@ angular.module("library").controller("updateBookCtrl", function ($scope, $http, 
     $scope.editMode = false;
     var bookId = $routeParams.id;
     $scope.fields = {
-        action: "updateBook"
+        id: "",
+        name: "",
+        sectionId: "",
+        bookcaseId: "",
+        author: "",
+        publisher: "",
+        releaseYear: "",
+        copies: ""
     };
+    $scope.errors = {};
     $scope.select = {};
     $http({
         method: "post",
-        url: "./server/index.php",
-        data: {action: "readBook", id: bookId}
+        url: "./server/readBook.php",
+        data: {id: bookId}
     }).then(function (response) {
-        for (var i in response.data) {
-            $scope.fields[i] = response.data[i];
-        }
+        $scope.fields = response.data;
         $scope.fields.id = bookId;
         $scope.fields.releaseYear = Number($scope.fields.releaseYear);
         $scope.fields.copies = Number($scope.fields.copies);
@@ -24,22 +30,19 @@ angular.module("library").controller("updateBookCtrl", function ($scope, $http, 
     });
     $http({
         method: "post",
-        url: "./server/index.php",
-        data: {action: "readAllAuthors"}
+        url: "./server/readAuthors.php"
     }).then(function (response) {
         $scope.select.authors = response.data.authors;
     });
     $http({
         method: "post",
-        url: "./server/index.php",
-        data: {action: "readAllPublishers"}
+        url: "./server/readPublishers.php"
     }).then(function (response) {
         $scope.select.publishers = response.data.publishers;
     });
     $http({
         method: "post",
-        url: "./server/index.php",
-        data: {action: "readAllSections"}
+        url: "./server/readSections.php"
     }).then(function (response) {
         $scope.select.sections = response.data.sections;
         if (boolSectionsFinish)
@@ -71,11 +74,9 @@ angular.module("library").controller("updateBookCtrl", function ($scope, $http, 
         $scope.fields.publisher = $("#publisher_value").val();
 
         $scope.loading = true;
-        $scope.errors = {};
-
         $http({
             method: "post",
-            url: "./server/index.php",
+            url: "./server/updateBook.php",
             data: $scope.fields
         }).then(function (response) {
             $scope.loading = false;
@@ -85,27 +86,8 @@ angular.module("library").controller("updateBookCtrl", function ($scope, $http, 
             } else {
                 alertify.success("הספר עודכן בהצלחה!");
                 $scope.editMode = false;
+                $scope.errors = {};
             }
-        });
-    };
-    $scope.deleteBook = function () {
-        alertify.confirm("האם אתה בטוח שברצונך למחוק את הספר '" + $scope.fields.name + "'?", function () {
-            $scope.loading = true;
-            $scope.errors = {};
-            $http({
-                method: "post",
-                url: "./server/index.php",
-                data: {action: "deleteBook", id: $scope.fields.id}
-            }).then(function (response) {
-                if (!response.data.success) {
-                    $scope.loading = false;
-                    $scope.errors = response.data.errors;
-                    alertify.error("אי אפשר למחוק את הספר");
-                } else {
-                    alertify.success("הספר נמחק בהצלחה!");
-                    $location.path("/");
-                }
-            });
         });
     };
     $scope.toggleModes = function () {

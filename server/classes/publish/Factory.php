@@ -7,7 +7,7 @@ class Factory {
     private static $user;
 
     public static function __initStatic() {
-        self::$database = new Database(array("servername" => "localhost", "username" => "root", "password" => "", "dbname" => "library"));
+        self::$database = new Database(array("servername" => "mysql.hostinger.co.il", "username" => "u990065029_roy", "password" => "H8ezDZt4b5", "dbname" => "u990065029_lib"));
         self::$writer = new JSONWriter();
     }
 

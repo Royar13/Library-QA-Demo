@@ -3,7 +3,12 @@ angular.module("library").controller("updateReaderCtrl", function ($scope, $http
     $scope.editMode = false;
     var readerId = $routeParams.id;
     $scope.fields = {
-        action: "updateReader",
+        id: "",
+        name: "",
+        city: "",
+        street: "",
+        maxBooks: 0,
+        readerType: "",
         joinDate: 0
     };
     $scope.fine = 0;
@@ -27,7 +32,7 @@ angular.module("library").controller("updateReaderCtrl", function ($scope, $http
             if ($scope.select.readerTypes[i].id == id)
                 return $scope.select.readerTypes[i];
         }
-    };
+    }
     $scope.address = function () {
         if ($scope.fields.city != "") {
             return $scope.fields.street + ", " + $scope.fields.city;
@@ -36,35 +41,31 @@ angular.module("library").controller("updateReaderCtrl", function ($scope, $http
     };
     $http({
         method: "post",
-        url: "./server/index.php",
-        data: {action: "readReader", id: readerId}
+        url: "./server/readReader.php",
+        data: {id: readerId}
     }).then(function (response) {
-        for (var i in response.data) {
-            $scope.fields[i] = response.data[i];
-        }
+        $scope.fields = response.data;
         $scope.fields.id = readerId;
         updatePay();
     });
     $http({
         method: "post",
-        url: "./server/index.php",
-        data: {action: "readReaderTypes"}
+        url: "./server/readReaderTypes.php"
     }).then(function (response) {
         $scope.select.readerTypes = response.data.readerTypes;
         updatePay();
     });
     $http({
         method: "post",
-        url: "./server/index.php",
-        data: {action: "readBooksNum"}
+        url: "./server/readBooksNum.php"
     }).then(function (response) {
         $scope.select.maxBooks = response.data.booksNum;
     });
 
     $http({
         method: "post",
-        url: "./server/index.php",
-        data: {action: "readAllBorrowsByReader", readerId: readerId}
+        url: "./server/readAllReaderBorrows.php",
+        data: {readerId: readerId}
     }).then(function (response) {
         $scope.borrows = response.data.borrows;
         for (var i in $scope.borrows) {
@@ -78,7 +79,7 @@ angular.module("library").controller("updateReaderCtrl", function ($scope, $http
         $scope.loading = true;
         $http({
             method: "post",
-            url: "./server/index.php",
+            url: "./server/updateReader.php",
             data: $scope.fields
         }).then(function (response) {
             $scope.loading = false;

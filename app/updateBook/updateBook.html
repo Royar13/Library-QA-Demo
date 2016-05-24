@@ -47,7 +47,7 @@
                     הוצאה לאור:
                 </td>
                 <td>
-                    <div angucomplete-alt id="publisher" initial-value="fields.publisher" selected-object="selectedPublisher" placeholder="חפש הוצאה לאור" local-data="select.publishers" search-fields="name" minlength="1" title-field="name" match-class="highlight" text-searching="מחפש..." text-no-results="false">
+                    <div angucomplete-alt id="publisher" selected-object="selectedPublisher" placeholder="חפש הוצאה לאור" local-data="select.publishers" search-fields="name" minlength="1" title-field="name" match-class="highlight" text-searching="מחפש..." text-no-results="false">
 
                     </div>
                     <div class="errors" ng-hide="loading">
@@ -75,7 +75,6 @@
                 <td colspan="2">
                     <img src="dist/img/loader.gif" class="loader" ng-show="loading">
                     <div general-errors></div>
-                    <a class="btn short right" ng-click="deleteBook()" ng-hide="loading">מחק</a>
                     <a class="btn left" ng-click="updateBook()" ng-hide="loading">עדכן ספר</a>
                 </td>
             </tr>

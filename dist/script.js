@@ -59,28 +59,31 @@ app.config(function ($routeProvider) {
 angular.module("library").controller("addBookCtrl", function ($scope, $http, $location, alertify) {
 
     $scope.fields = {
-        action: "createBook",
-        copies: 1
+        name: "",
+        sectionId: "",
+        bookcaseId: "",
+        author: "",
+        publisher: "",
+        releaseYear: "",
+        copies: ""
     };
+    $scope.errors = {};
     $scope.select = {};
     $http({
         method: "post",
-        url: "./server/index.php",
-        data: {action: "readAllAuthors"}
+        url: "./server/readAuthors.php"
     }).then(function (response) {
         $scope.select.authors = response.data.authors;
     });
     $http({
         method: "post",
-        url: "./server/index.php",
-        data: {action: "readAllPublishers"}
+        url: "./server/readPublishers.php"
     }).then(function (response) {
         $scope.select.publishers = response.data.publishers;
     });
     $http({
         method: "post",
-        url: "./server/index.php",
-        data: {action: "readAllSections"}
+        url: "./server/readSections.php"
     }).then(function (response) {
         $scope.select.sections = response.data.sections;
 
@@ -103,14 +106,13 @@ angular.module("library").controller("addBookCtrl", function ($scope, $http, $lo
         $scope.fields.publisher = $("#publisher_value").val();
 
         $scope.loading = true;
-        $scope.errors = {};
         $http({
             method: "post",
-            url: "./server/index.php",
+            url: "./server/addBook.php",
             data: $scope.fields
         }).then(function (response) {
+            $scope.loading = false;
             if (!response.data.success) {
-                $scope.loading = false;
                 $scope.errors = response.data.errors;
                 alertify.error("הקלט שהוזן אינו תקין");
             } else {
@@ -130,8 +132,14 @@ angular.module("library").controller("addBookCtrl", function ($scope, $http, $lo
 
 angular.module("library").controller("addReaderCtrl", function ($scope, $http, $location, alertify) {
     $scope.fields = {
-        action: "createReader"
+        id: "",
+        name: "",
+        city: "",
+        street: "",
+        maxBooks: 0,
+        readerType: ""
     };
+    $scope.errors = {};
     $scope.select = {};
     $scope.monthlyPay = 0;
     $scope.$watchGroup(["fields.readerType", "fields.maxBooks"], function (newValues, oldValues, scope) {
@@ -151,28 +159,25 @@ angular.module("library").controller("addReaderCtrl", function ($scope, $http, $
     }
     $http({
         method: "post",
-        url: "./server/index.php",
-        data: {action: "readReaderTypes"}
+        url: "./server/readReaderTypes.php"
     }).then(function (response) {
         $scope.select.readerTypes = response.data.readerTypes;
     });
     $http({
         method: "post",
-        url: "./server/index.php",
-        data: {action: "readBooksNum"}
+        url: "./server/readBooksNum.php"
     }).then(function (response) {
         $scope.select.maxBooks = response.data.booksNum;
     });
     $scope.addReader = function () {
         $scope.loading = true;
-        $scope.errors = {};
         $http({
             method: "post",
-            url: "./server/index.php",
+            url: "./server/addReader.php",
             data: $scope.fields
         }).then(function (response) {
+            $scope.loading = false;
             if (!response.data.success) {
-                $scope.loading = false;
                 $scope.errors = response.data.errors;
                 alertify.error("הקלט שהוזן אינו תקין");
             }
@@ -198,60 +203,58 @@ angular.module("library").controller("borrowBooksCtrl", function ($scope, $http,
     };
 
     $scope.fields = {
-        action: "borrowReturnBooks"
+        readerId: "",
+        borrowBooksId: [],
+        returnBooksId: []
     };
+    $scope.errors = {};
     $scope.select = {};
     $http({
         method: "post",
-        url: "./server/index.php",
-        data: {action: "readReader", id: $scope.readerId}
+        url: "./server/readReader.php",
+        data: {id: $scope.readerId}
     }).then(function (response) {
         $scope.readerName = response.data.name;
         $scope.maxBooks = response.data.maxBooks;
     });
     $http({
         method: "post",
-        url: "./server/index.php",
-        data: {action: "readBorrowsByReaderForDisplay", readerId: $scope.readerId}
+        url: "./server/readBorrowsForDisplay.php",
+        data: {readerId: $scope.readerId}
     }).then(function (response) {
         $scope.borrowedBooks = response.data.borrows;
     });
     $http({
         method: "post",
-        url: "./server/index.php",
-        data: {action: "readAllBooksForBorrow"}
+        url: "./server/readBooksBorrowAPI.php"
     }).then(function (response) {
         $scope.books = response.data.books;
     });
     $scope.borrowReturn = function () {
-        $scope.loading = true;
-        $scope.errors = {};
         $scope.fields.readerId = $scope.readerId;
-        $scope.fields.borrowBooksIds = [];
-        $scope.fields.returnBooksIds = [];
+        $scope.fields.borrowBooksId = [];
+        $scope.fields.returnBooksId = [];
 
         for (var i in $scope.isReturn) {
             if ($scope.isReturn[i]) {
-                $scope.fields.returnBooksIds.push(i);
+                $scope.fields.returnBooksId.push(i);
             }
         }
         for (var i in $scope.borrows) {
-            $scope.fields.borrowBooksIds.push($scope.borrows[i].originalObject.id);
+            $scope.fields.borrowBooksId.push($scope.borrows[i].originalObject.id);
         }
         $http({
             method: "post",
-            url: "./server/index.php",
+            url: "./server/borrowReturnBooks.php",
             data: $scope.fields
         }).then(function (response) {
-            if (!response.data.success) {
-                $scope.loading = false;
-                alertify.error("קלט לא תקין");
-                $scope.errors = response.data.errors;
-            }
-            else {
+            if (response.data.success) {
                 alertify.success("הספרים הוחזרו/הושאלו בהצלחה!");
                 $location.path("/updateReader").search({id: $scope.readerId});
-
+            }
+            else {
+                alertify.error("קלט לא תקין");
+                $scope.errors = response.data.errors;
             }
         });
     };
@@ -281,20 +284,17 @@ angular.module("library").controller("borrowBooksCtrl", function ($scope, $http,
 });
 
 angular.module("library").controller("borrowBooksMenuCtrl", function ($scope, $http, $location) {
-    $scope.fields = {
-        action: "readerExists"
-    };
+    $scope.fields = {};
 
     $scope.searchReader = function () {
         $scope.loading = true;
-        $scope.errors = {};
         $http({
             method: "post",
-            url: "./server/index.php",
+            url: "./server/readerExists.php",
             data: $scope.fields
         }).then(function (response) {
+            $scope.loading = false;
             if (!response.data.success) {
-                $scope.loading = false;
                 $scope.errors = response.data.errors;
             } else {
                 $location.path("/borrowBooks").search({id: $scope.fields.id});
@@ -308,8 +308,7 @@ angular.module("library").controller("displayBooksCtrl", function ($scope, $http
     $scope.quantity = 50;
     $http({
         method: "post",
-        url: "./server/index.php",
-        data: {action: "readAllBooks"}
+        url: "./server/readBooks.php"
     }).then(function (response) {
         $scope.books = response.data.books;
     });
@@ -319,8 +318,7 @@ angular.module("library").controller("displayReadersCtrl", function ($scope, $ht
     $scope.quantity = 50;
     $http({
         method: "post",
-        url: "./server/index.php",
-        data: {action: "readAllReaders"}
+        url: "./server/readReaders.php"
     }).then(function (response) {
         $scope.readers = response.data.readers;
     });
@@ -353,14 +351,15 @@ angular.module("library").controller("loginCtrl", function ($scope, $http, userS
         });
     }
     $scope.fields = {
-        action: "login"
+        username: "",
+        password: ""
     };
     $scope.errors = {};
     $scope.login = function () {
         $scope.loading = true;
         $http({
             method: "post",
-            url: "./server/index.php",
+            url: "./server/login.php",
             data: $scope.fields
         }).then(function (response) {
             $scope.loading = false;
@@ -391,6 +390,25 @@ angular.module("library").controller("panelCtrl", function ($scope, $window, $lo
     }
     $scope.loading = false;
 });
+angular.module("library").service("userService", function ($http, $location) {
+    this.updateUser = function (username, name) {
+        this.user = {username: username, name: name};
+    };
+    this.getUser = function () {
+        if (this.user != null) {
+            return true;
+        }
+        var _this = this;
+        return $http({
+            method: "post",
+            url: "./server/login.php"
+        }).then(function (response) {
+            if (response.data.success) {
+                _this.updateUser(response.data.username, response.data.name);
+            }
+        });
+    };
+});
 angular.module("library").controller("topBarCtrl", function ($scope, $http, $location, userService) {
     $scope.user = {};
     function retrieveUser() {
@@ -413,31 +431,10 @@ angular.module("library").controller("topBarCtrl", function ($scope, $http, $loc
     $scope.disconnect = function () {
         $http({
             method: "post",
-            url: "./server/index.php",
-            data: {action: "disconnect"}
+            url: "./server/disconnect.php"
         }).then(function () {
             userService.user = null;
             $location.path("/");
-        });
-    };
-});
-angular.module("library").service("userService", function ($http, $location) {
-    this.updateUser = function (username, name) {
-        this.user = {username: username, name: name};
-    };
-    this.getUser = function () {
-        if (this.user != null) {
-            return true;
-        }
-        var _this = this;
-        return $http({
-            method: "post",
-            url: "./server/index.php",
-            data: {action: "fetchLoggedUser"}
-        }).then(function (response) {
-            if (response.data.success) {
-                _this.updateUser(response.data.username, response.data.name);
-            }
         });
     };
 });
@@ -446,17 +443,23 @@ angular.module("library").controller("updateBookCtrl", function ($scope, $http, 
     $scope.editMode = false;
     var bookId = $routeParams.id;
     $scope.fields = {
-        action: "updateBook"
+        id: "",
+        name: "",
+        sectionId: "",
+        bookcaseId: "",
+        author: "",
+        publisher: "",
+        releaseYear: "",
+        copies: ""
     };
+    $scope.errors = {};
     $scope.select = {};
     $http({
         method: "post",
-        url: "./server/index.php",
-        data: {action: "readBook", id: bookId}
+        url: "./server/readBook.php",
+        data: {id: bookId}
     }).then(function (response) {
-        for (var i in response.data) {
-            $scope.fields[i] = response.data[i];
-        }
+        $scope.fields = response.data;
         $scope.fields.id = bookId;
         $scope.fields.releaseYear = Number($scope.fields.releaseYear);
         $scope.fields.copies = Number($scope.fields.copies);
@@ -467,22 +470,19 @@ angular.module("library").controller("updateBookCtrl", function ($scope, $http, 
     });
     $http({
         method: "post",
-        url: "./server/index.php",
-        data: {action: "readAllAuthors"}
+        url: "./server/readAuthors.php"
     }).then(function (response) {
         $scope.select.authors = response.data.authors;
     });
     $http({
         method: "post",
-        url: "./server/index.php",
-        data: {action: "readAllPublishers"}
+        url: "./server/readPublishers.php"
     }).then(function (response) {
         $scope.select.publishers = response.data.publishers;
     });
     $http({
         method: "post",
-        url: "./server/index.php",
-        data: {action: "readAllSections"}
+        url: "./server/readSections.php"
     }).then(function (response) {
         $scope.select.sections = response.data.sections;
         if (boolSectionsFinish)
@@ -514,11 +514,9 @@ angular.module("library").controller("updateBookCtrl", function ($scope, $http, 
         $scope.fields.publisher = $("#publisher_value").val();
 
         $scope.loading = true;
-        $scope.errors = {};
-
         $http({
             method: "post",
-            url: "./server/index.php",
+            url: "./server/updateBook.php",
             data: $scope.fields
         }).then(function (response) {
             $scope.loading = false;
@@ -528,27 +526,8 @@ angular.module("library").controller("updateBookCtrl", function ($scope, $http, 
             } else {
                 alertify.success("הספר עודכן בהצלחה!");
                 $scope.editMode = false;
+                $scope.errors = {};
             }
-        });
-    };
-    $scope.deleteBook = function () {
-        alertify.confirm("האם אתה בטוח שברצונך למחוק את הספר '" + $scope.fields.name + "'?", function () {
-            $scope.loading = true;
-            $scope.errors = {};
-            $http({
-                method: "post",
-                url: "./server/index.php",
-                data: {action: "deleteBook", id: $scope.fields.id}
-            }).then(function (response) {
-                if (!response.data.success) {
-                    $scope.loading = false;
-                    $scope.errors = response.data.errors;
-                    alertify.error("אי אפשר למחוק את הספר");
-                } else {
-                    alertify.success("הספר נמחק בהצלחה!");
-                    $location.path("/");
-                }
-            });
         });
     };
     $scope.toggleModes = function () {
@@ -560,19 +539,17 @@ angular.module("library").controller("updateBookCtrl", function ($scope, $http, 
 });
 
 angular.module("library").controller("updateBookMenuCtrl", function ($scope, $http, $location) {
-    $scope.fields = {
-        action: "bookExists"
-    };
+    $scope.fields = {};
 
     $scope.searchBook = function () {
         $scope.loading = true;
         $http({
             method: "post",
-            url: "./server/index.php",
+            url: "./server/bookExists.php",
             data: $scope.fields
         }).then(function (response) {
+            $scope.loading = false;
             if (!response.data.success) {
-                $scope.loading = false;
                 $scope.errors = response.data.errors;
             } else {
                 $location.path("/updateBook").search({id: $scope.fields.id});
@@ -586,7 +563,12 @@ angular.module("library").controller("updateReaderCtrl", function ($scope, $http
     $scope.editMode = false;
     var readerId = $routeParams.id;
     $scope.fields = {
-        action: "updateReader",
+        id: "",
+        name: "",
+        city: "",
+        street: "",
+        maxBooks: 0,
+        readerType: "",
         joinDate: 0
     };
     $scope.fine = 0;
@@ -610,7 +592,7 @@ angular.module("library").controller("updateReaderCtrl", function ($scope, $http
             if ($scope.select.readerTypes[i].id == id)
                 return $scope.select.readerTypes[i];
         }
-    };
+    }
     $scope.address = function () {
         if ($scope.fields.city != "") {
             return $scope.fields.street + ", " + $scope.fields.city;
@@ -619,35 +601,31 @@ angular.module("library").controller("updateReaderCtrl", function ($scope, $http
     };
     $http({
         method: "post",
-        url: "./server/index.php",
-        data: {action: "readReader", id: readerId}
+        url: "./server/readReader.php",
+        data: {id: readerId}
     }).then(function (response) {
-        for (var i in response.data) {
-            $scope.fields[i] = response.data[i];
-        }
+        $scope.fields = response.data;
         $scope.fields.id = readerId;
         updatePay();
     });
     $http({
         method: "post",
-        url: "./server/index.php",
-        data: {action: "readReaderTypes"}
+        url: "./server/readReaderTypes.php"
     }).then(function (response) {
         $scope.select.readerTypes = response.data.readerTypes;
         updatePay();
     });
     $http({
         method: "post",
-        url: "./server/index.php",
-        data: {action: "readBooksNum"}
+        url: "./server/readBooksNum.php"
     }).then(function (response) {
         $scope.select.maxBooks = response.data.booksNum;
     });
 
     $http({
         method: "post",
-        url: "./server/index.php",
-        data: {action: "readAllBorrowsByReader", readerId: readerId}
+        url: "./server/readAllReaderBorrows.php",
+        data: {readerId: readerId}
     }).then(function (response) {
         $scope.borrows = response.data.borrows;
         for (var i in $scope.borrows) {
@@ -661,7 +639,7 @@ angular.module("library").controller("updateReaderCtrl", function ($scope, $http
         $scope.loading = true;
         $http({
             method: "post",
-            url: "./server/index.php",
+            url: "./server/updateReader.php",
             data: $scope.fields
         }).then(function (response) {
             $scope.loading = false;
@@ -684,19 +662,17 @@ angular.module("library").controller("updateReaderCtrl", function ($scope, $http
 });
 
 angular.module("library").controller("updateReaderMenuCtrl", function ($scope, $http, $location) {
-    $scope.fields = {
-        action: "readerExists"
-    };
+    $scope.fields = {};
 
     $scope.searchReader = function () {
         $scope.loading = true;
         $http({
             method: "post",
-            url: "./server/index.php",
+            url: "./server/readerExists.php",
             data: $scope.fields
         }).then(function (response) {
+            $scope.loading = false;
             if (!response.data.success) {
-                $scope.loading = false;
                 $scope.errors = response.data.errors;
             } else {
                 $location.path("/updateReader").search({id: $scope.fields.id});

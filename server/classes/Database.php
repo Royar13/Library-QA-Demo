@@ -72,19 +72,6 @@ class Database {
         $this->preparedQuery($query, $bind);
     }
 
-    public function delete($table, $condition) {
-        $where = "";
-        foreach ($condition as $field => $value) {
-            if ($where != "") {
-                $where.=" AND ";
-            }
-            $where.="{$field}=:where{$field}";
-            $bind[":where{$field}"] = $condition[$field];
-        }
-        $query = "delete from {$table} where {$where}";
-        $this->preparedQuery($query, $bind);
-    }
-
     public function getLastId() {
         return $this->getConnection()->lastInsertId();
     }
