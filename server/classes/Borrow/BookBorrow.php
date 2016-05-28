@@ -15,7 +15,7 @@ class BookBorrow implements IDatabaseAccess {
         $borrowedBooks = $this->readBorrowsByReader()->fetchAll(PDO::FETCH_ASSOC);
         if (!$validator->validate($this, $maxBooks, $borrowedBooks))
             return false;
-        
+
         try {
             foreach ($this->borrowBooksIds as $id) {
                 $fields = array();
@@ -60,9 +60,10 @@ class BookBorrow implements IDatabaseAccess {
 
     public function readBorrowsByReaderForDisplay() {
         $borrowRules = $this->readBorrowRules()->fetchAll(PDO::FETCH_ASSOC)[0];
-        $query = "SELECT borrowed_books.*, borrowed_books.borrowDate, (DATEDIFF(now(),borrowed_books.borrowDate)-{$borrowRules["borrowDays"]}) as lateDays,"
-                . " IF((DATEDIFF(now(),borrowed_books.borrowDate)-{$borrowRules["borrowDays"]})>0, true, false) as isLate,"
-                . " ((DATEDIFF(now(),borrowed_books.borrowDate)-{$borrowRules["borrowDays"]})*{$borrowRules["dailyFine"]}) as fine,"
+        $query = "SELECT borrowed_books.*,"
+                . " (DATEDIFF(IF(borrowed_books.boolReturn, borrowed_books.returnDate, now()),borrowed_books.borrowDate)-{$borrowRules["borrowDays"]}) as lateDays,"
+                . " (IF((DATEDIFF(IF(borrowed_books.boolReturn, borrowed_books.returnDate, now()),borrowed_books.borrowDate)-{$borrowRules["borrowDays"]})>0, true, false)) as isLate,"
+                . " ((DATEDIFF(IF(borrowed_books.boolReturn, borrowed_books.returnDate, now()),borrowed_books.borrowDate)-{$borrowRules["borrowDays"]})*{$borrowRules["dailyFine"]}) as fine,"
                 . " books.name as bookName, authors.name as authorName"
                 . " FROM borrowed_books"
                 . " JOIN books ON borrowed_books.bookId=books.id"
@@ -73,17 +74,33 @@ class BookBorrow implements IDatabaseAccess {
         return $result;
     }
 
-    public function readAllReaderBorrows() {
+    public function readAllBorrowsByReader() {
         $borrowRules = $this->readBorrowRules()->fetchAll(PDO::FETCH_ASSOC)[0];
-        $query = "SELECT borrowed_books.*, borrowed_books.borrowDate, (DATEDIFF(now(),borrowed_books.borrowDate)-{$borrowRules["borrowDays"]}) as lateDays,"
-                . " IF((DATEDIFF(now(),borrowed_books.borrowDate)-{$borrowRules["borrowDays"]})>0, true, false) as isLate,"
-                . " ((DATEDIFF(now(),borrowed_books.borrowDate)-{$borrowRules["borrowDays"]})*{$borrowRules["dailyFine"]}) as fine,"
+        $query = "SELECT borrowed_books.*,"
+                . " (DATEDIFF(IF(borrowed_books.boolReturn, borrowed_books.returnDate, now()),borrowed_books.borrowDate)-{$borrowRules["borrowDays"]}) as lateDays,"
+                . " (IF((DATEDIFF(IF(borrowed_books.boolReturn, borrowed_books.returnDate, now()),borrowed_books.borrowDate)-{$borrowRules["borrowDays"]})>0, true, false)) as isLate,"
+                . " ((DATEDIFF(IF(borrowed_books.boolReturn, borrowed_books.returnDate, now()),borrowed_books.borrowDate)-{$borrowRules["borrowDays"]})*{$borrowRules["dailyFine"]}) as fine,"
                 . " books.name as bookName, authors.name as authorName"
                 . " FROM borrowed_books"
                 . " JOIN books ON borrowed_books.bookId=books.id"
                 . " LEFT JOIN authors ON books.authorId=authors.id"
                 . " WHERE readerId=:readerId";
         $bind[":readerId"] = $this->readerId;
+        $result = $this->db->preparedQuery($query, $bind);
+        return $result;
+    }
+
+    public function readAllBorrowsByBook() {
+        $borrowRules = $this->readBorrowRules()->fetchAll(PDO::FETCH_ASSOC)[0];
+        $query = "SELECT borrowed_books.*,"
+                . " (DATEDIFF(IF(borrowed_books.boolReturn, borrowed_books.returnDate, now()),borrowed_books.borrowDate)-{$borrowRules["borrowDays"]}) as lateDays,"
+                . " (IF((DATEDIFF(IF(borrowed_books.boolReturn, borrowed_books.returnDate, now()),borrowed_books.borrowDate)-{$borrowRules["borrowDays"]})>0, true, false)) as isLate,"
+                . " ((DATEDIFF(IF(borrowed_books.boolReturn, borrowed_books.returnDate, now()),borrowed_books.borrowDate)-{$borrowRules["borrowDays"]})*{$borrowRules["dailyFine"]}) as fine,"
+                . " readers.name as readerName, readers.id as readerId"
+                . " FROM borrowed_books"
+                . " JOIN readers ON borrowed_books.readerId=readers.id"
+                . " WHERE bookId=:bookId";
+        $bind[":bookId"] = $this->bookId;
         $result = $this->db->preparedQuery($query, $bind);
         return $result;
     }

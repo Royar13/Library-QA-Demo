@@ -50,7 +50,7 @@ gulp.task("images", function () {
 
 gulp.task("browser-sync", function () {
     browserSync.init({
-        proxy: "localhost:8080/library-qa-demo/index.html"
+        proxy: "localhost/library-qa-demo/index.html"
     });
 });
 

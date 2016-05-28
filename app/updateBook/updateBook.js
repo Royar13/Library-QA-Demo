@@ -46,6 +46,20 @@ angular.module("library").controller("updateBookCtrl", function ($scope, $http, 
             $scope.updateBookcases();
         boolSectionsFinish = true;
     });
+    $http({
+        method: "post",
+        url: "./server/index.php",
+        data: {action: "readAllBorrowsByBook", bookId: bookId}
+    }).then(function (response) {
+        $scope.borrows = response.data.borrows;
+    });
+    $http({
+        method: "post",
+        url: "./server/index.php",
+        data: {action: "readActionsByBook", id: bookId}
+    }).then(function (response) {
+        $scope.actions = response.data.actions;
+    });
     $scope.$watch("fields.sectionId", function () {
         $scope.updateBookcases();
     });
@@ -89,7 +103,7 @@ angular.module("library").controller("updateBookCtrl", function ($scope, $http, 
         });
     };
     $scope.deleteBook = function () {
-        alertify.confirm("האם אתה בטוח שברצונך למחוק את הספר '" + $scope.fields.name + "'?", function () {
+        alertify.confirm("האם אתה בטוח שברצונך למחוק את הספר \"" + $scope.fields.name + "\"?", function () {
             $scope.loading = true;
             $scope.errors = {};
             $http({

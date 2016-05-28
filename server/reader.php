@@ -90,3 +90,17 @@ function readerExists() {
     }
     Factory::write($output);
 }
+
+function deleteReader() {
+    $reader = Factory::makeReader();
+    $param = new Param();
+    $reader->id = $param->get("id");
+    $reader->readOne();
+    $validator = Factory::makeValidator("Reader");
+    if ($reader->delete($validator, Factory::getUser()->id)) {
+        $output["success"] = true;
+    } else {
+        $output = $validator->getErrors();
+    }
+    Factory::write($output);
+}

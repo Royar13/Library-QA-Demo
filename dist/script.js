@@ -376,7 +376,7 @@ angular.module("library").controller("loginCtrl", function ($scope, $http, userS
 angular.module("library").controller("mainCtrl", function ($scope) {
 });
 angular.module("library").controller("panelCtrl", function ($scope, $window, $location, alertify) {
-    alertify.logPosition("top right");
+    alertify.logPosition("top right").okBtn("אישור").cancelBtn("ביטול");
 
     var bgRatio = 1.67;
     var bgWidth = $(window).height() * bgRatio;
@@ -388,8 +388,28 @@ angular.module("library").controller("panelCtrl", function ($scope, $window, $lo
 
     $scope.includeTopBar = function () {
         return $location.path() != "/";
-    }
+    };
     $scope.loading = false;
+});
+angular.module("library").service("userService", function ($http, $location) {
+    this.updateUser = function (username, name) {
+        this.user = {username: username, name: name};
+    };
+    this.getUser = function () {
+        if (this.user != null) {
+            return true;
+        }
+        var _this = this;
+        return $http({
+            method: "post",
+            url: "./server/index.php",
+            data: {action: "fetchLoggedUser"}
+        }).then(function (response) {
+            if (response.data.success) {
+                _this.updateUser(response.data.username, response.data.name);
+            }
+        });
+    };
 });
 angular.module("library").controller("topBarCtrl", function ($scope, $http, $location, userService) {
     $scope.user = {};
@@ -418,26 +438,6 @@ angular.module("library").controller("topBarCtrl", function ($scope, $http, $loc
         }).then(function () {
             userService.user = null;
             $location.path("/");
-        });
-    };
-});
-angular.module("library").service("userService", function ($http, $location) {
-    this.updateUser = function (username, name) {
-        this.user = {username: username, name: name};
-    };
-    this.getUser = function () {
-        if (this.user != null) {
-            return true;
-        }
-        var _this = this;
-        return $http({
-            method: "post",
-            url: "./server/index.php",
-            data: {action: "fetchLoggedUser"}
-        }).then(function (response) {
-            if (response.data.success) {
-                _this.updateUser(response.data.username, response.data.name);
-            }
         });
     };
 });
@@ -489,6 +489,20 @@ angular.module("library").controller("updateBookCtrl", function ($scope, $http, 
             $scope.updateBookcases();
         boolSectionsFinish = true;
     });
+    $http({
+        method: "post",
+        url: "./server/index.php",
+        data: {action: "readAllBorrowsByBook", bookId: bookId}
+    }).then(function (response) {
+        $scope.borrows = response.data.borrows;
+    });
+    $http({
+        method: "post",
+        url: "./server/index.php",
+        data: {action: "readActionsByBook", id: bookId}
+    }).then(function (response) {
+        $scope.actions = response.data.actions;
+    });
     $scope.$watch("fields.sectionId", function () {
         $scope.updateBookcases();
     });
@@ -532,7 +546,7 @@ angular.module("library").controller("updateBookCtrl", function ($scope, $http, 
         });
     };
     $scope.deleteBook = function () {
-        alertify.confirm("האם אתה בטוח שברצונך למחוק את הספר '" + $scope.fields.name + "'?", function () {
+        alertify.confirm("האם אתה בטוח שברצונך למחוק את הספר \"" + $scope.fields.name + "\"?", function () {
             $scope.loading = true;
             $scope.errors = {};
             $http({
@@ -657,6 +671,13 @@ angular.module("library").controller("updateReaderCtrl", function ($scope, $http
             }
         }
     });
+    $http({
+        method: "post",
+        url: "./server/index.php",
+        data: {action: "readActionsByReader", id: readerId}
+    }).then(function (response) {
+        $scope.actions = response.data.actions;
+    });
     $scope.updateReader = function () {
         $scope.loading = true;
         $http({
@@ -673,6 +694,27 @@ angular.module("library").controller("updateReaderCtrl", function ($scope, $http
                 $scope.editMode = false;
                 $scope.errors = {};
             }
+        });
+    };
+    $scope.deleteReader = function () {
+        alertify.confirm("האם אתה בטוח שברצונך למחוק את הקורא \"" + $scope.fields.name + "\"?", function () {
+            $scope.loading = true;
+            $scope.errors = {};
+
+            $http({
+                method: "post",
+                url: "./server/index.php?XDEBUG_SESSION_START=netbeans-xdebug",
+                data: {action: "deleteReader", id: $scope.fields.id}
+            }).then(function (response) {
+                if (!response.data.success) {
+                    $scope.loading = false;
+                    $scope.errors = response.data.errors;
+                    alertify.error("אי אפשר למחוק את הקורא");
+                } else {
+                    alertify.success("הקורא נמחק בהצלחה!");
+                    $location.path("/");
+                }
+            });
         });
     };
     $scope.toggleModes = function () {

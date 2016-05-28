@@ -24,10 +24,8 @@ class Reader implements IDatabaseAccess {
         try {
             $this->db->insert("readers", $fields);
 
-            $actionFields["userId"] = $userId;
-            $actionFields["readerId"] = $this->id;
-            $actionFields["description"] = "המשתמש {user} יצר את הקורא {reader}";
-            $this->db->insert("readers_actions", $actionFields);
+            $action = new BookAction($this->db, $this->id, $userId, "המשתמש {user} יצר את הקורא {reader}");
+            $action->create();
             return true;
         } catch (Exception $ex) {
             return false;
@@ -54,10 +52,24 @@ class Reader implements IDatabaseAccess {
             $condition["id"] = $this->id;
             $this->db->update("readers", $fields, $condition);
 
-            $actionFields["userId"] = $userId;
-            $actionFields["readerId"] = $this->id;
-            $actionFields["description"] = "המשתמש {user} עדכן את הקורא {reader}";
-            $this->db->insert("readers_actions", $actionFields);
+            $action = new BookAction($this->db, $this->id, $userId, "המשתמש {user} עדכן את הקורא {reader}");
+            $action->create();
+            return true;
+        } catch (Exception $ex) {
+            return false;
+        }
+    }
+
+    public function delete(ReaderValidator $validator, $userId) {
+        if (!$validator->validateDelete($this))
+            return false;
+
+        try {
+            $condition["id"] = $this->id;
+            $this->db->delete("readers", $condition);
+
+            $action = new ReaderAction($this->db, null, $userId, "המשתמש {user} מחק את הקורא \"{$this->name}\"");
+            $action->create();
             return true;
         } catch (Exception $ex) {
             return false;
@@ -92,4 +104,5 @@ class Reader implements IDatabaseAccess {
                         . " JOIN reader_types"
                         . " ON readers.readerType=reader_types.id");
     }
+
 }

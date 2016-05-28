@@ -13,12 +13,8 @@ class ErrorLogger {
     }
 
     public function getErrors() {
-        if (count($this->errors) == 0) {
-            $output["success"] = true;
-        } else {
-            $output["success"] = false;
-            $output["errors"] = $this->errors;
-        }
+        $output["success"] = false;
+        $output["errors"] = $this->errors;
         return $output;
     }
 

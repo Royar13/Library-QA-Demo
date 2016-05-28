@@ -30,10 +30,8 @@ class Book implements IDatabaseAccess {
             $this->db->insert("books", $fields);
             $this->id = $this->db->getLastId();
 
-            $actionFields["userId"] = $userId;
-            $actionFields["bookId"] = $this->id;
-            $actionFields["description"] = "המשתמש {user} יצר את הספר {book}";
-            $this->db->insert("books_actions", $actionFields);
+            $action = new BookAction($this->db, $this->id, $userId, "המשתמש {user} יצר את הספר {book}");
+            $action->create();
             return true;
         } catch (Exception $ex) {
             return false;
@@ -68,10 +66,8 @@ class Book implements IDatabaseAccess {
             $condition["id"] = $this->id;
             $this->db->update("books", $fields, $condition);
 
-            $actionFields["userId"] = $userId;
-            $actionFields["bookId"] = $this->id;
-            $actionFields["description"] = "המשתמש {user} עדכן את הספר {book}";
-            $this->db->insert("books_actions", $actionFields);
+            $action = new BookAction($this->db, $this->id, $userId, "המשתמש {user} עדכן את הספר {book}");
+            $action->create();
             return true;
         } catch (Exception $ex) {
             return false;
@@ -86,8 +82,8 @@ class Book implements IDatabaseAccess {
             $condition["id"] = $this->id;
             $this->db->delete("books", $condition);
 
-            $action=new BookAction();
-            
+            $action = new BookAction($this->db, null, $userId, "המשתמש {user} מחק את הספר \"{$this->name}\"");
+            $action->create();
             return true;
         } catch (Exception $ex) {
             return false;

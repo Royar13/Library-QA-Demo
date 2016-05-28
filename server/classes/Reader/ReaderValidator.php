@@ -1,7 +1,7 @@
 <?php
 
 class ReaderValidator extends InputValidator implements IDatabaseAccess {
-    
+
     private $db;
 
     public function __construct() {
@@ -12,11 +12,11 @@ class ReaderValidator extends InputValidator implements IDatabaseAccess {
         $this->setValidation("city", "hebrew");
         $this->setValidation("street", "street");
     }
-    
+
     public function setDatabase($db) {
         $this->db = $db;
     }
-    
+
     public function validate($obj) {
         if (!$this->validateSyntax($obj))
             return false;
@@ -39,20 +39,28 @@ class ReaderValidator extends InputValidator implements IDatabaseAccess {
     public function validateCreate($obj) {
         if (!$this->validate($obj))
             return false;
-        
+
         if (!$this->validateIDNew($obj->id))
             $this->addError("id", "ת.ז. כבר קיימת במערכת");
-        
+
         return $this->isValid();
     }
 
     public function validateUpdate($obj) {
         if (!$this->validate($obj))
             return false;
-        
+
         if (!$this->validateIDExist($obj->id))
             $this->addGeneralError("לא נמצא קורא עם תעודת הזהות");
-        
+
+        return $this->isValid();
+    }
+
+    public function validateDelete($reader) {
+        if (!$this->validateIdExist($reader->id))
+            $this->addGeneralError("לא נמצא הקורא");
+        if (!$this->validateNoBorrowedBooks($reader->id))
+            $this->addGeneralError("אי אפשר למחוק קורא שיש לו ספרים מושאלים");
         return $this->isValid();
     }
 
@@ -91,10 +99,7 @@ class ReaderValidator extends InputValidator implements IDatabaseAccess {
         $bind[":id"] = $id;
         $result = $this->db->preparedQuery($query, $bind);
         $rows = $result->fetchAll(PDO::FETCH_ASSOC);
-        if (count($rows) == 1) {
-            return false;
-        }
-        return true;
+        return (count($rows) == 0);
         /* $counter = 0;
           for ($i = 0; $i < strlen($value); $i++) {
           $digit = intval($value[$i]);
@@ -111,10 +116,15 @@ class ReaderValidator extends InputValidator implements IDatabaseAccess {
         $bind[":id"] = $id;
         $result = $this->db->preparedQuery($query, $bind);
         $rows = $result->fetchAll(PDO::FETCH_ASSOC);
-        if (count($rows) != 1) {
-            return false;
-        }
-        return true;
+        return (count($rows) == 1);
+    }
+
+    public function validateNoBorrowedBooks($id) {
+        $query = "select id from borrowed_books where readerId=:readerId AND boolReturn=1";
+        $bind[":readerId"] = $id;
+        $result = $this->db->preparedQuery($query, $bind);
+        $rows = $result->fetchAll(PDO::FETCH_ASSOC);
+        return count($rows) == 0;
     }
 
 }

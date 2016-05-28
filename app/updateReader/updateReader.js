@@ -74,6 +74,13 @@ angular.module("library").controller("updateReaderCtrl", function ($scope, $http
             }
         }
     });
+    $http({
+        method: "post",
+        url: "./server/index.php",
+        data: {action: "readActionsByReader", id: readerId}
+    }).then(function (response) {
+        $scope.actions = response.data.actions;
+    });
     $scope.updateReader = function () {
         $scope.loading = true;
         $http({
@@ -90,6 +97,27 @@ angular.module("library").controller("updateReaderCtrl", function ($scope, $http
                 $scope.editMode = false;
                 $scope.errors = {};
             }
+        });
+    };
+    $scope.deleteReader = function () {
+        alertify.confirm("האם אתה בטוח שברצונך למחוק את הקורא \"" + $scope.fields.name + "\"?", function () {
+            $scope.loading = true;
+            $scope.errors = {};
+
+            $http({
+                method: "post",
+                url: "./server/index.php?XDEBUG_SESSION_START=netbeans-xdebug",
+                data: {action: "deleteReader", id: $scope.fields.id}
+            }).then(function (response) {
+                if (!response.data.success) {
+                    $scope.loading = false;
+                    $scope.errors = response.data.errors;
+                    alertify.error("אי אפשר למחוק את הקורא");
+                } else {
+                    alertify.success("הקורא נמחק בהצלחה!");
+                    $location.path("/");
+                }
+            });
         });
     };
     $scope.toggleModes = function () {

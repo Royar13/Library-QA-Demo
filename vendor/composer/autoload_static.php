@@ -9,7 +9,7 @@ class ComposerStaticInit0c953c4534aff2246b0a4427e162077e
     public static $classMap = array (
         'Action' => __DIR__ . '/../..' . '/server/classes/Action/Action.php',
         'Book' => __DIR__ . '/../..' . '/server/classes/Book/Book.php',
-        'BookAction' => __DIR__ . '/../..' . '/server/classes/Action/BookAction.php',
+        'BookAction' => __DIR__ . '/../..' . '/server/classes/Book/BookAction.php',
         'BookBorrow' => __DIR__ . '/../..' . '/server/classes/Borrow/BookBorrow.php',
         'BookValidator' => __DIR__ . '/../..' . '/server/classes/Book/BookValidator.php',
         'BorrowValidator' => __DIR__ . '/../..' . '/server/classes/Borrow/BorrowValidator.php',
@@ -22,7 +22,7 @@ class ComposerStaticInit0c953c4534aff2246b0a4427e162077e
         'JSONWriter' => __DIR__ . '/../..' . '/server/classes/JSONWriter.php',
         'Param' => __DIR__ . '/../..' . '/server/classes/Param.php',
         'Reader' => __DIR__ . '/../..' . '/server/classes/Reader/Reader.php',
-        'ReaderAction' => __DIR__ . '/../..' . '/server/classes/Action/ReaderAction.php',
+        'ReaderAction' => __DIR__ . '/../..' . '/server/classes/Reader/ReaderAction.php',
         'ReaderValidator' => __DIR__ . '/../..' . '/server/classes/Reader/ReaderValidator.php',
         'User' => __DIR__ . '/../..' . '/server/classes/User/User.php',
         'Validation' => __DIR__ . '/../..' . '/server/classes/Validation/Validation.php',
