@@ -5,7 +5,7 @@
             <td class="title required">
                 שם משתמש:
             </td>
-            <td text-field field-name="id" add-class="ltr" description="שם המשתמש יכול להכיל אותיות באנגלית, מספרים וקו תחתון">
+            <td text-field field-name="username" add-class="ltr" description="שם המשתמש יכול להכיל אותיות באנגלית, מספרים וקו תחתון">
             </td>
         </tr>
         <tr>
@@ -37,10 +37,27 @@
             </td>
         </tr>
         <tr>
+            <td class="title">
+                הרשאות:
+            </td>
+            <td>
+                <div id="permissions">
+                    <div ng-repeat="permission in getUserTypeById(fields.type).permissions">
+                        <div>
+                            {{permission}}
+                        </div>
+                    </div>
+                    <span ng-show="fields.type == null" class="defaultMsg">
+                        בחר סוג משתמש
+                    </span>
+                </div>
+            </td>
+        </tr>
+        <tr>
             <td colspan="2">
                 <img src="dist/img/loader.gif" class="loader" ng-show="loading">
                 <div general-errors></div>
-                <a class="btn left" ng-click="createUser()" ng-hide="loading">צור משתמש</a>
+                <a class="btn" ng-click="createUser()" ng-hide="loading">צור משתמש</a>
             </td>
         </tr>
     </table>

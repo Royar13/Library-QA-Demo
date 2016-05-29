@@ -1,0 +1,30 @@
+#panel.createUserCtrl {
+    h1 {
+        background-image: url('img/createUserBigIcon.png');
+    }
+    #permissions {
+        border: 1px solid #999;
+        border-radius: 5px;
+        height: 90px;
+        background-color: #e6e6e6;
+        overflow: auto;
+        font-size: 12px;
+        width: 370px;
+        padding: 10px;
+
+        >div {
+            padding: 4px 8px;
+            margin: 2px;
+            float: right;
+            border: 1px solid #bbb;
+            background: #eee;
+            border-radius: 15px;
+
+        }
+        
+        .defaultMsg {
+            font-style: italic;
+            color: #999;
+        }
+    }
+}

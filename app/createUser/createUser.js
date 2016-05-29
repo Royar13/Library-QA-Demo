@@ -17,7 +17,7 @@ angular.module("library").controller("createUserCtrl", function ($scope, $http, 
         $scope.errors = {};
         $http({
             method: "post",
-            url: "./server/index.php",
+            url: "./server/index.php?XDEBUG_SESSION_START=netbeans-xdebug",
             data: $scope.fields
         }).then(function (response) {
             if (!response.data.success) {
@@ -30,5 +30,13 @@ angular.module("library").controller("createUserCtrl", function ($scope, $http, 
                 $location.path("/");
             }
         });
+    };
+
+    $scope.getUserTypeById = function (id) {
+        for (var i in $scope.select.userTypes) {
+            if ($scope.select.userTypes[i].id == id) {
+                return $scope.select.userTypes[i];
+            }
+        }
     };
 });

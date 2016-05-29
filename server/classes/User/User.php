@@ -119,4 +119,40 @@ class User implements IDatabaseAccess {
         }
     }
 
+    public function readAllPermissionsForDisplay() {
+        $permissions = $this->db->query("select * from user_permissions")->fetchAll(PDO::FETCH_ASSOC);
+        $userTypes = $this->db->query("select * from user_types")->fetchAll(PDO::FETCH_ASSOC);
+        $output = array();
+        foreach ($userTypes as $key => $userType) {
+            $userTypes[$key]["permissionsArr"] = $this->permissionsToArray($userType["permissions"], $permissions);
+            $output["userTypes"][] = $userType["title"];
+        }
+        foreach ($permissions as $permission) {
+            $row = array();
+            $row["description"] = $permission["action"] . " " . $permission["subject"];
+            foreach ($userTypes as $userType) {
+                $row["typeAllowed"][] = in_array($permission["id"], $userType["permissionsArr"]);
+            }
+            $output["permissions"][] = $row;
+        }
+        return $output;
+    }
+
+    public function create(CreateUserValidator $validator) {
+        if (!$validator->validateCreate($this))
+            return false;
+
+        try {
+            $fields["name"] = $this->name;
+            $fields["username"] = $this->username;
+            $fields["password"] = $this->password;
+            $fields["type"] = $this->type;
+            $this->db->insert("users", $fields);
+
+            return true;
+        } catch (Exception $ex) {
+            return false;
+        }
+    }
+
 }

@@ -70,3 +70,41 @@ function readAllUserTypes() {
     $output = $user->readAllUserTypes();
     Factory::write($output);
 }
+
+function readAllPermissionsForDisplay() {
+    
+}
+
+function createUser() {
+    $user = Factory::getUser();
+    $param = new Param();
+    $user->username = $param->get("username");
+    $user->name = $param->get("name");
+    $user->password = $param->get("password");
+    $user->passwordRepeat = $param->get("passwordRepeat");
+    $user->type = $param->get("type");
+
+    $validator = Factory::makeValidator("CreateUser");
+
+    if ($user->create($validator)) {
+        $output["success"] = true;
+    } else {
+        $output = $validator->getErrors();
+    }
+    Factory::write($output);
+}
+
+function updateUser() {
+    $user = Factory::getUser();
+    $param = new Param();
+    $user->name = $param->get("name");
+    $user->type = $param->get("type");
+    $validator = Factory::makeValidator("UpdateUser");
+
+    if ($user->create($validator)) {
+        $output["success"] = true;
+    } else {
+        $output = $validator->getErrors();
+    }
+    Factory::write($output);
+}

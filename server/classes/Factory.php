@@ -39,8 +39,8 @@ class Factory {
             case "Borrow":
                 $validator = new BorrowValidator();
                 break;
-            case "User":
-                $validator = new UserValidator();
+            case "CreateUser":
+                $validator = new CreateUserValidator();
                 break;
             case "UpdatePassword":
                 $validator = new UpdatePasswordValidator();

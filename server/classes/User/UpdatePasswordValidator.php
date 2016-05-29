@@ -7,4 +7,16 @@ class UpdatePasswordValidator extends UserValidator {
         $this->mandatories = array("password");
     }
 
+    public function validateUpdatePassword($user) {
+        if (!$this->validateSyntax($user))
+            return false;
+        if (!$this->validateIdExist($user->id))
+            $this->addGeneralError("לא נמצא המשתמש");
+        if (!$this->validatePasswordRepeat($user->password, $user->passwordRepeat))
+            $this->addError("passwordRepeat", "אימות הסיסמא לא זהה לסיסמא");
+        if (!$this->validateCurrentPassword($user->id, $user->currentPassword))
+            $this->addError("currentPassword", "סיסמא שגויה");
+
+        return $this->isValid();
+    }
 }

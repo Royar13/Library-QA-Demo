@@ -2,7 +2,7 @@
 
 include "globalFunctions.php";
 
-$pageActions["user.php"] = array("login", "fetchLoggedUser", "disconnect", "readAllUsers", "updatePassword", "readAllUserTypes");
+$pageActions["user.php"] = array("login", "fetchLoggedUser", "disconnect", "readAllUsers", "updatePassword", "readAllUserTypes", "createUser");
 $pageActions["book.php"] = array("createBook", "deleteBook", "bookExists", "readBook", "readAllBooks", "readBooksNum", "updateBook", "readAllBooksForBorrow");
 $pageActions["author.php"] = array("readAllAuthors");
 $pageActions["borrow.php"] = array("readBorrowsByReader", "readBorrowsByReaderForDisplay", "readAllBorrowsByReader", "borrowReturnBooks", "readAllBorrowsByBook");

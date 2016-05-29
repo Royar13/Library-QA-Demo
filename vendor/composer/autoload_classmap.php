@@ -12,6 +12,7 @@ return array(
     'BookBorrow' => $baseDir . '/server/classes/Borrow/BookBorrow.php',
     'BookValidator' => $baseDir . '/server/classes/Book/BookValidator.php',
     'BorrowValidator' => $baseDir . '/server/classes/Borrow/BorrowValidator.php',
+    'CreateUserValidator' => $baseDir . '/server/classes/User/CreateUserValidator.php',
     'Database' => $baseDir . '/server/classes/Database.php',
     'ErrorLogger' => $baseDir . '/server/classes/Validation/ErrorLogger.php',
     'Factory' => $baseDir . '/server/classes/Factory.php',

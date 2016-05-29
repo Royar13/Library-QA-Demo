@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 29, 2016 at 02:24 AM
+-- Generation Time: May 29, 2016 at 09:43 PM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -359,14 +359,18 @@ CREATE TABLE IF NOT EXISTS `users` (
   `name` char(255) COLLATE utf8_bin NOT NULL,
   `type` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=6 ;
 
 --
 -- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `name`, `type`) VALUES
-(1, 'roy', '111111', 'רועי', 1);
+(1, 'roy', '111111', 'רועי', 1),
+(2, '', '', 'רועי', 1),
+(3, 'aaaa', '111111', 'רועי', 1),
+(4, 'aaaaa', '111111', 'רועי', 1),
+(5, 'ddd', '123123', 'גדשגשד', 2);
 
 -- --------------------------------------------------------
 

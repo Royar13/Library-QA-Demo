@@ -350,7 +350,7 @@ angular.module("library").controller("createUserCtrl", function ($scope, $http, 
         $scope.errors = {};
         $http({
             method: "post",
-            url: "./server/index.php",
+            url: "./server/index.php?XDEBUG_SESSION_START=netbeans-xdebug",
             data: $scope.fields
         }).then(function (response) {
             if (!response.data.success) {
@@ -363,6 +363,14 @@ angular.module("library").controller("createUserCtrl", function ($scope, $http, 
                 $location.path("/");
             }
         });
+    };
+
+    $scope.getUserTypeById = function (id) {
+        for (var i in $scope.select.userTypes) {
+            if ($scope.select.userTypes[i].id == id) {
+                return $scope.select.userTypes[i];
+            }
+        }
     };
 });
 
@@ -944,6 +952,35 @@ angular.module("library").directive("textField", function () {
         }
     };
 });
+angular.module("library").directive("fieldDescription", function () {
+    return {
+        restrict: "A",
+        scope: {
+            fieldDescription: "@"
+        },
+        transclude: true,
+        replace: true,
+        templateUrl: "app/directives/fieldDescription/fieldDescription.html",
+        link: function (scope, elem, attrs) {
+            var bubble;
+            var sel = "input, select";
+
+            $(elem).on("focus", sel, function () {
+                var right = $(elem).find(sel).outerWidth() + 11;
+                var width = Math.min(340, 550 - right);
+
+                bubble = $("<div>").addClass("fieldDescription").text(scope.fieldDescription).css({right: right, width: width});
+                $("<div>").addClass("triangle").appendTo(bubble);
+                if (scope.fieldDescription != "") {
+                    bubble.appendTo(elem);
+                }
+            });
+            $(elem).on("blur", sel, function () {
+                bubble.remove();
+            });
+        }
+    };
+});
 angular.module("library").directive("tabBody", function () {
     return {
         restrict: "A",
@@ -986,35 +1023,6 @@ angular.module("library").directive("tabs", function () {
         scope: true,
         controller: function ($scope) {
             $scope.selectedIndex = 0;                
-        }
-    };
-});
-angular.module("library").directive("fieldDescription", function () {
-    return {
-        restrict: "A",
-        scope: {
-            fieldDescription: "@"
-        },
-        transclude: true,
-        replace: true,
-        templateUrl: "app/directives/fieldDescription/fieldDescription.html",
-        link: function (scope, elem, attrs) {
-            var bubble;
-            var sel = "input, select";
-
-            $(elem).on("focus", sel, function () {
-                var right = $(elem).find(sel).outerWidth() + 11;
-                var width = Math.min(340, 550 - right);
-
-                bubble = $("<div>").addClass("fieldDescription").text(scope.fieldDescription).css({right: right, width: width});
-                $("<div>").addClass("triangle").appendTo(bubble);
-                if (scope.fieldDescription != "") {
-                    bubble.appendTo(elem);
-                }
-            });
-            $(elem).on("blur", sel, function () {
-                bubble.remove();
-            });
         }
     };
 });
