@@ -147,7 +147,8 @@ class Book implements IDatabaseAccess {
     }
 
     public function readAll() {
-        return $this->db->query("SELECT books.id, books.name, sections.name as sectionName, books.bookcaseId, authors.name as authorName, publishers.name as publisherName, IFNULL(books.releaseYear, '') as releaseYear, books.copies"
+        return $this->db->query("SELECT books.id, books.name, sections.name as sectionName, books.bookcaseId, authors.name as authorName, publishers.name as publisherName, IFNULL(books.releaseYear, '') as releaseYear, books.copies,"
+                        . " IF(COUNT(borrowed_books.bookId)>=books.copies OR books.copies=0, 'לא', 'כן') as available, borrowed_books.boolReturn"
                         . " FROM books"
                         . " LEFT JOIN sections"
                         . " ON books.sectionId=sections.id"
@@ -155,6 +156,8 @@ class Book implements IDatabaseAccess {
                         . " ON books.authorId=authors.id"
                         . " LEFT JOIN publishers"
                         . " ON books.publisherId=publishers.id"
+                        . " LEFT JOIN borrowed_books ON books.id = borrowed_books.bookId AND borrowed_books.boolReturn=0"
+                        . " GROUP BY books.id"
         );
     }
 

@@ -99,10 +99,11 @@ class Reader implements IDatabaseAccess {
     }
 
     public function readAll() {
-        return $this->db->query("SELECT readers.id, readers.name, readers.city, readers.street, reader_types.title as readerType, readers.maxBooks, readers.joinDate"
+        return $this->db->query("SELECT COUNT(borrowed_books.id) as borrowsNum, readers.id, readers.name, readers.city, readers.street, reader_types.title as readerType, readers.maxBooks, readers.joinDate"
                         . " FROM readers"
-                        . " JOIN reader_types"
-                        . " ON readers.readerType=reader_types.id");
+                        . " JOIN reader_types ON readers.readerType=reader_types.id"
+                        . " LEFT JOIN borrowed_books ON readers.id=borrowed_books.readerId AND boolReturn=0"
+                        . " GROUP BY readers.id");
     }
 
 }

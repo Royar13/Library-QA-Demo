@@ -1,4 +1,6 @@
-<select id="{{field}}" ng-class="class" ng-model="fields[field]">
-    <option ng-repeat="option in select[selectName]" value="{{getOptionValue(option)}}">{{getOptionText(option)}}</option>
-</select>
+<div field-description="{{description}}">
+    <select id="{{field}}" ng-class="class" ng-model="fields[field]">
+        <option ng-repeat="option in select[selectName]" value="{{getOptionValue(option)}}">{{getOptionText(option)}}</option>
+    </select>
+</div>
 <div errors></div>

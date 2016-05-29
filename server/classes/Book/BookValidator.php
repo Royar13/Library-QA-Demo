@@ -56,10 +56,7 @@ class BookValidator extends InputValidator implements IDatabaseAccess {
         $bind[":id"] = $id;
         $result = $this->db->preparedQuery($query, $bind);
         $rows = $result->fetchAll(PDO::FETCH_ASSOC);
-        if (count($rows) == 0) {
-            return false;
-        }
-        return true;
+        return (count($rows) == 1);
     }
 
     public function validateName($id, $name) {

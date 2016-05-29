@@ -1,0 +1,29 @@
+<h1>הצגת משתמשים</h1>
+<table st-table="displayedUsers" st-safe-src="users" class="data-table">
+    <thead>
+        <tr>
+            <th st-sort="name" st-sort-default="true">שם משתמש</th>
+            <th st-sort="type">סוג משתמש</th>
+            <th></th>
+        </tr>
+        <tr>
+            <th>
+                <input type="text" st-search="name" placeholder="חפש שם">
+            </th>
+            <th>
+                <input type="text" st-search="type" placeholder="חפש סוג משתמש">
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="user in displayedUsers| limitTo: quantity">
+            <td>{{user.name}} ({{user.username}})</td>
+            <td>{{user.type}}</td>
+            <td class="actionsInit">
+                <a href="#/updateUser?id={{user.id}}" class="editBtn" title="ערוך"></a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div btns-menu></div>

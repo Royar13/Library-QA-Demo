@@ -6,7 +6,11 @@ class User implements IDatabaseAccess {
     public $id;
     public $username;
     public $password;
+    public $repeatPassword;
+    public $currentPassword;
     public $name;
+    public $type;
+    public $typeTitle;
 
     public function setDatabase($db) {
         $this->db = $db;
@@ -18,7 +22,7 @@ class User implements IDatabaseAccess {
 
     public function fetchLoggedUser() {
         if ($this->authenticate()) {
-            $query = "select * from users where id=:uid";
+            $query = "select users.*, user_types.title as typeTitle from users left join user_types on users.type=user_types.id where users.id=:uid";
             $bind[":uid"] = $_SESSION["uid"];
             $result = $this->db->preparedQuery($query, $bind);
             $rows = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -27,6 +31,7 @@ class User implements IDatabaseAccess {
                 $this->id = $userData["id"];
                 $this->username = $userData["username"];
                 $this->name = $userData["name"];
+                $this->typeTitle = $userData["typeTitle"];
                 return true;
             }
         }
@@ -34,7 +39,7 @@ class User implements IDatabaseAccess {
     }
 
     public function login() {
-        $query = "select * from users where username=:username and password=:password";
+        $query = "select users.*, user_types.title as typeTitle from users left join user_types on users.type=user_types.id where username=:username and password=:password";
         $bind[":username"] = $this->username;
         $bind[":password"] = $this->password;
         $result = $this->db->preparedQuery($query, $bind);
@@ -45,8 +50,27 @@ class User implements IDatabaseAccess {
 
             $this->id = $userData["id"];
             $this->name = $userData["name"];
+            $this->typeTitle = $userData["typeTitle"];
+            $this->type = $userData["type"];
+
             return true;
         } else {
+            return false;
+        }
+    }
+
+    public function updatePassword(UpdatePasswordValidator $validator) {
+        if (!$validator->validateUpdatePassword($this))
+            return false;
+
+        try {
+            $fields["password"] = $this->password;
+
+            $condition["id"] = $this->id;
+            $this->db->update("users", $fields, $condition);
+
+            return true;
+        } catch (Exception $ex) {
             return false;
         }
     }
@@ -54,6 +78,45 @@ class User implements IDatabaseAccess {
     public function disconnect() {
         session_unset();
         session_destroy();
+    }
+
+    public function readAll() {
+        return $this->db->query("select users.name, users.username, users.type, user_types.title as type from users"
+                        . " join user_types on user_types.id=users.type");
+    }
+
+    public function readAllUserTypes() {
+        $permissions = $this->db->query("select * from user_permissions")->fetchAll(PDO::FETCH_ASSOC);
+        $result = $this->db->query("select * from user_types");
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $arr = $this->permissionsToArray($row["permissions"], $permissions);
+            $row["permissions"] = array();
+            foreach ($arr as $id) {
+                $permission = $this->getPermissionById($permissions, $id);
+                $row["permissions"][] = $permission["action"] . " " . $permission["subject"];
+            }
+            $userTypes["userTypes"][] = $row;
+        }
+        return $userTypes;
+    }
+
+    private function permissionsToArray($str, $permissions) {
+        $arr = array();
+        if ($str == "all") {
+            foreach ($permissions as $permission) {
+                $arr[] = $permission["id"];
+            }
+        } else {
+            $arr = explode(",", $str);
+        }
+        return $arr;
+    }
+
+    private function getPermissionById($permissions, $id) {
+        foreach ($permissions as $permission) {
+            if ($permission["id"] == $id)
+                return $permission;
+        }
     }
 
 }

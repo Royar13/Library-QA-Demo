@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 28, 2016 at 02:17 AM
+-- Generation Time: May 29, 2016 at 02:24 AM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -357,6 +357,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `username` char(255) COLLATE utf8_bin NOT NULL,
   `password` char(255) COLLATE utf8_bin NOT NULL,
   `name` char(255) COLLATE utf8_bin NOT NULL,
+  `type` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=2 ;
 
@@ -364,8 +365,64 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `password`, `name`) VALUES
-(1, 'roy', '123456', 'רועי');
+INSERT INTO `users` (`id`, `username`, `password`, `name`, `type`) VALUES
+(1, 'roy', '111111', 'רועי', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_permissions`
+--
+
+CREATE TABLE IF NOT EXISTS `user_permissions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `action` char(255) COLLATE utf8_bin NOT NULL,
+  `subject` char(255) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=15 ;
+
+--
+-- Dumping data for table `user_permissions`
+--
+
+INSERT INTO `user_permissions` (`id`, `action`, `subject`) VALUES
+(1, 'להציג', 'קורא'),
+(2, 'ליצור', 'קורא'),
+(3, 'לעדכן', 'קורא'),
+(4, 'למחוק', 'קורא'),
+(5, 'להציג', 'ספר'),
+(6, 'ליצור', 'ספר'),
+(7, 'לעדכן', 'ספר'),
+(8, 'למחוק', 'ספר'),
+(9, 'להשאיל', 'ספר'),
+(10, 'להציג', 'משתמש'),
+(11, 'ליצור', 'משתמש'),
+(12, 'לעדכן', 'משתמש'),
+(13, 'למחוק', 'משתמש'),
+(14, 'לעדכן', 'מדורים');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_types`
+--
+
+CREATE TABLE IF NOT EXISTS `user_types` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` char(255) COLLATE utf8_bin NOT NULL,
+  `permissions` char(255) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `user_types`
+--
+
+INSERT INTO `user_types` (`id`, `title`, `permissions`) VALUES
+(1, 'מנהל', 'all'),
+(2, 'ספרן בכיר', '1,2,3,4,5,6,7,8,9,10,11'),
+(3, 'ספרן', '1,2,3,5,6,7,9,10'),
+(4, 'קורא', '5');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

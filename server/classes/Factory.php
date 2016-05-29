@@ -39,6 +39,12 @@ class Factory {
             case "Borrow":
                 $validator = new BorrowValidator();
                 break;
+            case "User":
+                $validator = new UserValidator();
+                break;
+            case "UpdatePassword":
+                $validator = new UpdatePasswordValidator();
+                break;
         }
         $validator->setDatabase(self::$database);
         return $validator;

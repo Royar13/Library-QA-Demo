@@ -5,14 +5,14 @@
             <td class="title required">
                 ת.ז.:
             </td>
-            <td text-field field-name="id" add-class="ltr">
+            <td text-field field-name="id" add-class="ltr" description="תעודת זהות בת 9 ספרות">
             </td>
         </tr>
         <tr>
             <td class="title required">
                 שם:
             </td>
-            <td text-field field-name="name">
+            <td text-field field-name="name" description="שם פרטי ושם משפחה בעברית">
             </td>
         </tr>
         <tr>
@@ -26,7 +26,7 @@
                 </div>
                 <div class="fieldInit">
                     <label>רחוב:</label>
-                    <div text-field field-name="street"></div>
+                    <div text-field field-name="street" description='בפורמט "שם רחוב מספר בית"'></div>
                 </div>
             </td>
         </tr>
@@ -34,14 +34,14 @@
             <td class="title required">
                 מס' ספרים:
             </td>
-            <td select-field field-name="maxBooks" options="maxBooks">
+            <td select-field field-name="maxBooks" options="maxBooks" description="מס' ספרים מקסימלי להשאלה בו זמנית. התשלום החודשי מחושב על פי מכפלת מס' הספרים בעלות ספר עבור סוג הקורא הנבחר.">
             </td>
         </tr>
         <tr>
             <td class="title required">
                 סוג קורא:
             </td>
-            <td select-field field-name="readerType" add-class="big" options="readerTypes" options-value="id" options-text="title">
+            <td select-field field-name="readerType" add-class="big" options="readerTypes" options-value="id" options-text="fullTitle">
             </td>
         </tr>
         <tr>

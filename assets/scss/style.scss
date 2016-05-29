@@ -14,7 +14,7 @@ body {
     position: absolute;
     top: 20px;
     height: 530px;
-    width: 740px;
+    width: 760px;
     background: rgba(255, 255, 255, 0.8);
     border-radius: 10px;
     box-sizing: border-box;
@@ -59,6 +59,7 @@ body {
     margin-top: 10px;
     height: 460px;
     overflow-y: auto;
+    overflow-x: hidden;
     padding-left: 5px;
 }
 h1 {
@@ -324,4 +325,8 @@ img.rightImage {
 .angucomplete-dropdown {
     overflow-y: auto;
     max-height: 150px;
+}
+.dirLeft {
+    direction: ltr;
+    text-align: right;
 }

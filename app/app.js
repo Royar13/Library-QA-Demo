@@ -46,6 +46,30 @@ app.config(function ($routeProvider) {
                 templateUrl: "app/borrowBooks/borrowBooksMenu.html",
                 controller: "borrowBooksMenuCtrl"
             })
+            .when("/displayUsers", {
+                templateUrl: "app/displayUsers/displayUsers.html",
+                controller: "displayUsersCtrl"
+            })
+            .when("/updateUser", {
+                templateUrl: "app/updateUser/updateUser.html",
+                controller: "updateUserCtrl"
+            })
+            .when("/createUser", {
+                templateUrl: "app/createUser/createUser.html",
+                controller: "createUserCtrl"
+            })
+            .when("/updatePassword", {
+                templateUrl: "app/updatePassword/updatePassword.html",
+                controller: "updatePasswordCtrl"
+            })
+            .when("/updateSections", {
+                templateUrl: "app/updateSections/updateSections.html",
+                controller: "updateSectionsCtrl"
+            })
+            .when("/updateUserMenu", {
+                templateUrl: "app/updateUser/updateUserMenu.html",
+                controller: "updateUserMenuCtrl"
+            })
             .when("/borrowBooks", {
                 templateUrl: "app/borrowBooks/borrowBooks.html",
                 controller: "borrowBooksCtrl"

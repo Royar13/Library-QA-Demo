@@ -21,7 +21,7 @@ angular.module("library").controller("loginCtrl", function ($scope, $http, userS
         }).then(function (response) {
             $scope.loading = false;
             if (response.data.success) {
-                userService.updateUser(response.data.username, response.data.name);
+                userService.updateUser(response.data);
                 $location.path("/main");
             } else {
                 $scope.errors = response.data.errors;

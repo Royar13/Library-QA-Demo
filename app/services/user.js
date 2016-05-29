@@ -1,6 +1,6 @@
 angular.module("library").service("userService", function ($http, $location) {
-    this.updateUser = function (username, name) {
-        this.user = {username: username, name: name};
+    this.updateUser = function (user) {
+        this.user = user;
     };
     this.getUser = function () {
         if (this.user != null) {
@@ -13,7 +13,7 @@ angular.module("library").service("userService", function ($http, $location) {
             data: {action: "fetchLoggedUser"}
         }).then(function (response) {
             if (response.data.success) {
-                _this.updateUser(response.data.username, response.data.name);
+                _this.updateUser(response.data);
             }
         });
     };

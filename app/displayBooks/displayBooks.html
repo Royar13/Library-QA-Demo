@@ -9,6 +9,7 @@
             <th st-sort="authorName">סופר</th>
             <th st-sort="publisherName">הוצאה לאור</th>
             <th st-sort="releaseYear">שנת פרסום</th>
+            <th st-sort="available">נמצא?</th>
             <th></th>
         </tr>
         <tr>
@@ -37,6 +38,13 @@
             <th>
                 <input type="text" st-search="releaseYear" placeholder="חפש שנה">
             </th>
+            <th>
+                <select st-search="available">
+                    <option value=""></option>
+                    <option value="כן">כן</option>
+                    <option value="לא">לא</option>
+                </select>   
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -49,6 +57,7 @@
             <td>{{book.authorName}}</td>
             <td>{{book.publisherName}}</td>
             <td>{{book.releaseYear}}</td>
+            <td>{{book.available}}</td>
             <td class="actionsInit">
                 <a href="#/updateBook?id={{book.id}}" class="editBtn" title="ערוך"></a>
             </td>

@@ -1,0 +1,21 @@
+#panel.displayUsersCtrl {
+    h1 {
+        background-image: url('img/displayUsersBigIcon.png');
+    }
+    .actionsInit {
+        width: 13px;
+        .editBtn {
+            display: block;
+            float: right;
+            background: url("img/editIcon.png");
+            background-size: cover;
+            width: 13px;
+            height: 13px;
+            margin-left: 8px;
+
+        }
+        .editBtn:hover {
+            background-image: url("img/editIconHover.png");
+        }
+    }
+}

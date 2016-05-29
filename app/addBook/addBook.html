@@ -5,7 +5,7 @@
             <td class="title required">
                 שם:
             </td>
-            <td text-field field-name="name" add-class="big">
+            <td text-field field-name="name" add-class="big" description="שם הספר בעברית">
             </td>
         </tr>
         <tr>
@@ -13,8 +13,10 @@
                 סופר:
             </td>
             <td>
-                <div angucomplete-alt id="author" placeholder="חפש סופרים" selected-object="selectedAuthor" local-data="select.authors" search-fields="name" minlength="1"  title-field="name" match-class="highlight" text-searching="מחפש..." text-no-results="false">
+                <div field-description="חפש סופר קיים או הוסף סופר חדש">
+                    <div angucomplete-alt id="author" placeholder="חפש סופרים" selected-object="selectedAuthor" local-data="select.authors" search-fields="name" minlength="1"  title-field="name" match-class="highlight" text-searching="מחפש..." text-no-results="false">
 
+                    </div>
                 </div>
                 <div class="errors" ng-hide="loading">
                     <div ng-repeat="msg in errors.fields.author">
@@ -34,7 +36,7 @@
             <td class="title required">
                 מס' כוננית:
             </td>
-            <td select-field field-name="bookcaseId" options="bookcases">
+            <td select-field field-name="bookcaseId" options="bookcases" description="האפשרויות מתעדכנות בהתאם למדור שנבחר">
             </td>
         </tr>
         <tr>
@@ -42,8 +44,10 @@
                 הוצאה לאור:
             </td>
             <td>
-                <div angucomplete-alt id="publisher" placeholder="חפש הוצאה לאור" selected-object="selectedPublisher" local-data="select.publishers" search-fields="name" minlength="1" title-field="name" match-class="highlight" text-searching="מחפש..." text-no-results="false">
+                <div field-description="חפש הוצאה לאור קיימת או הוסף אחת חדשה">
+                    <div angucomplete-alt id="publisher" placeholder="חפש הוצאה לאור" selected-object="selectedPublisher" local-data="select.publishers" search-fields="name" minlength="1" title-field="name" match-class="highlight" text-searching="מחפש..." text-no-results="false">
 
+                    </div>
                 </div>
                 <div class="errors" ng-hide="loading">
                     <div ng-repeat="msg in errors.fields.publisher">
@@ -56,7 +60,7 @@
             <td class="title">
                 שנת פרסום:
             </td>
-            <td text-field field-name="releaseYear" field-type="number">
+            <td text-field field-name="releaseYear" field-type="number" description="שנה בפורמט של 4 ספרות">
             </td>     
         </tr>
         <tr>

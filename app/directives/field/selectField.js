@@ -4,12 +4,17 @@ angular.module("library").directive("selectField", function () {
         scope: true,
         require: "field",
         templateUrl: "app/directives/field/selectField.html",
+        replace: false,
         controller: function ($scope, $element) {
             $scope.field = $element.attr("field-name");
 
             $scope.class = "";
             if ($element[0].hasAttribute("add-class")) {
                 $scope.class = $element.attr("add-class");
+            }
+            $scope.description = "";
+            if ($element[0].hasAttribute("description")) {
+                $scope.description = $element.attr("description");
             }
             $scope.selectName = $element.attr("options");
             var valueName = null;

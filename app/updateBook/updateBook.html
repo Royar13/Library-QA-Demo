@@ -210,7 +210,7 @@
                         <tr ng-repeat="action in displayedActions">
                             <td>{{action.nameOfUser}} ({{action.username}})</td>
                             <td>{{action.description}}</td>
-                            <td dir="ltr" style="text-align: right;">{{action.actionDate| dateToISO | date:'dd/MM/yy HH:mm'}}</td>
+                            <td class="dirLeft">{{action.actionDate| dateToISO | date:'dd/MM/yy HH:mm'}}</td>
                         </tr>
                     </tbody>
                 </table>           

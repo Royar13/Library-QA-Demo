@@ -46,6 +46,30 @@ app.config(function ($routeProvider) {
                 templateUrl: "app/borrowBooks/borrowBooksMenu.html",
                 controller: "borrowBooksMenuCtrl"
             })
+            .when("/displayUsers", {
+                templateUrl: "app/displayUsers/displayUsers.html",
+                controller: "displayUsersCtrl"
+            })
+            .when("/updateUser", {
+                templateUrl: "app/updateUser/updateUser.html",
+                controller: "updateUserCtrl"
+            })
+            .when("/createUser", {
+                templateUrl: "app/createUser/createUser.html",
+                controller: "createUserCtrl"
+            })
+            .when("/updatePassword", {
+                templateUrl: "app/updatePassword/updatePassword.html",
+                controller: "updatePasswordCtrl"
+            })
+            .when("/updateSections", {
+                templateUrl: "app/updateSections/updateSections.html",
+                controller: "updateSectionsCtrl"
+            })
+            .when("/updateUserMenu", {
+                templateUrl: "app/updateUser/updateUserMenu.html",
+                controller: "updateUserMenuCtrl"
+            })
             .when("/borrowBooks", {
                 templateUrl: "app/borrowBooks/borrowBooks.html",
                 controller: "borrowBooksCtrl"
@@ -155,6 +179,10 @@ angular.module("library").controller("addReaderCtrl", function ($scope, $http, $
         data: {action: "readReaderTypes"}
     }).then(function (response) {
         $scope.select.readerTypes = response.data.readerTypes;
+        for (var i in $scope.select.readerTypes) {
+            var t = $scope.select.readerTypes[i];
+            t.fullTitle = t.title + " (" + t.bookCost + " ₪ לספר)";
+        }
     });
     $http({
         method: "post",
@@ -303,6 +331,41 @@ angular.module("library").controller("borrowBooksMenuCtrl", function ($scope, $h
     };
 });
 
+angular.module("library").controller("createUserCtrl", function ($scope, $http, $location, alertify) {
+    $scope.fields = {
+        action: "createUser"
+    };
+    $scope.select = {};
+
+    $http({
+        method: "post",
+        url: "./server/index.php",
+        data: {action: "readAllUserTypes"}
+    }).then(function (response) {
+        $scope.select.userTypes = response.data.userTypes;
+    });
+
+    $scope.createUser = function () {
+        $scope.loading = true;
+        $scope.errors = {};
+        $http({
+            method: "post",
+            url: "./server/index.php",
+            data: $scope.fields
+        }).then(function (response) {
+            if (!response.data.success) {
+                $scope.loading = false;
+                $scope.errors = response.data.errors;
+                alertify.error("הקלט שהוזן אינו תקין");
+            }
+            else {
+                alertify.success("המשתמש נוצר בהצלחה!");
+                $location.path("/");
+            }
+        });
+    };
+});
+
 angular.module("library").controller("displayBooksCtrl", function ($scope, $http) {
     $scope.books = [];
     $scope.quantity = 50;
@@ -323,6 +386,17 @@ angular.module("library").controller("displayReadersCtrl", function ($scope, $ht
         data: {action: "readAllReaders"}
     }).then(function (response) {
         $scope.readers = response.data.readers;
+    });
+});
+angular.module("library").controller("displayUsersCtrl", function ($scope, $http) {
+    $scope.users = [];
+    $scope.quantity = 50;
+    $http({
+        method: "post",
+        url: "./server/index.php",
+        data: {action: "readAllUsers"}
+    }).then(function (response) {
+        $scope.users = response.data.users;
     });
 });
 angular.module("library").filter('dateToISO', function () {
@@ -365,7 +439,7 @@ angular.module("library").controller("loginCtrl", function ($scope, $http, userS
         }).then(function (response) {
             $scope.loading = false;
             if (response.data.success) {
-                userService.updateUser(response.data.username, response.data.name);
+                userService.updateUser(response.data);
                 $location.path("/main");
             } else {
                 $scope.errors = response.data.errors;
@@ -392,8 +466,8 @@ angular.module("library").controller("panelCtrl", function ($scope, $window, $lo
     $scope.loading = false;
 });
 angular.module("library").service("userService", function ($http, $location) {
-    this.updateUser = function (username, name) {
-        this.user = {username: username, name: name};
+    this.updateUser = function (user) {
+        this.user = user;
     };
     this.getUser = function () {
         if (this.user != null) {
@@ -406,7 +480,7 @@ angular.module("library").service("userService", function ($http, $location) {
             data: {action: "fetchLoggedUser"}
         }).then(function (response) {
             if (response.data.success) {
-                _this.updateUser(response.data.username, response.data.name);
+                _this.updateUser(response.data);
             }
         });
     };
@@ -595,6 +669,30 @@ angular.module("library").controller("updateBookMenuCtrl", function ($scope, $ht
     };
 });
 
+angular.module("library").controller("updatePasswordCtrl", function ($scope, $http, $location, alertify) {
+    $scope.fields = {
+        action: "updatePassword"
+    };
+    $scope.errors = {};
+    $scope.updatePassword = function () {
+        $scope.loading = true;
+        $http({
+            method: "post",
+            url: "./server/index.php",
+            data: $scope.fields
+        }).then(function (response) {
+            if (!response.data.success) {
+                $scope.loading = false;
+                $scope.errors = response.data.errors;
+                alertify.error("הקלט שהוזן אינו תקין");
+            }
+            else {
+                alertify.success("הסיסמא עודכנה בהצלחה!");
+                $location.path("/");
+            }
+        });
+    };
+});
 angular.module("library").controller("updateReaderCtrl", function ($scope, $http, $routeParams, $location, $route, alertify) {
     var boolData = false;
     $scope.editMode = false;
@@ -786,12 +884,17 @@ angular.module("library").directive("selectField", function () {
         scope: true,
         require: "field",
         templateUrl: "app/directives/field/selectField.html",
+        replace: false,
         controller: function ($scope, $element) {
             $scope.field = $element.attr("field-name");
 
             $scope.class = "";
             if ($element[0].hasAttribute("add-class")) {
                 $scope.class = $element.attr("add-class");
+            }
+            $scope.description = "";
+            if ($element[0].hasAttribute("description")) {
+                $scope.description = $element.attr("description");
             }
             $scope.selectName = $element.attr("options");
             var valueName = null;
@@ -823,11 +926,16 @@ angular.module("library").directive("textField", function () {
         restrict: "A",
         scope: true,
         templateUrl: "app/directives/field/textField.html",
+        replace: false,
         controller: function ($scope, $element) {
             $scope.field = $element.attr("field-name");
             $scope.class = "";
             if ($element[0].hasAttribute("add-class")) {
                 $scope.class = $element.attr("add-class");
+            }
+            $scope.description = "";
+            if ($element[0].hasAttribute("description")) {
+                $scope.description = $element.attr("description");
             }
             $scope.fieldType = "text";
             if ($element[0].hasAttribute("field-type")) {
@@ -878,6 +986,35 @@ angular.module("library").directive("tabs", function () {
         scope: true,
         controller: function ($scope) {
             $scope.selectedIndex = 0;                
+        }
+    };
+});
+angular.module("library").directive("fieldDescription", function () {
+    return {
+        restrict: "A",
+        scope: {
+            fieldDescription: "@"
+        },
+        transclude: true,
+        replace: true,
+        templateUrl: "app/directives/fieldDescription/fieldDescription.html",
+        link: function (scope, elem, attrs) {
+            var bubble;
+            var sel = "input, select";
+
+            $(elem).on("focus", sel, function () {
+                var right = $(elem).find(sel).outerWidth() + 11;
+                var width = Math.min(340, 550 - right);
+
+                bubble = $("<div>").addClass("fieldDescription").text(scope.fieldDescription).css({right: right, width: width});
+                $("<div>").addClass("triangle").appendTo(bubble);
+                if (scope.fieldDescription != "") {
+                    bubble.appendTo(elem);
+                }
+            });
+            $(elem).on("blur", sel, function () {
+                bubble.remove();
+            });
         }
     };
 });

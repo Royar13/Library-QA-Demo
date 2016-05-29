@@ -1,0 +1,48 @@
+<h1>יצירת משתמש</h1>
+<div class="form">
+    <table class="fields">
+        <tr>
+            <td class="title required">
+                שם משתמש:
+            </td>
+            <td text-field field-name="id" add-class="ltr" description="שם המשתמש יכול להכיל אותיות באנגלית, מספרים וקו תחתון">
+            </td>
+        </tr>
+        <tr>
+            <td class="title required">
+                שם:
+            </td>
+            <td text-field field-name="name" description="שם פרטי ושם משפחה בעברית">
+            </td>
+        </tr>
+        <tr>
+            <td class="title required">
+                סיסמא:
+            </td>
+            <td text-field field-type="password" field-name="password" add-class="ltr" description="הסיסמא צריכה להיות בין 6 ל-20 תווים">
+            </td>
+        </tr>
+        <tr>
+            <td class="title required">
+                אימות סיסמא:
+            </td>
+            <td text-field field-type="password" field-name="passwordRepeat" add-class="ltr">
+            </td>
+        </tr>
+        <tr>
+            <td class="title required">
+                סוג משתמש:
+            </td>
+            <td select-field field-name="type" add-class="big" options="userTypes" options-value="id" options-text="title">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <img src="dist/img/loader.gif" class="loader" ng-show="loading">
+                <div general-errors></div>
+                <a class="btn left" ng-click="createUser()" ng-hide="loading">צור משתמש</a>
+            </td>
+        </tr>
+    </table>
+    <div btns-menu></div>
+</div>

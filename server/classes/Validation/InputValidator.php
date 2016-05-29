@@ -17,10 +17,12 @@ abstract class InputValidator {
 
         $this->regexes["hebrew"] = new Validation("^([א-ת][']?[א-ת]?[.]?){2,}(\s([א-ת][']?[א-ת]?[.]?){2,})*$", "יש להזין ערך בעברית");
         $this->regexes["hebrewTitle"] = new Validation("^([א-ת][']?[א-ת]?[.]?([:]|[,])?){2,}(\s([א-ת][']?[א-ת]?[.]?([:]|[,])?){2,})*$", "יש להזין ערך בעברית");
-        $this->regexes["street"] = new Validation("^([א-ת][']?[א-ת]?[.]?){2,}(\s([א-ת][']?[א-ת]?[.]?){2,})* [1-9]([0-9]){0,2}$", "הערך אינו בתבנית של 'שם רחוב מספר בית'");
+        $this->regexes["street"] = new Validation("^([א-ת][']?[א-ת]?[.]?){2,}(\s([א-ת][']?[א-ת]?[.]?){2,})* [1-9]([0-9]){0,2}$", "הערך אינו בתבנית של \"שם רחוב מספר בית\"");
         $this->regexes["israeliID"] = new Validation("^[0-9]{9}$", "על תעודת הזהות להיות בת 9 ספרות");
         $this->regexes["nonNegativeInt"] = new Validation("^(0|([1-9][0-9]{0,6}))$", "הערך צריך להיות מספר");
         $this->regexes["positiveInt"] = new Validation("^[1-9][0-9]{0,6}$", "הערך צריך להיות מספר");
+        $this->regexes["username"] = new Validation("^[a-zA-Z_0-9]{2,}$", "שם המשתמש יכול להכיל אותיות באנגלית, מספרים וקו תחתון בלבד");
+        $this->regexes["password"] = new Validation("^(\S){6,20}$", "הסיסמא צריכה להיות בין 6 ל-20 תווים");
     }
 
     public function setValidation($field, $validation) {
@@ -34,6 +36,7 @@ abstract class InputValidator {
     public function addGeneralError($msg) {
         $this->errorLogger->addGeneralError($msg);
     }
+
     public function getErrors() {
         return $this->errorLogger->getErrors();
     }
@@ -48,7 +51,7 @@ abstract class InputValidator {
                 $this->addError($type, "יש להזין ערך בשדה");
             }
         }
-        foreach ($this->validations as $type=>$validation) {
+        foreach ($this->validations as $type => $validation) {
             $this->validateItem($obj->$type, $type);
         }
         return $this->isValid();

@@ -23,6 +23,8 @@ return array(
     'Reader' => $baseDir . '/server/classes/Reader/Reader.php',
     'ReaderAction' => $baseDir . '/server/classes/Reader/ReaderAction.php',
     'ReaderValidator' => $baseDir . '/server/classes/Reader/ReaderValidator.php',
+    'UpdatePasswordValidator' => $baseDir . '/server/classes/User/UpdatePasswordValidator.php',
     'User' => $baseDir . '/server/classes/User/User.php',
+    'UserValidator' => $baseDir . '/server/classes/User/UserValidator.php',
     'Validation' => $baseDir . '/server/classes/Validation/Validation.php',
 );

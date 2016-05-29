@@ -25,6 +25,10 @@ angular.module("library").controller("addReaderCtrl", function ($scope, $http, $
         data: {action: "readReaderTypes"}
     }).then(function (response) {
         $scope.select.readerTypes = response.data.readerTypes;
+        for (var i in $scope.select.readerTypes) {
+            var t = $scope.select.readerTypes[i];
+            t.fullTitle = t.title + " (" + t.bookCost + " ₪ לספר)";
+        }
     });
     $http({
         method: "post",

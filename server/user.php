@@ -10,6 +10,8 @@ function login() {
         $output["success"] = true;
         $output["username"] = $user->username;
         $output["name"] = $user->name;
+        $output["type"] = $user->type;
+        $output["typeTitle"] = $user->typeTitle;
     } else {
         $output["success"] = false;
         $output["errors"]["general"][] = "פרטי התחברות שגויים";
@@ -24,6 +26,8 @@ function fetchLoggedUser() {
         $output["success"] = true;
         $output["username"] = $user->username;
         $output["name"] = $user->name;
+        $output["type"] = $user->type;
+        $output["typeTitle"] = $user->typeTitle;
     } else {
         $output["success"] = false;
     }
@@ -33,4 +37,36 @@ function fetchLoggedUser() {
 function disconnect() {
     $user = Factory::getUser();
     $user->disconnect();
+}
+
+function readAllUsers() {
+    $user = Factory::getUser();
+    $result = $user->readAll();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $output["users"][] = $row;
+    }
+    Factory::write($output);
+}
+
+function updatePassword() {
+    $user = Factory::getUser();
+    $user->fetchLoggedUser();
+    $param = new Param();
+    $user->currentPassword = $param->get("currentPassword");
+    $user->password = $param->get("password");
+    $user->passwordRepeat = $param->get("passwordRepeat");
+    $validator = Factory::makeValidator("UpdatePassword");
+
+    if ($user->updatePassword($validator)) {
+        $output["success"] = true;
+    } else {
+        $output = $validator->getErrors();
+    }
+    Factory::write($output);
+}
+
+function readAllUserTypes() {
+    $user = Factory::getUser();
+    $output = $user->readAllUserTypes();
+    Factory::write($output);
 }

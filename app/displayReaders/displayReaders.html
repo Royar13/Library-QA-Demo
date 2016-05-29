@@ -6,7 +6,7 @@
             <th st-sort="name">שם</th>
             <th st-sort="address">כתובת</th>
             <th st-sort="readerType">סוג קורא</th>
-            <th st-sort="maxBooks">מס' ספרים</th>
+            <th st-sort="maxBooks">השאלות</th>
             <th st-sort="joinDate" st-sort-default="reverse">הצטרף</th>
             <th></th>
         </tr>
@@ -42,7 +42,7 @@
             <td>{{reader.name}}</td>
             <td>{{reader.address}}</td>
             <td>{{reader.readerType}}</td>
-            <td>{{reader.maxBooks}}</td>
+            <td class="dirLeft">{{reader.borrowsNum}} / {{reader.maxBooks}}</td>
             <td>{{reader.joinDate| dateToISO | date:'dd/MM/yy'}}</td>
             <td class="actionsInit">
                 <a class="editBtn" href="#/updateReader?id={{reader.id}}" title="ערוך"></a>

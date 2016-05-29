@@ -24,7 +24,9 @@ class ComposerStaticInit0c953c4534aff2246b0a4427e162077e
         'Reader' => __DIR__ . '/../..' . '/server/classes/Reader/Reader.php',
         'ReaderAction' => __DIR__ . '/../..' . '/server/classes/Reader/ReaderAction.php',
         'ReaderValidator' => __DIR__ . '/../..' . '/server/classes/Reader/ReaderValidator.php',
+        'UpdatePasswordValidator' => __DIR__ . '/../..' . '/server/classes/User/UpdatePasswordValidator.php',
         'User' => __DIR__ . '/../..' . '/server/classes/User/User.php',
+        'UserValidator' => __DIR__ . '/../..' . '/server/classes/User/UserValidator.php',
         'Validation' => __DIR__ . '/../..' . '/server/classes/Validation/Validation.php',
     );
 
