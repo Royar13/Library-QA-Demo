@@ -1,31 +1,34 @@
 <h1>ספריה</h1>
 <table id="categories">
     <tr>
-        <td>
-            <h2>ניהול קוראים</h2>
+        <td ng-show="showReadReader()">
+            <h2>קוראים</h2>
 
             <a href="#displayReaders" id="displayReaders">הצגת קוראים</a>
-            <a href="#addReader" id="addReader">קליטת קורא</a>
-            <a href="#updateReaderMenu" id="updateReader">עדכון/מחיקת קורא</a>
-            <a href="#borrowBooksMenu" id="borrowBooks">השאלת/החזרת ספרים</a>
+            <a href="#addReader" id="addReader" ng-show="showCreateReader()">קליטת קורא</a>
+            <a href="#updateReaderMenu" id="updateReader">עדכון קורא</a>
+            <a href="#borrowBooksMenu" id="borrowBooks" ng-show="showBorrowBook()">השאלת/החזרת ספרים</a>
         </td>
-        <td>
-            <h2>ניהול ספרים</h2>
+        <td ng-show="showBooksTable()">
+            <h2>ספרים</h2>
 
             <a href="#displayBooks" id="displayBooks">הצגת ספרים</a>
-            <a href="#addBook" id="addBook">קליטת ספר</a>
-            <a href="#updateBookMenu" id="updateBook">עדכון/מחיקת ספר</a>
-            <a href="#updateSections" id="updateSections">ארגון מדורים</a>
-            <a href="#borrowedBooks" id="borrowedBooks">ספרים מושאלים</a>
+            <a href="#addBook" id="addBook" ng-show="showCreateBook()">קליטת ספר</a>
+            <a href="#updateBookMenu" id="updateBook" ng-show="showReadBook()">עדכון ספר</a>
+            <a href="#updateSections" id="updateSections" ng-show="showUpdateSections()">ארגון מדורים</a>
+            <a href="#borrowedBooks" id="borrowedBooks" ng-show="showReadReader()">ספרים מושאלים</a>
             <a href="#borrowRules" id="borrowRules">חוקי השאלה</a>
         </td>
-        <td>
+        <td ng-show="showUpdatePersonalUser()">
             <h2>משתמש ספרן</h2>
 
             <a href="#updatePassword" id="updatePassword">עדכון סיסמא</a>
-            <a href="#displayUsers" id="displayUsers">הצגת משתמשים</a>
-            <a href="#createUser" id="createUser">יצירת משתמש חדש</a>
-            <a href="#updateUser" id="updateUser">עדכון/מחיקת משתמש</a>
+            <a href="#displayUsers" id="displayUsers" ng-show="showReadUser()">הצגת משתמשים</a>
+            <a href="#createUser" id="createUser" ng-show="showCreateUser()">יצירת משתמש חדש</a>
+            <a href="#updateUserMenu" id="updateUser" ng-show="showReadUser()">עדכון משתמש</a>
+            <a href="#displayPermissions" id="displayPermissions" ng-show="showReadPermissions()">תצוגת הרשאות</a>
+            <a href="#displayPermissions" id="displayPermissions" ng-show="showReadUser()">תצוגת פעולות</a>
+
         </td>
     </tr>
 </table>

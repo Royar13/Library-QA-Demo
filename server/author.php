@@ -1,6 +1,8 @@
 <?php
 
 function readAllAuthors() {
+    enforcePermission(5);
+
     $db = Factory::$database;
 
     $result = $db->query("select * from authors");

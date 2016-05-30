@@ -18,10 +18,4 @@ class ReaderAction extends Action {
         return $result;
     }
 
-    public function formatDescription($description, $username, $readerName) {
-        $description = str_replace("{user}", "\"$username\"", $description);
-        $description = str_replace("{reader}", "\"$readerName\"", $description);
-        return $description;
-    }
-
 }

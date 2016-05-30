@@ -58,7 +58,7 @@
             <td>{{book.publisherName}}</td>
             <td>{{book.releaseYear}}</td>
             <td>{{book.available}}</td>
-            <td class="actionsInit">
+            <td class="actionsInit" ng-show="showEditBtn()">
                 <a href="#/updateBook?id={{book.id}}" class="editBtn" title="ערוך"></a>
             </td>
         </tr>

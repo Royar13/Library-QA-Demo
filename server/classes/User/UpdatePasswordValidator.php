@@ -7,7 +7,7 @@ class UpdatePasswordValidator extends UserValidator {
         $this->mandatories = array("password");
     }
 
-    public function validateUpdatePassword($user) {
+    public function validate($user) {
         if (!$this->validateSyntax($user))
             return false;
         if (!$this->validateIdExist($user->id))

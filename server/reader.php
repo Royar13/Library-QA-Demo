@@ -1,6 +1,8 @@
 <?php
 
 function createReader() {
+    enforcePermission(2);
+
     $reader = Factory::makeReader();
     $param = new Param();
     assignReaderData($reader, $param);
@@ -15,6 +17,8 @@ function createReader() {
 }
 
 function updateReader() {
+    enforcePermission(3);
+
     $reader = Factory::makeReader();
     $param = new Param();
     assignReaderData($reader, $param);
@@ -38,6 +42,8 @@ function assignReaderData($reader, $param) {
 }
 
 function readReader() {
+    enforcePermission(1);
+
     $reader = Factory::makeReader();
     $param = new Param();
     $reader->id = $param->get("id");
@@ -56,6 +62,8 @@ function readReader() {
 }
 
 function readReaderTypes() {
+    enforcePermission(1);
+
     $db = Factory::$database;
 
     $result = $db->query("select * from reader_types");
@@ -67,6 +75,8 @@ function readReaderTypes() {
 }
 
 function readAllReaders() {
+    enforcePermission(1);
+
     $reader = Factory::makeReader();
     $result = $reader->readAll();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -80,6 +90,8 @@ function readAllReaders() {
 }
 
 function readerExists() {
+    enforcePermission(1);
+
     $param = new Param();
     $validator = Factory::makeValidator("Reader");
     if ($validator->validateIDExist($param->get("id"))) {
@@ -92,6 +104,8 @@ function readerExists() {
 }
 
 function deleteReader() {
+    enforcePermission(4);
+
     $reader = Factory::makeReader();
     $param = new Param();
     $reader->id = $param->get("id");

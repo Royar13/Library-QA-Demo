@@ -11,6 +11,8 @@ class User implements IDatabaseAccess {
     public $name;
     public $type;
     public $typeTitle;
+    public $hierarchy;
+    public $permissionsArr;
 
     public function setDatabase($db) {
         $this->db = $db;
@@ -22,7 +24,7 @@ class User implements IDatabaseAccess {
 
     public function fetchLoggedUser() {
         if ($this->authenticate()) {
-            $query = "select users.*, user_types.title as typeTitle from users left join user_types on users.type=user_types.id where users.id=:uid";
+            $query = "select users.*, user_types.title as typeTitle, user_types.hierarchy, user_types.permissions from users left join user_types on users.type=user_types.id where users.id=:uid";
             $bind[":uid"] = $_SESSION["uid"];
             $result = $this->db->preparedQuery($query, $bind);
             $rows = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -32,6 +34,10 @@ class User implements IDatabaseAccess {
                 $this->username = $userData["username"];
                 $this->name = $userData["name"];
                 $this->typeTitle = $userData["typeTitle"];
+                $this->type = $userData["type"];
+                $this->hierarchy = $userData["hierarchy"];
+                $this->permissionsArr = $this->permissionsToArray($userData["permissions"], $this->readAllPermissions());
+
                 return true;
             }
         }
@@ -39,7 +45,7 @@ class User implements IDatabaseAccess {
     }
 
     public function login() {
-        $query = "select users.*, user_types.title as typeTitle from users left join user_types on users.type=user_types.id where username=:username and password=:password";
+        $query = "select users.*, user_types.title as typeTitle, user_types.hierarchy, user_types.permissions from users left join user_types on users.type=user_types.id where username=:username and password=:password";
         $bind[":username"] = $this->username;
         $bind[":password"] = $this->password;
         $result = $this->db->preparedQuery($query, $bind);
@@ -49,9 +55,13 @@ class User implements IDatabaseAccess {
             $_SESSION["uid"] = $userData["id"];
 
             $this->id = $userData["id"];
+            $this->username = $userData["username"];
             $this->name = $userData["name"];
             $this->typeTitle = $userData["typeTitle"];
             $this->type = $userData["type"];
+            $this->hierarchy = $userData["hierarchy"];
+            $this->permissionsArr = $this->permissionsToArray($userData["permissions"], $this->readAllPermissions());
+
 
             return true;
         } else {
@@ -60,7 +70,7 @@ class User implements IDatabaseAccess {
     }
 
     public function updatePassword(UpdatePasswordValidator $validator) {
-        if (!$validator->validateUpdatePassword($this))
+        if (!$validator->validate($this))
             return false;
 
         try {
@@ -81,7 +91,7 @@ class User implements IDatabaseAccess {
     }
 
     public function readAll() {
-        return $this->db->query("select users.name, users.username, users.type, user_types.title as type from users"
+        return $this->db->query("select users.id, users.name, users.username, users.type, user_types.title as type from users"
                         . " join user_types on user_types.id=users.type");
     }
 
@@ -119,8 +129,12 @@ class User implements IDatabaseAccess {
         }
     }
 
+    private function readAllPermissions() {
+        return $this->db->query("select * from user_permissions")->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function readAllPermissionsForDisplay() {
-        $permissions = $this->db->query("select * from user_permissions")->fetchAll(PDO::FETCH_ASSOC);
+        $permissions = readAllPermissions();
         $userTypes = $this->db->query("select * from user_types")->fetchAll(PDO::FETCH_ASSOC);
         $output = array();
         foreach ($userTypes as $key => $userType) {
@@ -138,8 +152,8 @@ class User implements IDatabaseAccess {
         return $output;
     }
 
-    public function create(CreateUserValidator $validator) {
-        if (!$validator->validateCreate($this))
+    public function create(CreateUserValidator $validator, $loggedUserHierarchy) {
+        if (!$validator->validate($this, $loggedUserHierarchy))
             return false;
 
         try {
@@ -152,6 +166,74 @@ class User implements IDatabaseAccess {
             return true;
         } catch (Exception $ex) {
             return false;
+        }
+    }
+
+    public function readOne() {
+        $query = "SELECT users.username, users.name, users.type FROM users WHERE id=:id";
+        $bind[":id"] = $this->id;
+        $result = $this->db->preparedQuery($query, $bind);
+        $rows = $result->fetchAll(PDO::FETCH_ASSOC);
+        if (count($rows) == 1) {
+            $user = $rows[0];
+            $this->username = $user["username"];
+            $this->name = $user["name"];
+            $this->type = $user["type"];
+
+            return true;
+        }
+        return false;
+    }
+
+    public function readByUsername() {
+        $query = "SELECT users.id FROM users WHERE username=:username";
+        $bind[":username"] = $this->username;
+        $result = $this->db->preparedQuery($query, $bind);
+        $rows = $result->fetchAll(PDO::FETCH_ASSOC);
+        if (count($rows) == 1) {
+            $user = $rows[0];
+            $this->id = $user["id"];
+
+            return true;
+        }
+        return false;
+    }
+
+    public function update(UpdateUserValidator $validator, $loggedUserHierarchy) {
+        if (!$validator->validate($this, $loggedUserHierarchy))
+            return false;
+
+        try {
+            $fields["name"] = $this->name;
+            $fields["type"] = $this->type;
+
+            $condition["id"] = $this->id;
+
+            $this->db->update("users", $fields, $condition);
+
+            return true;
+        } catch (Exception $ex) {
+            return false;
+        }
+    }
+
+    public function delete(UserValidator $validator, $loggedUserHierarchy) {
+        if (!$validator->validateDelete($this, $loggedUserHierarchy))
+            return false;
+
+        try {
+            $condition["id"] = $this->id;
+            $this->db->delete("users", $condition);
+
+            return true;
+        } catch (Exception $ex) {
+            return false;
+        }
+    }
+
+    public function enforcePermission($id) {
+        if (!in_array($id, $this->permissionsArr)) {
+            trigger_error("User doesn't have sufficient permissions for this action", E_USER_ERROR);
         }
     }
 

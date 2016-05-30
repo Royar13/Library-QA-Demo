@@ -1,6 +1,8 @@
 <?php
 
 function createBook() {
+    enforcePermission(6);
+
     $book = Factory::makeBook();
     $param = new Param();
     assignBookData($book, $param);
@@ -16,6 +18,8 @@ function createBook() {
 }
 
 function updateBook() {
+    enforcePermission(7);
+
     $book = Factory::makeBook();
     $param = new Param();
     assignBookData($book, $param);
@@ -41,6 +45,8 @@ function assignBookData($book, $param) {
 }
 
 function bookExists() {
+    enforcePermission(5);
+
     $validator = Factory::makeValidator("Book");
     $param = new Param();
     if ($validator->validateIdExist($param->get("id"))) {
@@ -53,6 +59,8 @@ function bookExists() {
 }
 
 function readBook() {
+    enforcePermission(5);
+
     $book = Factory::makeBook();
     $param = new Param();
     $book->id = $param->get("id");
@@ -69,6 +77,8 @@ function readBook() {
 }
 
 function readAllBooks() {
+    enforcePermission(18);
+
     $book = Factory::makeBook();
     $result = $book->readAll();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -78,6 +88,8 @@ function readAllBooks() {
 }
 
 function readBooksNum() {
+    enforcePermission(5);
+
     $db = Factory::$database;
 
     $result = $db->query("select * from allowed_books_num");
@@ -88,6 +100,8 @@ function readBooksNum() {
 }
 
 function readAllBooksForBorrow() {
+    enforcePermission(5);
+
     $book = Factory::makeBook();
     $result = $book->readAllBooksForBorrow();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -97,6 +111,8 @@ function readAllBooksForBorrow() {
 }
 
 function deleteBook() {
+    enforcePermission(8);
+
     $book = Factory::makeBook();
     $param = new Param();
     $book->id = $param->get("id");

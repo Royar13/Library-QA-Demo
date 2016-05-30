@@ -1,0 +1,47 @@
+#panel.updateUserCtrl {
+    h1 {
+        background-image: url('img/updateUserBigIcon.png');
+    }
+    .toggleMode {
+        display: inline-block;
+        margin-right: 10px;
+        font-weight: normal;
+        font-size: 15px;
+        line-height: 28px;
+        height: 28px;
+    }
+    td {
+        vertical-align: middle;
+    }
+    .title {
+        vertical-align: top;
+    }
+    .permissions {
+        border: 1px solid #999;
+        border-radius: 5px;
+        height: 90px;
+        background-color: #e6e6e6;
+        overflow: auto;
+        font-size: 12px;
+        width: 370px;
+        padding: 10px;
+
+        >div {
+            padding: 4px 8px;
+            margin: 2px;
+            float: right;
+            border: 1px solid #bbb;
+            background: #eee;
+            border-radius: 15px;
+
+        }
+
+        .defaultMsg {
+            font-style: italic;
+            color: #999;
+        }
+    }
+    #deleteUser {
+        margin-left: 25px;
+    }
+}

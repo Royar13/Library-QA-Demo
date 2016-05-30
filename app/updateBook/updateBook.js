@@ -1,5 +1,11 @@
-angular.module("library").controller("updateBookCtrl", function ($scope, $http, $routeParams, $location, $route, alertify) {
+angular.module("library").controller("updateBookCtrl", function ($scope, $http, $routeParams, $location, $route, alertify, userService) {
     var boolSectionsFinish = false;
+    $scope.showEditBtn = function () {
+        return userService.hasPermission(7);
+    };
+    $scope.showDeleteBtn = function () {
+        return userService.hasPermission(8);
+    };
     $scope.editMode = false;
     var bookId = $routeParams.id;
     $scope.fields = {

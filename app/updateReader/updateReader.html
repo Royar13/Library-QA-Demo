@@ -1,6 +1,6 @@
 <h1>
     עדכון קורא
-    <a class="btn short toggleMode" ng-click="toggleModes()">{{editMode?"למצב קריאה":"למצב עריכה"}}</a>
+    <a class="btn short toggleMode" ng-click="toggleModes()" ng-show="showEditBtn()">{{editMode?"למצב קריאה":"למצב עריכה"}}</a>
 </h1>
 <img class="rightImage" src="dist/img/viewReader.png">
 <div class="form">
@@ -55,14 +55,14 @@
                 <td colspan="2">
                     <img src="dist/img/loader.gif" class="loader" ng-show="loading">
                     <div general-errors></div>
-                    <a class="btn short right" ng-click="deleteReader()" ng-hide="loading">מחק</a>
+                    <a class="btn short right" ng-click="deleteReader()" ng-hide="loading || !showDeleteBtn()">מחק</a>
                     <a class="btn left" ng-click="updateReader()" ng-hide="loading">עדכן קורא</a>
                 </td>
             </tr>
         </table>
     </div>
     <div ng-hide="editMode">
-        <h2 class="readerTitle" ng-bind="fields.name"></h2>
+        <h2 class="formTitle" ng-bind="fields.name"></h2>
         <table class="fields">
             <tr>
                 <td class="title">

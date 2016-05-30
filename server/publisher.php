@@ -1,6 +1,8 @@
 <?php
 
 function readAllPublishers() {
+    enforcePermission(5);
+
     $db = Factory::$database;
 
     $result = $db->query("select * from publishers");

@@ -12,6 +12,7 @@ function login() {
         $output["name"] = $user->name;
         $output["type"] = $user->type;
         $output["typeTitle"] = $user->typeTitle;
+        $output["permissionsArr"] = $user->permissionsArr;
     } else {
         $output["success"] = false;
         $output["errors"]["general"][] = "פרטי התחברות שגויים";
@@ -28,6 +29,7 @@ function fetchLoggedUser() {
         $output["name"] = $user->name;
         $output["type"] = $user->type;
         $output["typeTitle"] = $user->typeTitle;
+        $output["permissionsArr"] = $user->permissionsArr;
     } else {
         $output["success"] = false;
     }
@@ -40,6 +42,8 @@ function disconnect() {
 }
 
 function readAllUsers() {
+    enforcePermission(10);
+
     $user = Factory::getUser();
     $result = $user->readAll();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -50,7 +54,6 @@ function readAllUsers() {
 
 function updatePassword() {
     $user = Factory::getUser();
-    $user->fetchLoggedUser();
     $param = new Param();
     $user->currentPassword = $param->get("currentPassword");
     $user->password = $param->get("password");
@@ -71,12 +74,11 @@ function readAllUserTypes() {
     Factory::write($output);
 }
 
-function readAllPermissionsForDisplay() {
-    
-}
-
 function createUser() {
-    $user = Factory::getUser();
+    enforcePermission(11);
+
+    $loggedUser = Factory::getUser();
+    $user = Factory::makeUser();
     $param = new Param();
     $user->username = $param->get("username");
     $user->name = $param->get("name");
@@ -86,7 +88,7 @@ function createUser() {
 
     $validator = Factory::makeValidator("CreateUser");
 
-    if ($user->create($validator)) {
+    if ($user->create($validator, $loggedUser->hierarchy)) {
         $output["success"] = true;
     } else {
         $output = $validator->getErrors();
@@ -95,16 +97,70 @@ function createUser() {
 }
 
 function updateUser() {
-    $user = Factory::getUser();
+    enforcePermission(12);
+
+    $loggedUser = Factory::getUser();
+    $user = Factory::makeUser();
     $param = new Param();
+    $user->id = $param->get("id");
     $user->name = $param->get("name");
     $user->type = $param->get("type");
     $validator = Factory::makeValidator("UpdateUser");
 
-    if ($user->create($validator)) {
+    if ($user->update($validator, $loggedUser->hierarchy)) {
         $output["success"] = true;
     } else {
         $output = $validator->getErrors();
     }
     Factory::write($output);
+}
+
+function readUser() {
+    enforcePermission(10);
+
+    $user = Factory::makeUser();
+    $param = new Param();
+    $user->id = $param->get("id");
+    $user->readOne();
+    $output["name"] = $user->name;
+    $output["username"] = $user->username;
+    $output["type"] = $user->type;
+
+    Factory::write($output);
+}
+
+function deleteUser() {
+    enforcePermission(13);
+
+    $loggedUser = Factory::getUser();
+    $user = Factory::makeUser();
+    $param = new Param();
+    $user->id = $param->get("id");
+    $validator = Factory::makeValidator("User");
+    if ($user->delete($validator, $loggedUser->hierarchy)) {
+        $output["success"] = true;
+    } else {
+        $output = $validator->getErrors();
+    }
+    Factory::write($output);
+}
+
+function userExists() {
+    enforcePermission(10);
+
+    $user = Factory::makeUser();
+    $param = new Param();
+    $user->username = $param->get("username");
+    if ($user->readByUsername()) {
+        $output["success"] = true;
+        $output["id"] = $user->id;
+    } else {
+        $output["success"] = false;
+        $output["errors"]["general"][] = "לא נמצא המשתמש המבוקש";
+    }
+    Factory::write($output);
+}
+
+function readAllPermissionsForDisplay() {
+    
 }

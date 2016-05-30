@@ -374,9 +374,12 @@ angular.module("library").controller("createUserCtrl", function ($scope, $http, 
     };
 });
 
-angular.module("library").controller("displayBooksCtrl", function ($scope, $http) {
+angular.module("library").controller("displayBooksCtrl", function ($scope, $http, userService) {
     $scope.books = [];
     $scope.quantity = 50;
+    $scope.showEditBtn = function () {
+        return userService.hasPermission(5);
+    };
     $http({
         method: "post",
         url: "./server/index.php",
@@ -424,38 +427,66 @@ app.filter('unique', function () {
         return r;
     };
 });
-angular.module("library").controller("loginCtrl", function ($scope, $http, userService, $location) {
-    var request = userService.getUser();
-    if (request === true) {
+angular.module("library").controller("loginCtrl", function ($scope, $http, $location, userService) {
+    userService.getUser().then(function () {
         $location.path("/main");
-    } else {
-        request.then(function () {
-            if (userService.user != null)
-                $location.path("/main");
-        });
-    }
+    });
+
     $scope.fields = {
         action: "login"
     };
-    $scope.errors = {};
     $scope.login = function () {
+        $scope.errors = {};
         $scope.loading = true;
         $http({
             method: "post",
             url: "./server/index.php",
             data: $scope.fields
         }).then(function (response) {
-            $scope.loading = false;
             if (response.data.success) {
                 userService.updateUser(response.data);
                 $location.path("/main");
             } else {
+                $scope.loading = false;
                 $scope.errors = response.data.errors;
             }
         });
     };
 });
-angular.module("library").controller("mainCtrl", function ($scope) {
+angular.module("library").controller("mainCtrl", function ($scope, userService) {
+    $scope.showReadReader = function () {
+        return userService.hasPermission(1);
+    };
+    $scope.showCreateReader = function () {
+        return userService.hasPermission(2);
+    };
+    $scope.showBorrowBook = function () {
+        return userService.hasPermission(9);
+    };
+    $scope.showReadBook = function () {
+        return userService.hasPermission(5);
+    };
+    $scope.showCreateBook = function () {
+        return userService.hasPermission(6);
+    };
+    $scope.showUpdateSections = function () {
+        return userService.hasPermission(14);
+    };
+    $scope.showUpdatePersonalUser = function () {
+        return userService.hasPermission(17);
+    };
+    $scope.showReadUser = function () {
+        return userService.hasPermission(10);
+    };
+    $scope.showCreateUser = function () {
+        return userService.hasPermission(11);
+    };
+    $scope.showReadPermissions = function () {
+        return userService.hasPermission(15);
+    };
+    $scope.showBooksTable = function () {
+        return userService.hasPermission(18);
+    };
 });
 angular.module("library").controller("panelCtrl", function ($scope, $window, $location, alertify) {
     alertify.logPosition("top right").okBtn("אישור").cancelBtn("ביטול");
@@ -473,58 +504,85 @@ angular.module("library").controller("panelCtrl", function ($scope, $window, $lo
     };
     $scope.loading = false;
 });
-angular.module("library").service("userService", function ($http, $location) {
+angular.module("library").service("userService", function ($http, $location, $q) {
+    this.user = null;
+    this.userRequest = null;
     this.updateUser = function (user) {
         this.user = user;
     };
-    this.getUser = function () {
-        if (this.user != null) {
-            return true;
-        }
+    this.disconnect = function () {
         var _this = this;
-        return $http({
-            method: "post",
-            url: "./server/index.php",
-            data: {action: "fetchLoggedUser"}
-        }).then(function (response) {
-            if (response.data.success) {
-                _this.updateUser(response.data);
-            }
-        });
-    };
-});
-angular.module("library").controller("topBarCtrl", function ($scope, $http, $location, userService) {
-    $scope.user = {};
-    function retrieveUser() {
-        Object.keys(userService.user).forEach(function (key) {
-            $scope.user[key] = userService.user[key];
-        });
-    }
-    ;
-    var request = userService.getUser();
-    if (request === true) {
-        retrieveUser();
-    } else {
-        request.then(function () {
-            if (userService.user != null)
-                retrieveUser();
-            else
-                $location.path("/");
-        });
-    }
-    $scope.disconnect = function () {
         $http({
             method: "post",
             url: "./server/index.php",
             data: {action: "disconnect"}
         }).then(function () {
-            userService.user = null;
+            _this.updateUser(null);
+            _this.userRequest = null;
             $location.path("/");
         });
     };
+    this.getUser = function () {
+        var deferred = $q.defer();
+
+        if (this.user != null) {
+            deferred.resolve(this.user);
+        }
+        else {
+            if (this.userRequest == null) {
+                this.userRequest = $http({
+                    method: "post",
+                    url: "./server/index.php",
+                    data: {action: "fetchLoggedUser"}
+                });
+            }
+            var _this = this;
+            this.userRequest.then(function (response) {
+                if (response.data.success) {
+                    _this.updateUser(response.data);
+                    deferred.resolve(_this.user);
+                }
+                else {
+                    deferred.reject();
+                }
+            }, function () {
+                deferred.reject();
+            });
+        }
+        return deferred.promise;
+    };
+
+    this.hasPermission = function (id) {
+        if (this.user == null)
+            return false;
+        var permissions = this.user.permissionsArr;
+        for (var i in permissions) {
+            if (permissions[i] == id)
+                return true;
+        }
+        return false;
+    };
 });
-angular.module("library").controller("updateBookCtrl", function ($scope, $http, $routeParams, $location, $route, alertify) {
+angular.module("library").controller("topBarCtrl", function ($scope, $http, $location, userService) {
+    $scope.user = {};
+
+    userService.getUser().then(function (user) {
+        $scope.user = user;
+    }, function () {
+        $location.path("/");
+    });
+    $scope.disconnect = function () {
+        userService.disconnect();
+    };
+});
+angular.module("library").controller("updateBookCtrl", function ($scope, $http, $routeParams, $location, $route, alertify, userService) {
     var boolSectionsFinish = false;
+    $scope.showEditBtn = function () {
+        return userService.hasPermission(7);
+    };
+    $scope.showDeleteBtn = function () {
+        return userService.hasPermission(8);
+    };
     $scope.editMode = false;
     var bookId = $routeParams.id;
     $scope.fields = {
@@ -701,13 +759,19 @@ angular.module("library").controller("updatePasswordCtrl", function ($scope, $ht
         });
     };
 });
-angular.module("library").controller("updateReaderCtrl", function ($scope, $http, $routeParams, $location, $route, alertify) {
+angular.module("library").controller("updateReaderCtrl", function ($scope, $http, $routeParams, $location, $route, alertify, userService) {
     var boolData = false;
     $scope.editMode = false;
     var readerId = $routeParams.id;
     $scope.fields = {
         action: "updateReader",
         joinDate: 0
+    };
+    $scope.showEditBtn = function () {
+        return userService.hasPermission(3);
+    };
+    $scope.showDeleteBtn = function () {
+        return userService.hasPermission(4);
     };
     $scope.fine = 0;
     $scope.errors = {};
@@ -848,6 +912,125 @@ angular.module("library").controller("updateReaderMenuCtrl", function ($scope, $
                 $scope.errors = response.data.errors;
             } else {
                 $location.path("/updateReader").search({id: $scope.fields.id});
+            }
+        });
+    };
+});
+
+angular.module("library").controller("updateUserCtrl", function ($scope, $http, $routeParams, $location, $route, alertify, userService) {
+    $scope.showEditBtn = function () {
+        return userService.hasPermission(12);
+    };
+    $scope.showDeleteBtn = function () {
+        return userService.hasPermission(13);
+    };
+    $scope.editMode = false;
+    var userId = $routeParams.id;
+    $scope.fields = {
+        action: "updateUser",
+    };
+    $scope.errors = {};
+    $scope.select = {};
+
+    $http({
+        method: "post",
+        url: "./server/index.php",
+        data: {action: "readUser", id: userId}
+    }).then(function (response) {
+        for (var i in response.data) {
+            $scope.fields[i] = response.data[i];
+        }
+        $scope.fields.id = userId;
+    });
+
+    $http({
+        method: "post",
+        url: "./server/index.php",
+        data: {action: "readAllUserTypes"}
+    }).then(function (response) {
+        $scope.select.userTypes = response.data.userTypes;
+    });
+
+    $http({
+        method: "post",
+        url: "./server/index.php",
+        data: {action: "readActionsByUser", id: userId}
+    }).then(function (response) {
+        $scope.actions = response.data.actions;
+    });
+
+    $scope.updateUser = function () {
+        $scope.loading = true;
+        $http({
+            method: "post",
+            url: "./server/index.php",
+            data: $scope.fields
+        }).then(function (response) {
+            $scope.loading = false;
+            if (!response.data.success) {
+                $scope.errors = response.data.errors;
+                alertify.error("הקלט שהוזן אינו תקין");
+            } else {
+                alertify.success("המשתמש עודכן בהצלחה!");
+                $scope.editMode = false;
+                $scope.errors = {};
+            }
+        });
+    };
+    $scope.deleteUser = function () {
+        alertify.confirm("האם אתה בטוח שברצונך למחוק את המשתמש \"" + $scope.fields.username + "\"?", function () {
+            $scope.loading = true;
+            $scope.errors = {};
+
+            $http({
+                method: "post",
+                url: "./server/index.php",
+                data: {action: "deleteUser", id: $scope.fields.id}
+            }).then(function (response) {
+                if (!response.data.success) {
+                    $scope.loading = false;
+                    $scope.errors = response.data.errors;
+                    alertify.error("אי אפשר למחוק את המשתמש");
+                } else {
+                    alertify.success("המשתמש נמחק בהצלחה!");
+                    $location.path("/");
+                }
+            });
+        });
+    };
+    $scope.toggleModes = function () {
+        if ($scope.editMode)
+            $route.reload();
+        else
+            $scope.editMode = !$scope.editMode;
+    };
+
+    $scope.getUserTypeById = function (id) {
+        for (var i in $scope.select.userTypes) {
+            if ($scope.select.userTypes[i].id == id) {
+                return $scope.select.userTypes[i];
+            }
+        }
+    };
+});
+
+angular.module("library").controller("updateUserMenuCtrl", function ($scope, $http, $location) {
+    $scope.fields = {
+        action: "userExists"
+    };
+
+    $scope.searchUser = function () {
+        $scope.loading = true;
+        $http({
+            method: "post",
+            url: "./server/index.php",
+            data: $scope.fields
+        }).then(function (response) {
+            if (!response.data.success) {
+                $scope.loading = false;
+                $scope.errors = response.data.errors;
+            } else {
+                $location.path("/updateUser").search({id: response.data.id});
             }
         });
     };

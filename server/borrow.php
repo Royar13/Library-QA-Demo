@@ -1,6 +1,8 @@
 <?php
 
 function readBorrowsByReader() {
+    enforcePermission(1);
+
     $borrow = Factory::makeBookBorrow();
     $borrow->readerId = (new Param())->get("readerId");
     $result = $borrow->readBorrowsByReader();
@@ -12,6 +14,8 @@ function readBorrowsByReader() {
 }
 
 function readBorrowsByReaderForDisplay() {
+    enforcePermission(1);
+
     $borrow = Factory::makeBookBorrow();
     $borrow->readerId = (new Param())->get("readerId");
     $result = $borrow->readBorrowsByReaderForDisplay();
@@ -23,6 +27,8 @@ function readBorrowsByReaderForDisplay() {
 }
 
 function readAllBorrowsByReader() {
+    enforcePermission(1);
+
     $borrow = Factory::makeBookBorrow();
     $borrow->readerId = (new Param())->get("readerId");
     $result = $borrow->readAllBorrowsByReader();
@@ -34,6 +40,8 @@ function readAllBorrowsByReader() {
 }
 
 function readAllBorrowsByBook() {
+    enforcePermission(5);
+
     $borrow = Factory::makeBookBorrow();
     $borrow->bookId = (new Param())->get("bookId");
     $result = $borrow->readAllBorrowsByBook();
@@ -45,6 +53,8 @@ function readAllBorrowsByBook() {
 }
 
 function borrowReturnBooks() {
+    enforcePermission(9);
+
     $borrow = Factory::makeBookBorrow();
     $reader = Factory::makeReader();
 

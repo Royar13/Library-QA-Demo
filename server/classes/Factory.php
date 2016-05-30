@@ -39,8 +39,14 @@ class Factory {
             case "Borrow":
                 $validator = new BorrowValidator();
                 break;
+            case "User":
+                $validator = new UserValidator();
+                break;
             case "CreateUser":
                 $validator = new CreateUserValidator();
+                break;
+            case "UpdateUser":
+                $validator = new UpdateUserValidator();
                 break;
             case "UpdatePassword":
                 $validator = new UpdatePasswordValidator();
@@ -56,6 +62,12 @@ class Factory {
             self::$user->setDatabase(self::$database);
         }
         return self::$user;
+    }
+
+    public static function makeUser() {
+        $user = new User();
+        $user->setDatabase(self::$database);
+        return $user;
     }
 
 }

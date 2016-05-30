@@ -15,12 +15,11 @@ class UserValidator extends InputValidator implements IDatabaseAccess {
         $this->db = $db;
     }
 
-    public function validateUpdate($user) {
-        if (!$this->validateSyntax($user))
-            return false;
+    public function validateDelete($user, $loggedUserHierarchy) {
         if (!$this->validateIdExist($user->id))
             $this->addGeneralError("לא נמצא המשתמש");
-
+        if (!$this->validateType($user->type, $loggedUserHierarchy))
+            $this->addGeneralError("לא ניתן למחוק משתמש עם סוג משתמש בכיר ממך");
         return $this->isValid();
     }
 
@@ -51,6 +50,17 @@ class UserValidator extends InputValidator implements IDatabaseAccess {
         $result = $this->db->preparedQuery($query, $bind);
         $rows = $result->fetchAll(PDO::FETCH_ASSOC);
         return (count($rows) == 1);
+    }
+
+    public function validateType($type, $loggedUserHierarchy) {
+        $query = "select hierarchy from user_types where id=:type";
+        $bind[":type"] = $type;
+        $result = $this->db->preparedQuery($query, $bind);
+        $rows = $result->fetchAll(PDO::FETCH_ASSOC);
+        if (count($rows) != 1)
+            return false;
+        $hierarchy = $rows[0]["hierarchy"];
+        return ($loggedUserHierarchy <= $hierarchy);
     }
 
 }

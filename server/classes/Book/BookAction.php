@@ -18,10 +18,4 @@ class BookAction extends Action {
         return $result;
     }
 
-    public function formatDescription($description, $username, $bookName) {
-        $description = str_replace("{user}", "\"$username\"", $description);
-        $description = str_replace("{book}", "\"$bookName\"", $description);
-        return $description;
-    }
-
 }

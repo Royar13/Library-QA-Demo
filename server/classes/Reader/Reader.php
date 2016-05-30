@@ -24,7 +24,7 @@ class Reader implements IDatabaseAccess {
         try {
             $this->db->insert("readers", $fields);
 
-            $action = new BookAction($this->db, $this->id, $userId, "המשתמש {user} יצר את הקורא {reader}");
+            $action = new ReaderAction($this->db, $this->id, $userId, "המשתמש {user} יצר את הקורא {reader}");
             $action->create();
             return true;
         } catch (Exception $ex) {
@@ -52,7 +52,7 @@ class Reader implements IDatabaseAccess {
             $condition["id"] = $this->id;
             $this->db->update("readers", $fields, $condition);
 
-            $action = new BookAction($this->db, $this->id, $userId, "המשתמש {user} עדכן את הקורא {reader}");
+            $action = new ReaderAction($this->db, $this->id, $userId, "המשתמש {user} עדכן את הקורא {reader}");
             $action->create();
             return true;
         } catch (Exception $ex) {

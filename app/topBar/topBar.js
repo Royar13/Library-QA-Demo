@@ -1,30 +1,12 @@
 angular.module("library").controller("topBarCtrl", function ($scope, $http, $location, userService) {
     $scope.user = {};
-    function retrieveUser() {
-        Object.keys(userService.user).forEach(function (key) {
-            $scope.user[key] = userService.user[key];
-        });
-    }
-    ;
-    var request = userService.getUser();
-    if (request === true) {
-        retrieveUser();
-    } else {
-        request.then(function () {
-            if (userService.user != null)
-                retrieveUser();
-            else
-                $location.path("/");
-        });
-    }
+
+    userService.getUser().then(function (user) {
+        $scope.user = user;
+    }, function () {
+        $location.path("/");
+    });
     $scope.disconnect = function () {
-        $http({
-            method: "post",
-            url: "./server/index.php",
-            data: {action: "disconnect"}
-        }).then(function () {
-            userService.user = null;
-            $location.path("/");
-        });
+        userService.disconnect();
     };
 });

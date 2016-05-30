@@ -1,10 +1,16 @@
-angular.module("library").controller("updateReaderCtrl", function ($scope, $http, $routeParams, $location, $route, alertify) {
+angular.module("library").controller("updateReaderCtrl", function ($scope, $http, $routeParams, $location, $route, alertify, userService) {
     var boolData = false;
     $scope.editMode = false;
     var readerId = $routeParams.id;
     $scope.fields = {
         action: "updateReader",
         joinDate: 0
+    };
+    $scope.showEditBtn = function () {
+        return userService.hasPermission(3);
+    };
+    $scope.showDeleteBtn = function () {
+        return userService.hasPermission(4);
     };
     $scope.fine = 0;
     $scope.errors = {};
