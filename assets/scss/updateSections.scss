@@ -1,0 +1,21 @@
+#panel.updateSectionsCtrl {
+    h1 {
+        background-image: url('img/bookcaseBigIcon.png');
+    }
+    .amount {
+        width: 70px;
+    }
+    .addSections {
+        margin-top: 40px;
+    }
+    .plusInit {
+        text-align: center;
+        img {
+            cursor: pointer;
+        }
+    }
+    .removeSection {
+        width: 25px;
+        cursor: pointer;
+    }
+}

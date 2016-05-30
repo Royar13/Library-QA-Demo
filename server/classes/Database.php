@@ -89,4 +89,16 @@ class Database {
         return $this->getConnection()->lastInsertId();
     }
 
+    public function beginTransaction() {
+        $this->getConnection()->beginTransaction();
+    }
+
+    public function commit() {
+        $this->getConnection()->commit();
+    }
+
+    public function rollback() {
+        $this->getConnection()->rollBack();
+    }
+
 }

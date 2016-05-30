@@ -1,0 +1,76 @@
+<h1>
+    ארגון מדורים
+</h1>
+<div class="form">
+    <table class="fields data-table">
+        <caption>
+            עדכון מדורים:
+        </caption>
+        <thead>
+            <tr>
+                <th>
+                    מס' מדור
+                </th>
+                <th>
+                    שם
+                </th>
+                <th>
+                    מס' כונניות
+                </th>
+            </tr>    
+        </thead>
+        <tbody>
+            <tr class="body" ng-repeat="section in fields.updateSections">
+                <td>
+                    {{section.id}}
+                </td>
+                <td>
+                    <input type="text" ng-model="section.name">
+                </td>                
+                <td>
+                    <input type="number" class="amount" ng-model="section.bookcaseAmount">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="fields data-table addSections">
+        <caption>
+            הוספת מדורים:
+        </caption>
+        <thead>
+            <tr>
+                <th>
+                    שם
+                </th>
+                <th>
+                    מס' כונניות
+                </th>
+                <th></th>
+            </tr>    
+        </thead>
+        <tbody>
+            <tr class="body" ng-repeat="section in fields.createSections">
+                <td>
+                    <input type="text" ng-model="section.name">
+                </td>                
+                <td>
+                    <input type="number" class="amount" ng-model="section.bookcaseAmount">
+                </td>
+                <td>
+                    <img src="dist/img/x.png" class="removeSection" ng-click="removeSection(section)">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" class="plusInit">
+                    <img src="dist/img/plusIcon.png" ng-click="addSection()">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br><br>
+    <img src="dist/img/loader.gif" class="loader" ng-show="loading">
+    <div general-errors></div>
+    <a class="btn right" ng-click="updateSections()" ng-hide="loading">עדכן מדורים</a>
+
+</div>
+<div btns-menu></div>

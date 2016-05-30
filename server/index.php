@@ -8,7 +8,7 @@ $pageActions["author.php"] = array("readAllAuthors");
 $pageActions["borrow.php"] = array("readBorrowsByReader", "readBorrowsByReaderForDisplay", "readAllBorrowsByReader", "borrowReturnBooks", "readAllBorrowsByBook");
 $pageActions["publisher.php"] = array("readAllPublishers");
 $pageActions["reader.php"] = array("createReader", "readReader", "readReaderTypes", "readAllReaders", "updateReader", "readerExists", "deleteReader");
-$pageActions["section.php"] = array("readAllSections");
+$pageActions["section.php"] = array("readAllSections","updateSections");
 $pageActions["action.php"] = array("readActionsByBook", "readActionsByReader", "readActionsByUser");
 
 $param = new Param();

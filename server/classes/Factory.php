@@ -51,6 +51,9 @@ class Factory {
             case "UpdatePassword":
                 $validator = new UpdatePasswordValidator();
                 break;
+            case "Section":
+                $validator = new SectionValidator();
+                break;
         }
         $validator->setDatabase(self::$database);
         return $validator;
@@ -68,6 +71,12 @@ class Factory {
         $user = new User();
         $user->setDatabase(self::$database);
         return $user;
+    }
+
+    public static function makeSection() {
+        $section = new Section();
+        $section->setDatabase(self::$database);
+        return $section;
     }
 
 }

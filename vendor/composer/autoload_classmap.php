@@ -24,6 +24,8 @@ return array(
     'Reader' => $baseDir . '/server/classes/Reader/Reader.php',
     'ReaderAction' => $baseDir . '/server/classes/Reader/ReaderAction.php',
     'ReaderValidator' => $baseDir . '/server/classes/Reader/ReaderValidator.php',
+    'Section' => $baseDir . '/server/classes/Section/Section.php',
+    'SectionValidator' => $baseDir . '/server/classes/Section/SectionValidator.php',
     'UpdatePasswordValidator' => $baseDir . '/server/classes/User/UpdatePasswordValidator.php',
     'UpdateUserValidator' => $baseDir . '/server/classes/User/UpdateUserValidator.php',
     'User' => $baseDir . '/server/classes/User/User.php',

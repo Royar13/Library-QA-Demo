@@ -270,6 +270,11 @@ input:focus {
 .data-table {
     width: 100%;
     border-spacing: 0px;
+    caption {
+        font-weight: bold;
+        font-size: 18px;
+        color: #01579b;
+    }
     th {
         text-align: right;
         border-bottom: 2px solid #999;

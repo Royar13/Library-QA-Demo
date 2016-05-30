@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 30, 2016 at 07:03 PM
+-- Generation Time: May 30, 2016 at 10:15 PM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `library`
+-- Database: `library2`
 --
 
 -- --------------------------------------------------------
@@ -97,7 +97,7 @@ INSERT INTO `books` (`id`, `name`, `sectionId`, `bookcaseId`, `authorId`, `publi
 (7, 'שר הטבעות: בבב', 6, 1, 6, 0, 12, 0),
 (8, 'שר הטבעות: בבב', 6, 1, 6, 1, 12, 0),
 (10, 'מדריך הטרמפיסט לגלקסיה', 1, 2, 7, 2, 1900, 2),
-(11, 'גגדשגדשג', 2, 1, 8, 3, 0, 0),
+(11, 'גגדשגדשג', 2, 5, 8, 3, NULL, 0),
 (12, 'גשדגשדג', 1, 1, 9, 3, 0, 0),
 (15, 'נסיון מאה', 1, 1, 11, 5, 2002, 1),
 (17, 'הספר הטוב בעולם', 2, 2, 7, 7, 1234, 1);
@@ -115,7 +115,7 @@ CREATE TABLE IF NOT EXISTS `books_actions` (
   `description` char(255) COLLATE utf8_bin NOT NULL,
   `actionDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=45 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=47 ;
 
 --
 -- Dumping data for table `books_actions`
@@ -165,7 +165,9 @@ INSERT INTO `books_actions` (`id`, `userId`, `bookId`, `description`, `actionDat
 (41, 3, 888888988, 'המשתמש {user} יצר את הקורא {reader}', '2016-05-30 13:09:11'),
 (42, 3, 444444444, 'המשתמש {user} עדכן את הקורא {reader}', '2016-05-30 13:11:12'),
 (43, 3, 17, 'המשתמש {user} יצר את הספר {book}', '2016-05-30 13:14:04'),
-(44, 3, 17, 'המשתמש {user} עדכן את הספר {book}', '2016-05-30 13:14:12');
+(44, 3, 17, 'המשתמש {user} עדכן את הספר {book}', '2016-05-30 13:14:12'),
+(45, 3, 11, 'המשתמש {user} עדכן את הספר {book}', '2016-05-30 21:08:43'),
+(46, 3, 11, 'המשתמש {user} עדכן את הספר {book}', '2016-05-30 21:08:46');
 
 -- --------------------------------------------------------
 
@@ -183,7 +185,7 @@ CREATE TABLE IF NOT EXISTS `borrowed_books` (
   `borrowUserId` int(11) NOT NULL,
   `returnUserId` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=9 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=10 ;
 
 --
 -- Dumping data for table `borrowed_books`
@@ -194,7 +196,8 @@ INSERT INTO `borrowed_books` (`id`, `bookId`, `readerId`, `borrowDate`, `boolRet
 (5, 2, 315524695, '2016-05-16 14:32:47', 1, '2016-05-24 09:49:30', 1, 1),
 (6, 1, 222222222, '2016-05-23 08:49:57', 0, NULL, 1, NULL),
 (7, 10, 315524695, '2016-05-23 23:30:21', 1, '2016-05-24 09:49:30', 1, 1),
-(8, 15, 315524695, '2016-05-24 09:49:30', 1, '2016-05-24 09:50:15', 1, 1);
+(8, 15, 315524695, '2016-05-24 09:49:30', 1, '2016-05-24 09:50:15', 1, 1),
+(9, 2, 111111111, '2016-05-30 23:09:55', 1, '2016-05-30 23:10:05', 3, 3);
 
 -- --------------------------------------------------------
 
@@ -262,6 +265,7 @@ CREATE TABLE IF NOT EXISTS `readers` (
 --
 
 INSERT INTO `readers` (`id`, `name`, `city`, `street`, `readerType`, `maxBooks`, `joinDate`) VALUES
+('111111111', 'בדיקה', 'יאשי', 'כגדכ 56', 2, 2, '2016-05-30 23:09:44'),
 ('315524695', 'משאיל הספרים', 'גדשג', 'גדשג 534', 4, 2, '2016-05-13 17:32:26'),
 ('333333333', 'אמיר לוין', '', '', 3, 2, '2016-05-30 13:06:15'),
 ('444444444', 'גדשגש', '', '', 2, 4, '2016-05-30 13:10:41'),
@@ -281,7 +285,7 @@ CREATE TABLE IF NOT EXISTS `readers_actions` (
   `description` char(255) COLLATE utf8_bin NOT NULL,
   `actionDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=33 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=37 ;
 
 --
 -- Dumping data for table `readers_actions`
@@ -311,7 +315,11 @@ INSERT INTO `readers_actions` (`id`, `userId`, `readerId`, `description`, `actio
 (29, 3, 444444444, 'המשתמש {user} יצר את הקורא {reader}', '2016-05-30 13:10:41'),
 (30, 3, 444444444, 'המשתמש {user} עדכן את הקורא {reader}', '2016-05-30 13:11:38'),
 (31, 3, 1, 'המשתמש {user} יצר את הקורא {reader}', '2016-05-30 13:40:58'),
-(32, 3, NULL, 'המשתמש {user} מחק את הקורא "גדשגדש"', '2016-05-30 19:38:48');
+(32, 3, NULL, 'המשתמש {user} מחק את הקורא "גדשגדש"', '2016-05-30 19:38:48'),
+(33, 3, 444444444, 'המשתמש {user} עדכן את הקורא {reader}', '2016-05-30 23:09:32'),
+(34, 3, 111111111, 'המשתמש {user} יצר את הקורא {reader}', '2016-05-30 23:09:44'),
+(35, 3, 111111111, 'המשתמש {user} עדכן את הקורא {reader}', '2016-05-30 23:10:11'),
+(36, 3, 111111111, 'המשתמש {user} עדכן את הקורא {reader}', '2016-05-30 23:10:18');
 
 -- --------------------------------------------------------
 
@@ -347,20 +355,30 @@ CREATE TABLE IF NOT EXISTS `sections` (
   `name` char(255) COLLATE utf8_bin NOT NULL,
   `bookcaseAmount` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=21 ;
 
 --
 -- Dumping data for table `sections`
 --
 
 INSERT INTO `sections` (`id`, `name`, `bookcaseAmount`) VALUES
-(1, 'מדע בדיוני', 2),
-(2, 'פנטזיה', 3),
+(1, 'פנטזיה', 9),
+(2, 'מדע בדיוני', 2),
 (3, 'דרמה', 4),
 (4, 'אנציקלופדיות', 1),
 (5, 'קומיקס', 1),
 (6, 'מתח', 2),
-(7, 'ספרי ילדים', 3);
+(7, 'ספרי ילדים', 3),
+(8, 'בבב', 9),
+(9, 'להלה', 3),
+(10, 'להלה', 3),
+(11, 'גגדשג', 3),
+(13, 'גגדשג', 3),
+(15, 'גגדשג', 3),
+(16, 'המדור החדש', 2),
+(17, 'המדור החדש ביותר', 3),
+(18, 'יאי', 5),
+(20, 'משהו', 3);
 
 -- --------------------------------------------------------
 
@@ -375,7 +393,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `name` char(255) COLLATE utf8_bin NOT NULL,
   `type` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=9 ;
 
 --
 -- Dumping data for table `users`
@@ -383,7 +401,8 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 INSERT INTO `users` (`id`, `username`, `password`, `name`, `type`) VALUES
 (3, 'aaaa', '111111', 'עדי', 1),
-(7, 'bbbb', '111111', 'גדשגשדגשד', 4);
+(7, 'bbbb', '111111', 'גדשגשדגשד', 4),
+(8, 'ccc', 'aaaaaa', 'רועי', 1);
 
 -- --------------------------------------------------------
 
